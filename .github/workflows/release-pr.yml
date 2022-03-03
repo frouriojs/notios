@@ -46,7 +46,7 @@ jobs:
             - recursive: true
               args: [--frozen-lockfile, --prefer-offline]
       - name: Create Release Pull Request
-        uses: changesets/action@master
+        uses: changesets/action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
