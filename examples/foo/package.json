@@ -1,0 +1,23 @@
+{
+  "name": "demo",
+  "version": "0.0.0",
+  "private": true,
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "pnpm run gen && run-p dev:**",
+    "dev:abc": "node ./echo_preodic.js abc",
+    "dev:def": "node ./echo_preodic.js def",
+    "dev:unstable:1": "node ./echo_preodic_unstable.js unstable:1",
+    "dev:unstable:2": "node ./echo_preodic_unstable.js unstable:2",
+    "foo1": "pnpm run gen:1 && pnpm run gen:2 && run-p dev:*",
+    "foo2": "run-s gen:1 gen:2 && run-p dev:*",
+    "gen": "run-s gen:2 gen:1",
+    "gen:1": "echo gen:1",
+    "gen:2": "echo gen:2",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "scui": "workspace:../.."
+  }
+}
