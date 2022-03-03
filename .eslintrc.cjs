@@ -4,6 +4,6 @@ const config = { __dirname };
 
 /** @type {import('eslint').Linter.Config} */
 module.exports = {
-  extends: ['@luma-dev/base'],
+  extends: ['@luma-dev/base', '@luma-dev/react'],
   overrides: [...configureBase(config)],
 };

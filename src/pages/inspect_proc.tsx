@@ -18,9 +18,9 @@ const InspectProc: FC<InspectProcProps> = ({}) => {
       setPage('tree-procs');
     }
   });
-  if (!procNode) return <Text color="red">Process not found.</Text>;
-  const [log, setLog] = useState(procNode.log);
+  const [log, setLog] = useState(procNode?.log ?? '');
   useEffect(() => {
+    if (!procNode) return;
     const listener = () => {
       setLog(procNode.log);
     };
@@ -29,10 +29,11 @@ const InspectProc: FC<InspectProcProps> = ({}) => {
       procNode.removeUpdateListener(listener);
     };
   }, [procNode]);
+  if (!procNode) return <Text color="red">Process not found.</Text>;
   return (
     <>
       <Box flexDirection="column" flexGrow={1}>
-        <Scrollable children={log} />
+        <Scrollable>{log}</Scrollable>
       </Box>
       <FullDivider />
       <Box>
