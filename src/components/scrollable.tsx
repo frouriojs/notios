@@ -15,7 +15,7 @@ const Scrollable: FC<ScrollableProps> = ({ children }) => {
     const { width, height } = measureElement(ref.current as any);
     setRealWidth(width);
     setRealHeight(Math.min(termHeight - 2, height));
-  }, [ref.current, termWidth, termHeight]);
+  }, [termWidth, termHeight]);
   const lines = children.split('\n');
   return (
     <Box ref={ref}>

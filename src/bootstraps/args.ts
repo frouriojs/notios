@@ -4,7 +4,7 @@ import path from 'path';
 import type { UiOptions } from '../interfaces/ui_options';
 import detectNpmClient from '../utils/detect_npm_client';
 import { tryWithHint } from '../utils/error';
-import { ProcManager } from '../utils/proc_manager';
+import type { ProcManager } from '../utils/proc_manager';
 
 export interface setupArgsParams {
   procManager: ProcManager;

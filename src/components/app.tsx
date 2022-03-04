@@ -1,4 +1,5 @@
-import React, { FC, useEffect, useMemo } from 'react';
+import type { FC } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { inspectContext, useInspectContextDefaultValue } from '../contexts/inspect_context';
 import { pageContext, usePageContextDefaultValue } from '../contexts/page_context';
 import { procManagerContext } from '../contexts/proc_manager_context';
@@ -27,7 +28,7 @@ const App: FC<AppProps> = ({ uiOptions, procManager }) => {
     if (procManager.rootNode.children.length > 0) {
       setPage('tree-procs');
     }
-  }, []);
+  }, [procManager.rootNode.children.length, setPage]);
 
   const activePage = useMemo(() => {
     switch (page) {
