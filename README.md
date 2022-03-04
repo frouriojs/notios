@@ -6,7 +6,7 @@
 
 ![scui_demo1](https://user-images.githubusercontent.com/29811106/156586923-e36b8eb9-41de-46fa-a6a6-760c0be42200.gif)
 
-## Usage
+## Setup
 
 ### For `npm-run-all` users
 
@@ -21,6 +21,13 @@ Binaries (`run-p`, `run-s` and `npm-run-all`) behavies perfectly the same as `np
 
 As an other option, you can keep `npm-run-all` with using `srun-p`, `srun-s` and `snpm-run-all` binaries.
 
+## Usage
+
+```
+npx scui --help
+npx scui
+```
+
 ## Imcompatibility
 
 - Flags other than `-s` and `-p` in `npm-run-app` are not supported when starting from `scui`.
@@ -32,6 +39,7 @@ As an other option, you can keep `npm-run-all` with using `srun-p`, `srun-s` and
 - [x] `npm-run-all` replace
 - [x] restart in tree
 - [x] detect package manager type
+- [x] run script soon by CLI
 
 ## TODO
 
@@ -45,7 +53,7 @@ As an other option, you can keep `npm-run-all` with using `srun-p`, `srun-s` and
 - [ ] support `pnpm --filter` compat like `npm-run-filter`
 - [ ] search
 - [ ] scroll
-- [ ] vertical scroll
+- [ ] horizontal scroll
 - [ ] line wrap
 - [ ] restart in inspect
 - [ ] reload manifest

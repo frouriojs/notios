@@ -7,6 +7,6 @@ import { createProcManager } from '../utils/proc_manager';
 catchWithHint(() => {
   const procManager = createProcManager();
   setupIpc({ procManager });
-  const uiOptions = setupArgs();
+  const uiOptions = setupArgs({ procManager });
   setupUi({ procManager, uiOptions });
 });
