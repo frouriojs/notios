@@ -54,8 +54,8 @@ export const setupIpc = ({ procManager }: setupIpcParams): void => {
         }
       }
       const listener = () => {
-        if (topNode.status !== undefined) {
-          nodeIpc.server.emit(socket, 'exit', topNode.status);
+        if (topNode.status === 'finished') {
+          nodeIpc.server.emit(socket, 'exit', topNode.exitCode);
           topNode.removeUpdateListener(listener);
         }
       };

@@ -120,9 +120,11 @@ const TreeProcs: FC<TreeProcsProps> = ({}) => {
         {lines.map((line, i) => (
           <Box>
             <Text>{line.indent}</Text>
-            <Text color="yellow" inverse={index === i}>
-              {line.symbol}
-            </Text>
+            <Box minWidth={1}>
+              <Text color="yellow" inverse={index === i}>
+                {line.symbol}
+              </Text>
+            </Box>
             <Text
               color={(() => {
                 const code = line.node.exitCode ?? 0;

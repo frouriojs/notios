@@ -8,18 +8,18 @@ export interface ScrollableProps {
 }
 const Scrollable: FC<ScrollableProps> = ({ children }) => {
   const { termWidth, termHeight } = useTermShapeContext();
-  const [realHeight, setRealHeight] = useState(50);
+  const [realHeight, setRealHeight] = useState(1);
   const [, setRealWidth] = useState(50);
   const ref = useRef(null);
   useEffect(() => {
     const { width, height } = measureElement(ref.current as any);
     setRealWidth(width);
-    setRealHeight(height);
-  }, [termWidth, termHeight]);
+    setRealHeight(Math.min(termHeight - 2, height));
+  }, [ref.current, termWidth, termHeight]);
   const lines = children.split('\n');
   return (
-    <Box ref={ref} height="100%" width="100%">
-      <Text>{lines.slice(-realHeight).join('\n')}</Text>
+    <Box ref={ref}>
+      <Text>{lines.slice(-realHeight + 1).join('\n')}</Text>
     </Box>
   );
 };

@@ -51,6 +51,7 @@ export const request = (cliName: string, args: string[], argv: any): void => {
     runGroups,
   };
   const id = `${IPC_CONFIG_NAME}-${process.env[envVarNames.rootToken]}`;
+  nodeIpc.config.logger = () => {};
   nodeIpc.connectTo(id, () => {
     const client = nodeIpc.of[id];
     client.on('connect', () => {
