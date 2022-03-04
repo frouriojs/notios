@@ -2,6 +2,7 @@ import { program } from 'commander';
 import fs from 'fs';
 import path from 'path';
 import type { UiOptions } from '../interfaces/ui_options';
+import detectNpmClient from '../utils/detect_npm_client';
 import { tryWithHint } from '../utils/error';
 
 export const setupArgs = (): UiOptions => {
@@ -32,6 +33,6 @@ export const setupArgs = (): UiOptions => {
     manifestFullPath,
     manifestRelativePath,
     scripts,
-    npmClient: 'pnpm',
+    npmClient: detectNpmClient({ cwd: process.cwd() }),
   };
 };

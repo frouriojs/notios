@@ -11,7 +11,7 @@ export interface SelectScriptProps {}
 const SelectScript: FC<SelectScriptProps> = ({}) => {
   const { setPage } = usePageContext();
   const procManager = useProcManagerContext();
-  const { scripts, manifestFullPath } = useUiOptionsContext();
+  const { scripts, manifestFullPath, npmClient } = useUiOptionsContext();
   const [index, setIndex] = useState(0);
 
   useInput((input, key) => {
@@ -34,7 +34,7 @@ const SelectScript: FC<SelectScriptProps> = ({}) => {
         own: {
           command: scripts[index].command,
           cwd: path.dirname(manifestFullPath),
-          npmPath: 'pnpm',
+          npmPath: npmClient,
         },
         status: 'running',
       });

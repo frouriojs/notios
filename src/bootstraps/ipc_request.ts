@@ -4,6 +4,7 @@ import matchTasks from 'npm-run-all/lib/match-tasks';
 import path from 'path';
 import { envVarNames, IPC_CONFIG_NAME } from '../constants/ipc';
 import type { IpcRequest, RunGroup } from '../interfaces/ipc_request';
+import detectNpmClient from '../utils/detect_npm_client';
 import { tryWithHint } from '../utils/error';
 
 export const request = (cliName: string, args: string[], argv: any): void => {
@@ -41,13 +42,14 @@ export const request = (cliName: string, args: string[], argv: any): void => {
       }),
     };
   });
+  const cwd = process.cwd();
   const request: IpcRequest = {
     cliName,
     args,
-    cwd: process.cwd(),
+    cwd,
     parentToken: process.env[envVarNames.parentToken]!,
     npmPath: argv.npmPath,
-    npmClient: 'pnpm',
+    npmClient: detectNpmClient({ cwd }),
     runGroups,
   };
   const id = `${IPC_CONFIG_NAME}-${process.env[envVarNames.rootToken]}`;

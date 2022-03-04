@@ -31,14 +31,15 @@ As an other option, you can keep `npm-run-all` with using `srun-p`, `srun-s` and
 - [x] `run-p` replace
 - [x] `npm-run-all` replace
 - [x] restart in tree
-
-## DOING
-
+- [x] detect package manager type
 
 ## TODO
 
 - [ ] expand all
-- [ ] detect package manager type
+- [ ] stat process to view details from tree
+  - when started
+  - what npm client used
+  - pid
 - [ ] kill running process
 - [ ] remove/hide done process from tree
 - [ ] support `pnpm --filter` compat like `npm-run-filter`

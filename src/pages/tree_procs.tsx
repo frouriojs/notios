@@ -147,7 +147,7 @@ const TreeProcs: FC<TreeProcsProps> = ({}) => {
       <FullDivider />
       <Box>
         <Box marginRight={2}>
-          <Text>[Enter] run</Text>
+          <Text>[Enter] log</Text>
         </Box>
         <Box marginRight={2}>
           <Text>[up/down] cursor</Text>
