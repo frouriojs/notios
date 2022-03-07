@@ -21,11 +21,10 @@ importers:
       ink-big-text: ^1.2.0
       ink-divider: ^3.0.0
       ink-link: ^2.0.0
-      ink-spinner: ^4.0.3
       ink-testing-library: ^2.1.0
       ink-text-input: ^4.0.3
       node-ipc: ^10.1.0
-      npm-run-all: ^4.1.5
+      npm-run-all: 4.1.5
       prettier: ^2.5.1
       prettier-plugin-organize-imports: ^2.3.4
       react: ^17.0.2
@@ -37,7 +36,6 @@ importers:
       ink-big-text: 1.2.0_ink@3.2.0+react@17.0.2
       ink-divider: 3.0.0_ink@3.2.0+react@17.0.2
       ink-link: 2.0.0_ink@3.2.0+react@17.0.2
-      ink-spinner: 4.0.3_ink@3.2.0+react@17.0.2
       ink-text-input: 4.0.3_ink@3.2.0+react@17.0.2
       node-ipc: 10.1.0
       npm-run-all: 4.1.5
@@ -1029,11 +1027,6 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       restore-cursor: 3.1.0
-    dev: false
-
-  /cli-spinners/2.6.1:
-    resolution: {integrity: sha512-x/5fWmGMnbKQAaNwN+UZlV79qBLM9JFnJuJ03gIi5whrob0xV0ofNVHy9DhwGdsMJQc2OKv0oGmLzvaqvAVv+g==}
-    engines: {node: '>=6'}
     dev: false
 
   /cli-truncate/2.1.0:
@@ -2255,18 +2248,6 @@ packages:
       prop-types: 15.8.1
       react: 17.0.2
       terminal-link: 2.1.1
-    dev: false
-
-  /ink-spinner/4.0.3_ink@3.2.0+react@17.0.2:
-    resolution: {integrity: sha512-uJ4nbH00MM9fjTJ5xdw0zzvtXMkeGb0WV6dzSWvFv2/+ks6FIhpkt+Ge/eLdh0Ah6Vjw5pLMyNfoHQpRDRVFbQ==}
-    engines: {node: '>=10'}
-    peerDependencies:
-      ink: '>=3.0.5'
-      react: '>=16.8.2'
-    dependencies:
-      cli-spinners: 2.6.1
-      ink: 3.2.0_a0c521d4794c7ad97f5f4c1c4a7d5818
-      react: 17.0.2
     dev: false
 
   /ink-testing-library/2.1.0_@types+react@17.0.39:

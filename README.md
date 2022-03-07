@@ -77,6 +77,7 @@ npx notios dev
 - [ ] write logs to file from tree
 - [ ] previous logs
   - toggle? (show/hide)
+- [ ] manage npm-run-all version by user
 
 - Real cases test
   - [ ] next dev
