@@ -188,6 +188,9 @@ export const createProcManager = (): ProcManager => {
       cwd: node.own.cwd,
       env: {
         ...process.env,
+        npm_config_color: 'always',
+        NO_COLOR: '',
+        FORCE_COLOR: 'true',
         [envVarNames.rootToken]: rootNode.token,
         [envVarNames.parentToken]: node.token,
       },

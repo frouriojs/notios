@@ -13,7 +13,7 @@ const FullDivider: FC = () => {
     setRealWidth(width);
   }, [termWidth, termHeight]);
   return (
-    <Box ref={ref} width="100%">
+    <Box ref={ref}>
       <Divider width={Math.max(realWidth - 5, 1)} />
     </Box>
   );

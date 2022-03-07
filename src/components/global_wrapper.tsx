@@ -9,7 +9,7 @@ interface GlobalWrapperProps {
 const GlobalWrapper: FC<GlobalWrapperProps> = ({ children }) => {
   const { termHeight } = useTermShapeContext();
   return (
-    <Box flexDirection="column" height={termHeight} width="100%">
+    <Box flexDirection="column" height={termHeight}>
       {children}
     </Box>
   );

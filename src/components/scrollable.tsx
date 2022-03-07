@@ -19,7 +19,7 @@ const Scrollable: FC<ScrollableProps> = ({ children }) => {
   const lines = children.split('\n');
   return (
     <Box ref={ref}>
-      <Text>{lines.slice(-realHeight + 1).join('\n')}</Text>
+      <Text wrap="truncate-end">{lines.slice(-realHeight + 1).join('\n')}</Text>
     </Box>
   );
 };

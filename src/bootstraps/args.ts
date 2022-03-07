@@ -11,7 +11,7 @@ export interface setupArgsParams {
 }
 export const setupArgs = ({ procManager }: setupArgsParams): UiOptions => {
   program.option('--manifest <string>', 'package.json path', 'package.json');
-  program.name('scui');
+  program.name('notios');
   program.argument('[run-script-name]');
   program.allowExcessArguments(false);
   program.version(require('../../package.json').version, '-v, --version');

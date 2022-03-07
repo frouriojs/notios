@@ -1,36 +1,42 @@
-# SCUI
+# Notios
 
 [![Luma Style Guide](https://img.shields.io/badge/styled%20with-luma-%23c5ebeb?style=flat-square)](https://github.com/luma-dev/luma-style-guide#readme)
 
 **WARNING**: Under development.
 
-![scui_demo1](https://user-images.githubusercontent.com/29811106/156586923-e36b8eb9-41de-46fa-a6a6-760c0be42200.gif)
+![](https://user-images.githubusercontent.com/29811106/156586923-e36b8eb9-41de-46fa-a6a6-760c0be42200.gif)
 
 ## Setup
 
 ### For `npm-run-all` users
 
-Just uninstall `npm-run-all` and install `@luma-sandbox/scui`.
+Just uninstall `npm-run-all` and install `notios`.
 
 ```sh
 npm remove npm-run-all
-npm install -D @luma-sandbox/scui
+npm install -D notios
 ```
 
-Binaries (`run-p`, `run-s` and `npm-run-all`) behavies perfectly the same as `npm-run-all` unless starting from `scui`.
+Binaries (`n-run-p`, `n-run-s` and `n-npm-run-all`) behavies perfectly the same as `npm-run-all` unless starting from `notios`.
 
-As an other option, you can keep `npm-run-all` with using `srun-p`, `srun-s` and `snpm-run-all` binaries.
+As an other option, you can keep `npm-run-all` with using `n-run-p`, `n-run-s` and `n-npm-run-all` binaries.
 
 ## Usage
 
 ```
-npx scui --help
-npx scui
+# Show help.
+npx notios --help
+
+# Start UI.
+npx notios
+
+# Or specify script name.
+npx notios dev
 ```
 
 ## Imcompatibility
 
-- Flags other than `-s` and `-p` in `npm-run-app` are not supported when starting from `scui`.
+- Flags other than `-s` and `-p` in `npm-run-app` are not supported when starting from `notios`.
 
 ## DONE
 
@@ -40,19 +46,20 @@ npx scui
 - [x] restart in tree
 - [x] detect package manager type
 - [x] run script soon by CLI
+- [x] color management
 
 ## TODO
 
+- [ ] scroll
+- [ ] kill running process
 - [ ] expand all
 - [ ] stat process to view details from tree
   - when started
   - what npm client used
   - pid
-- [ ] kill running process
 - [ ] remove/hide done process from tree
 - [ ] support `pnpm --filter` compat like `npm-run-filter`
 - [ ] search
-- [ ] scroll
 - [ ] horizontal scroll
 - [ ] line wrap
 - [ ] restart in inspect
@@ -65,3 +72,18 @@ npx scui
   - [ ] clear all
   - [ ] clear all except last xxx lines
   - [ ] auto trim
+- [ ] log history management
+- [ ] write logs to file from tree
+- [ ] previous logs
+  - toggle? (show/hide)
+
+- Real cases test
+  - [ ] next dev
+  - [ ] nuxt dev
+  - [ ] vite dev
+  - [ ] react-scripts
+  - [ ] remix
+  - [ ] jest (--watch)
+  - [ ] vitest (--watch)
+  - [ ] ava (--watch)
+  - [ ] mocha (--watch)
