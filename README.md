@@ -66,6 +66,7 @@ npx notios dev
 - [ ] reload manifest
 - [ ] keymapping support
 - [ ] toggle timestamp
+- [ ] toggle label in merged log
 - [ ] show last update timestamp
 - [ ] show more info in inspect
 - [ ] clear log

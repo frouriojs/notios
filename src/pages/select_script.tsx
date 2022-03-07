@@ -23,11 +23,17 @@ const SelectScript: FC<SelectScriptProps> = ({}) => {
       setIndex((prev) => (prev + scripts.length - 1) % scripts.length);
     }
 
-    if (key.backspace || (key.ctrl && !key.meta && input === 'h') || (key.ctrl && input === 'o')) {
+    if (key.backspace || (key.ctrl && !key.meta && input === 'h') || (key.ctrl && !key.meta && input === 'o')) {
       setPage('tree-procs');
     }
 
-    if (key.return || (key.ctrl && input === 'm')) {
+    if (
+      key.return ||
+      key.rightArrow ||
+      (key.ctrl && !key.meta && input === 'm') ||
+      (!key.ctrl && !key.meta && input === 'l') ||
+      (key.ctrl && !key.meta && input === 'f')
+    ) {
       procManager.createNode({
         name: scripts[index].name,
         type: 'none',

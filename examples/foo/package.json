@@ -5,6 +5,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "anywidth": "node ./anywidth",
+    "colorful": "node ./colorful",
     "dev": "pnpm run gen && run-p dev:**",
     "dev:abc": "node ./echo_preodic.js abc",
     "dev:def": "node ./echo_preodic.js def",
@@ -19,9 +21,7 @@
     "s-and-do": "run-s take:6000 take:4000 && pnpm run gen",
     "take:4000": "node ./take_ms.js 4000",
     "take:6000": "node ./take_ms.js 6000",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "colorful": "node ./colorful",
-    "anywidth": "node ./anywidth"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
     "chalk": "^5.0.0",
