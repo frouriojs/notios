@@ -7,13 +7,13 @@
   "author": "",
   "main": "index.js",
   "bin": {
-    "n-npm-run-all": "./build/npm-run-all.js",
-    "n-run-p": "./build/run-p.js",
-    "n-run-s": "./build/run-s.js",
-    "notios": "./build/main.js",
-    "npm-run-all": "./build/npm-run-all.js",
-    "run-p": "./build/run-p.js",
-    "run-s": "./build/run-s.js"
+    "n-npm-run-all": "./bin/npm-run-all",
+    "n-run-p": "./bin/run-p",
+    "n-run-s": "./bin/run-s",
+    "notios": "./bin/notios",
+    "npm-run-all": "./bin/npm-run-all",
+    "run-p": "./bin/run-p",
+    "run-s": "./bin/run-s"
   },
   "scripts": {
     "build": "ts-node -T ./scripts/build.ts --from-dir ./src/entrypoints --to-dir ./build --clean --target es2015",
@@ -37,6 +37,7 @@
     "react": "^17.0.2"
   },
   "devDependencies": {
+    "@changesets/changelog-github": "^0.4.3",
     "@changesets/cli": "^2.21.0",
     "@luma-dev/eslint-config-base": "0.11.0",
     "@luma-dev/eslint-config-react": "^0.4.2",

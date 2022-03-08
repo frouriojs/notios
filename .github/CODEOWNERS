@@ -1,0 +1,7 @@
+/.eslintignore @LumaKernel
+/.eslintrc.cjs @LumaKernel
+/.prettierignore @LumaKernel
+/.prettierrc.json @LumaKernel
+/package.json @LumaKernel
+/tsconfig.json @LumaKernel
+/src/** @LumaKernel

@@ -23,7 +23,7 @@ As an other option, you can keep `npm-run-all` with using `n-run-p`, `n-run-s` a
 
 ## Usage
 
-```
+```sh
 # Show help.
 npx notios --help
 
@@ -38,54 +38,15 @@ npx notios dev
 
 - Flags other than `-s` and `-p` in `npm-run-app` are not supported when starting from `notios`.
 
-## DONE
+## Fix npm-run-all version
 
-- [x] `run-s` replace
-- [x] `run-p` replace
-- [x] `npm-run-all` replace
-- [x] restart in tree
-- [x] detect package manager type
-- [x] run script soon by CLI
-- [x] color management
+Notios will check existence of `@notios/npm-run-all`.
 
-## TODO
+```sh
+npm i -D @notios/npm-run-all@npm:npm-run-all@${version}
 
-- [ ] scroll
-- [ ] kill running process
-- [ ] expand all
-- [ ] stat process to view details from tree
-  - when started
-  - what npm client used
-  - pid
-- [ ] remove/hide done process from tree
-- [ ] support `pnpm --filter` compat like `npm-run-filter`
-- [ ] search
-- [ ] horizontal scroll
-- [ ] line wrap
-- [ ] restart in inspect
-- [ ] reload manifest
-- [ ] keymapping support
-- [ ] toggle timestamp
-- [ ] toggle label in merged log
-- [ ] show last update timestamp
-- [ ] show more info in inspect
-- [ ] clear log
-  - [ ] clear all
-  - [ ] clear all except last xxx lines
-  - [ ] auto trim
-- [ ] log history management
-- [ ] write logs to file from tree
-- [ ] previous logs
-  - toggle? (show/hide)
-- [ ] manage npm-run-all version by user
+# example for ^3
+npm i -D @notios/npm-run-all@npm:npm-run-all@^3
+```
 
-- Real cases test
-  - [ ] next dev
-  - [ ] nuxt dev
-  - [ ] vite dev
-  - [ ] react-scripts
-  - [ ] remix
-  - [ ] jest (--watch)
-  - [ ] vitest (--watch)
-  - [ ] ava (--watch)
-  - [ ] mocha (--watch)
+Note that you should replace `run-p`, `run-s` and `npm-run-all` with `n-` prefixed ones.

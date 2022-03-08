@@ -1,11 +1,7 @@
-import parseCliArgs from 'npm-run-all/bin/common/parse-cli-args';
-import { request } from '../bootstraps/ipc_request';
-import { envVarNames } from '../constants/ipc';
+import hijackNpmRunAll from '../bootstraps/hijack_npm_run_all';
 
-if (process.env[envVarNames.rootToken] && process.env[envVarNames.parentToken]) {
-  const args = process.argv.slice(2);
-  const argv = parseCliArgs(args, { parallel: false }, { singleMode: true });
-  request('run-s', args, argv);
-} else {
-  require('npm-run-all/bin/run-s');
-}
+hijackNpmRunAll({
+  name: 'run-s',
+  initial: { parallel: false },
+  options: { singleMode: true },
+});
