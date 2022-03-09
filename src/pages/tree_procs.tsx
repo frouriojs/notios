@@ -74,11 +74,21 @@ const TreeProcs: FC<TreeProcsProps> = ({}) => {
   }, [lines, index]);
 
   useInput((input, key) => {
-    if (key.downArrow || (key.ctrl && !key.meta && input === 'n') || (!key.ctrl && !key.meta && input === 'j')) {
+    if (
+      (!key.shift && key.tab) ||
+      key.downArrow ||
+      (key.ctrl && !key.meta && input === 'n') ||
+      (!key.ctrl && !key.meta && input === 'j')
+    ) {
       setIndex((prev) => (prev + 1) % lines.length);
     }
 
-    if (key.upArrow || (key.ctrl && !key.meta && input === 'p') || (!key.ctrl && !key.meta && input === 'k')) {
+    if (
+      (key.shift && key.tab) ||
+      key.upArrow ||
+      (key.ctrl && !key.meta && input === 'p') ||
+      (!key.ctrl && !key.meta && input === 'k')
+    ) {
       setIndex((prev) => (prev + lines.length - 1) % lines.length);
     }
 
