@@ -74,15 +74,25 @@ const TreeProcs: FC<TreeProcsProps> = ({}) => {
   }, [lines, index]);
 
   useInput((input, key) => {
-    if (key.tab || key.downArrow || (key.ctrl && !key.meta && input === 'n') || (!key.ctrl && !key.meta && input === 'j')) {
+    if (
+      (!key.shift && key.tab) ||
+      key.downArrow ||
+      (key.ctrl && !key.meta && input === 'n') ||
+      (!key.ctrl && !key.meta && input === 'j')
+    ) {
       setIndex((prev) => (prev + 1) % lines.length);
     }
 
-    if (key.upArrow || (key.ctrl && !key.meta && input === 'p') || (!key.ctrl && !key.meta && input === 'k')) {
+    if (
+      (key.shift && key.tab) ||
+      key.upArrow ||
+      (key.ctrl && !key.meta && input === 'p') ||
+      (!key.ctrl && !key.meta && input === 'k')
+    ) {
       setIndex((prev) => (prev + lines.length - 1) % lines.length);
     }
 
-    if (key.tab || key.rightArrow || (!key.ctrl && !key.meta && input === 'l')) {
+    if (key.rightArrow || (!key.ctrl && !key.meta && input === 'l')) {
       if (lines[index].node.children.length > 0) {
         setOpenMap((m) => ({ ...m, [lines[index].node.token]: true }));
       }
