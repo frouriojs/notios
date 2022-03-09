@@ -1,8 +1,8 @@
-*
-!package.json
-!LICENSE*
-!NOTICE*
-!CHANGELOG*
-!README*
-!build
-!bin
+/*
+!/package.json
+!/LICENSE*
+!/NOTICE*
+!/CHANGELOG*
+!/README*
+!/build/
+!/bin/
