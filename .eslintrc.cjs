@@ -9,8 +9,8 @@ module.exports = {
     ...configureBase(config),
     {
       files: ['*.js'],
+      extends: ['@luma-dev/base/js-dev'],
       rules: {
-        'no-console': 'off',
         '@typescript-eslint/no-var-requires': 'off',
         'import/no-unresolved': 'off',
       },
