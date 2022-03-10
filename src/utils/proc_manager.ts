@@ -208,7 +208,7 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
           : {
               npm_config_color: 'false',
               NO_COLOR: 'true',
-              FORCE_COLOR: undefined,
+              FORCE_COLOR: '0',
             }),
         [envVarNames.rootToken]: rootNode.token,
         [envVarNames.parentToken]: node.token,

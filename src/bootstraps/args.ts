@@ -14,7 +14,7 @@ export const setupArgs = (): UiOptions => {
   program.parse();
   const initialScriptNames = program.args;
   const options = program.opts();
-  const forceNoColor: boolean = options['no-color'];
+  const forceNoColor = !options.color;
   const manifestFullPath = path.resolve(process.cwd(), options.manifest);
   const manifestRelativePath = path.relative(process.cwd(), manifestFullPath);
   const manifestJsonString = tryWithHint(
