@@ -4,20 +4,17 @@ import path from 'path';
 import type { UiOptions } from '../interfaces/ui_options';
 import detectNpmClient from '../utils/detect_npm_client';
 import { tryWithHint } from '../utils/error';
-import type { ProcManager } from '../utils/proc_manager';
 
-export interface setupArgsParams {
-  procManager: ProcManager;
-}
-export const setupArgs = ({ procManager }: setupArgsParams): UiOptions => {
+export const setupArgs = (): UiOptions => {
   program.option('--manifest <string>', 'package.json path', 'package.json');
+  program.option('--no-color', 'force to suppress coloring');
   program.name('notios');
-  program.argument('[run-script-name]');
-  program.allowExcessArguments(false);
+  program.argument('[run-script-name...]');
   program.version(require('../../package.json').version, '-v, --version');
   program.parse();
-  const scriptName = program.args[0];
+  const initialScriptNames = program.args;
   const options = program.opts();
+  const forceNoColor: boolean = options['no-color'];
   const manifestFullPath = path.resolve(process.cwd(), options.manifest);
   const manifestRelativePath = path.relative(process.cwd(), manifestFullPath);
   const manifestJsonString = tryWithHint(
@@ -39,29 +36,19 @@ export const setupArgs = ({ procManager }: setupArgsParams): UiOptions => {
     )} does not have scripts section correctly.\nPlease check the npm documentation for more information: https://docs.npmjs.com/misc/scripts/`,
   );
 
-  tryWithHint(() => {
-    if (typeof scriptName === 'string') {
+  initialScriptNames.forEach((scriptName) => {
+    tryWithHint(() => {
       if (!(scriptName in (manifestJson as any).scripts)) {
         throw new Error('no such script');
       }
-
-      const cwd = process.cwd();
-      procManager.createNode({
-        name: scriptName,
-        type: 'none',
-        status: 'running',
-        own: {
-          cwd,
-          command: scriptName,
-          npmPath: detectNpmClient({ cwd }),
-        },
-      });
-    }
-  }, `Manifest json ${JSON.stringify(manifestFullPath)} does not have such script: ${JSON.stringify(scriptName)}`);
+    }, `Manifest json ${JSON.stringify(manifestFullPath)} does not have such script: ${JSON.stringify(scriptName)}`);
+  });
 
   return {
+    forceNoColor,
     manifestFullPath,
     manifestRelativePath,
+    initialScriptNames,
     scripts,
     npmClient: detectNpmClient({ cwd: process.cwd() }),
   };
