@@ -74,11 +74,29 @@ const TreeProcs: FC<TreeProcsProps> = ({}) => {
   }, [lines, index]);
 
   useInput((input, key) => {
+    if (key.ctrl) {
+      switch (input) {
+        case "n":
+          setIndex((prev) => (prev + 1) % lines.length);
+          break;
+        case "p":
+          setIndex((prev) => (prev + lines.length - 1) % lines.length);
+          break;
+        case "h":
+        case "o":
+          //TODO: backspace behavior
+          break;
+        case "m":
+          const token = lines[index].node.token;
+          setInspectingToken(token);
+          setPage("inspect-proc");
+          break;
+      }
+    }
     if (
       (!key.shift && key.tab) ||
       key.downArrow ||
-      (key.ctrl && !key.meta && input === 'n') ||
-      (!key.ctrl && !key.meta && input === 'j')
+      (!key.ctrl && !key.meta && input === "j")
     ) {
       setIndex((prev) => (prev + 1) % lines.length);
     }
@@ -86,41 +104,40 @@ const TreeProcs: FC<TreeProcsProps> = ({}) => {
     if (
       (key.shift && key.tab) ||
       key.upArrow ||
-      (key.ctrl && !key.meta && input === 'p') ||
-      (!key.ctrl && !key.meta && input === 'k')
+      (!key.ctrl && !key.meta && input === "k")
     ) {
       setIndex((prev) => (prev + lines.length - 1) % lines.length);
     }
 
-    if (key.rightArrow || (!key.ctrl && !key.meta && input === 'l')) {
+    if (key.rightArrow || (!key.ctrl && !key.meta && input === "l")) {
       if (lines[index].node.children.length > 0) {
         setOpenMap((m) => ({ ...m, [lines[index].node.token]: true }));
       }
     }
 
-    if (key.leftArrow || (!key.ctrl && !key.meta && input === 'h')) {
+    if (key.leftArrow || (!key.ctrl && !key.meta && input === "h")) {
       if (lines[index].node.children.length > 0) {
         setOpenMap((m) => ({ ...m, [lines[index].node.token]: false }));
       }
     }
 
-    if (!key.ctrl && !key.meta && input === 'n') {
-      setPage('select-script');
+    if (!key.ctrl && !key.meta && input === "n") {
+      setPage("select-script");
     }
 
-    if (key.backspace || (key.ctrl && !key.meta && input === 'h') || (key.ctrl && !key.meta && input === 'o')) {
+    if (key.backspace) {
     }
 
-    if (!key.ctrl && !key.meta && input === 'r') {
+    if (!key.ctrl && !key.meta && input === "r") {
       if (canRestart) {
         procManager.restartNode(lines[index].node);
       }
     }
 
-    if (key.return || (key.ctrl && !key.meta && input === 'm')) {
+    if (key.return) {
       const token = lines[index].node.token;
       setInspectingToken(token);
-      setPage('inspect-proc');
+      setPage("inspect-proc");
     }
   });
 
