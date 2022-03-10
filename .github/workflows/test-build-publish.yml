@@ -60,7 +60,7 @@ jobs:
         name: Configure npm token
         run: pnpm config set //registry.npmjs.org/:_authToken ${{ secrets.NPM_TOKEN }}
       - name: Publish Dry Run
-        run: pnpm -r publish --dry-run
+        run: pnpm -r publish --no-git-checks --dry-run
       - if: ${{ github.event_name == 'push' && github.event.ref == 'refs/heads/main' }}
         name: Publish if needed
         run: pnpm -r publish --access public

@@ -1,4 +1,5 @@
 import childProcess from 'child_process';
+import tty from 'tty';
 import { envVarNames } from '../constants/ipc';
 
 export type ProcStatus = 'waiting' | 'running' | 'finished';
@@ -74,7 +75,10 @@ export interface ProcManager {
   readonly findNodeByToken: FindNodeByToken;
 }
 
-export const createProcManager = (): ProcManager => {
+export interface CreateProcManagerParams {
+  forceNoColor: boolean;
+}
+export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): ProcManager => {
   const $updateListenerSet = new Set<UpdateListener>();
   // Call when tree structure changed.
   const $notifyUpdate = (): void => {
@@ -183,14 +187,29 @@ export const createProcManager = (): ProcManager => {
     nodeStderr.parent = node;
     $notifyUpdate();
 
+    const isColorSupported =
+      !('NO_COLOR' in process.env || forceNoColor) &&
+      ('FORCE_COLOR' in process.env ||
+        process.platform === 'win32' ||
+        (tty.isatty(1) && process.env.TERM !== 'dumb') ||
+        'CI' in process.env);
+
     const p = childProcess.spawn(node.own.npmPath, ['run', node.name], {
       stdio: ['pipe', 'pipe', 'pipe'],
       cwd: node.own.cwd,
       env: {
         ...process.env,
-        npm_config_color: 'always',
-        NO_COLOR: '',
-        FORCE_COLOR: 'true',
+        ...(isColorSupported
+          ? {
+              npm_config_color: 'always',
+              NO_COLOR: undefined,
+              FORCE_COLOR: 'true',
+            }
+          : {
+              npm_config_color: 'false',
+              NO_COLOR: 'true',
+              FORCE_COLOR: '0',
+            }),
         [envVarNames.rootToken]: rootNode.token,
         [envVarNames.parentToken]: node.token,
       },
