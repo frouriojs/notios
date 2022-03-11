@@ -1,26 +1,51 @@
-import { Box, measureElement, Text } from 'ink';
+import { Box, Text } from 'ink';
 import type { FC } from 'react';
-import React, { useEffect, useRef, useState } from 'react';
-import { useTermShapeContext } from '../contexts/term_shape_context';
+import React, { useCallback } from 'react';
+import stringLength from 'string-length';
+import wcslice from 'wcslice';
+import wcwidth from 'wcwidth';
+import BoxWithSize from './box_with_size';
 
 export interface ScrollableProps {
-  children: string;
+  lines: string[];
+  top?: number;
+  left?: number;
 }
-const Scrollable: FC<ScrollableProps> = ({ children }) => {
-  const { termWidth, termHeight } = useTermShapeContext();
-  const [realHeight, setRealHeight] = useState(1);
-  const [, setRealWidth] = useState(50);
-  const ref = useRef<any>(null);
-  useEffect(() => {
-    const { width, height } = measureElement(ref.current);
-    setRealWidth(width);
-    setRealHeight(height);
-  }, [termWidth, termHeight]);
-  const lines = children.split('\n');
+const Scrollable: FC<ScrollableProps> = ({ lines, top = 0, left = 0 }) => {
+  const trimmedLines = useCallback(
+    ({ height, width }: { height: number; width: number }) => {
+      return lines.slice(top, top + height).map((line, i) => {
+        const wcstart = left;
+        const wcend = left + width - 2.5;
+        const text = wcslice(line, wcstart, wcend);
+        return {
+          abs: top + i,
+          left: wcstart > 0 ? '~' : '',
+          text,
+          right: text !== wcslice(line, wcstart) ? '~' : '',
+        };
+      });
+    },
+    [lines, top, left],
+  );
   return (
-    <Box ref={ref}>
-      <Text wrap="truncate">{lines.slice(-realHeight + 1).join('\n')}</Text>
-    </Box>
+    <BoxWithSize height="100%" width="100%" flexDirection="column">
+      {({ width, height }) =>
+        trimmedLines({ width, height }).map(({ text, left, right, abs }) => (
+          <Box key={abs}>
+            <Text color="gray" italic>
+              {left}
+            </Text>
+            <Box width={wcwidth(text) - (text.length - stringLength(text))}>
+              <Text wrap="end">{text}</Text>
+            </Box>
+            <Text color="gray" italic>
+              {right}
+            </Text>
+          </Box>
+        ))
+      }
+    </BoxWithSize>
   );
 };
 

@@ -49,12 +49,12 @@ const SelectScript: FC<SelectScriptProps> = ({}) => {
   });
 
   return (
-    <>
+    <Box flexDirection="column" flexGrow={1}>
       <Box flexDirection="column" flexGrow={1}>
         <Text>{manifestFullPath}</Text>
         {scripts.map((script, i) => {
           return (
-            <Box>
+            <Box key={script.name}>
               <Text color="yellow" inverse={index === i}>
                 {script.name}
               </Text>
@@ -75,7 +75,7 @@ const SelectScript: FC<SelectScriptProps> = ({}) => {
           <Text>[backspace] back</Text>
         </Box>
       </Box>
-    </>
+    </Box>
   );
 };
 export default SelectScript;
