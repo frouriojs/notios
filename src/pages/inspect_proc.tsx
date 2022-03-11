@@ -66,7 +66,11 @@ const InspectProc: FC<InspectProcProps> = ({}) => {
       <Box height="100%" width="100%" flexDirection="column" flexGrow={1}>
         <ScrollableCounter lines={logLines} left={left} bottom={bottom} />
       </Box>
-      <FullDivider dividerChar={bottom > 0 ? '-' : '='} title={bottom > 0 ? `${bottom}lines` : undefined} />
+      <FullDivider
+        dividerChar={bottom > 0 ? '─' : '='}
+        title={bottom > 0 ? `${bottom}` : undefined}
+        dividerColor={bottom > 0 ? 'cyan' : 'cyanBright'}
+      />
       <Box>
         <Box marginRight={2}>
           <Text>[up/down] scroll(TODO)</Text>
