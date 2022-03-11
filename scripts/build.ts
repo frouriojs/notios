@@ -72,7 +72,10 @@ const main = async ({ fromDir, toDir, watch, target, clean }: Params) => {
       ...(clean ? [cleanPlugin] : []),
       omitImportNodeNSPlugin,
       nodeExternalsPlugin({
-        allowList: [],
+        allowList: [
+          // small ESM packages
+          'string-length',
+        ],
       }),
     ],
   });

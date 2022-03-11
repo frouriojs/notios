@@ -1,21 +1,20 @@
-import { Box, measureElement } from 'ink';
 import Divider from 'ink-divider';
 import type { FC } from 'react';
-import React, { useEffect, useRef, useState } from 'react';
-import { useTermShapeContext } from '../contexts/term_shape_context';
+import React from 'react';
+import BoxWithSize from './box_with_size';
 
-const FullDivider: FC = () => {
-  const { termWidth, termHeight } = useTermShapeContext();
-  const [realWidth, setRealWidth] = useState(50);
-  const ref = useRef(null);
-  useEffect(() => {
-    const { width } = measureElement(ref.current as any);
-    setRealWidth(width);
-  }, [termWidth, termHeight]);
+export interface FullDividerProps {
+  title?: string;
+  dividerChar?: string;
+  dividerColor?: string;
+}
+const FullDivider: FC<FullDividerProps> = ({ title, dividerChar, dividerColor }) => {
   return (
-    <Box ref={ref}>
-      <Divider width={Math.max(realWidth - 5, 1)} />
-    </Box>
+    <BoxWithSize>
+      {({ width }) => (
+        <Divider title={title} dividerChar={dividerChar} dividerColor={dividerColor} width={Math.max(width - 5, 1)} />
+      )}
+    </BoxWithSize>
   );
 };
 
