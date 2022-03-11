@@ -1,5 +1,11 @@
 # notios
 
+## 0.0.4
+
+### Patch Changes
+
+- [#13](https://github.com/frouriojs/notios/pull/13) [`8dca62e`](https://github.com/frouriojs/notios/commit/8dca62ee4c38b0124f2f17391789f0ba31e667b5) Thanks [@LumaKernel](https://github.com/LumaKernel)! - feat: inspect log scrolling
+
 ## 0.0.3
 
 ### Patch Changes
