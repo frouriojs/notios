@@ -34,9 +34,10 @@ npx notios
 npx notios dev
 ```
 
-## Imcompatibility
+## Incompatibility
 
 - Flags other than `-s` and `-p` in `npm-run-app` are not supported when starting from `notios`.
+- Supplying flags over patterns like `run-s 'build:* -- --watch'`.
 
 ## Fix npm-run-all version
 
