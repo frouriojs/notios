@@ -6,6 +6,13 @@ import wcslice from 'wcslice';
 import wcwidth from 'wcwidth';
 import BoxWithSize from './box_with_size';
 
+interface Line {
+  abs: number;
+  left: string;
+  text: string;
+  right: string;
+}
+
 export interface ScrollableProps {
   lines: string[];
   top?: number;
@@ -14,17 +21,20 @@ export interface ScrollableProps {
 const Scrollable: FC<ScrollableProps> = ({ lines, top = 0, left = 0 }) => {
   const trimmedLines = useCallback(
     ({ height, width }: { height: number; width: number }) => {
-      return lines.slice(top, top + height).map((line, i) => {
+      const shownLines: Line[] = [];
+      for (let i = Math.max(top, 0); i < top + height && i < lines.length; i += 1) {
+        const line = lines[i];
         const wcstart = left;
         const wcend = left + width - 2.5;
         const text = wcslice(line, wcstart, wcend);
-        return {
+        shownLines.push({
           abs: top + i,
           left: wcstart > 0 ? '~' : '',
           text,
           right: text !== wcslice(line, wcstart) ? '~' : '',
-        };
-      });
+        });
+      }
+      return shownLines;
     },
     [lines, top, left],
   );
