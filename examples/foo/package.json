@@ -22,6 +22,10 @@
     "s-and-do": "run-s take:6000 take:4000 && pnpm run gen",
     "take:4000": "node ./take_ms.js 4000",
     "take:6000": "node ./take_ms.js 6000",
+    "lines:1000": "node ./lines.js 1000",
+    "lines:10000": "node ./lines.js 10000",
+    "lines:100000": "node ./lines.js 100000",
+    "lines:1000000": "node ./lines.js 1000000",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
