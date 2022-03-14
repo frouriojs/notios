@@ -39,7 +39,7 @@ const main = async ({ fromDir, toDir, watch, target, clean }: Params) => {
         console.error(error);
         return;
       }
-      console.log(`Build done for files under ${fromDirAbs}`);
+      console.log(new Date(), `Build done for files under ${fromDirAbs}`);
     },
   };
 
