@@ -1,5 +1,13 @@
 # notios
 
+## 0.0.5
+
+### Patch Changes
+
+- [#21](https://github.com/frouriojs/notios/pull/21) [`214daec`](https://github.com/frouriojs/notios/commit/214daec3b93239293a607a0ed64cad8409901bb3) Thanks [@LumaKernel](https://github.com/LumaKernel)! - update rule
+
+* [#16](https://github.com/frouriojs/notios/pull/16) [`94c2a2a`](https://github.com/frouriojs/notios/commit/94c2a2aae4867169bd28cd1f2cf017713536a7af) Thanks [@LumaKernel](https://github.com/LumaKernel)! - feat: support coloring for cargo tools
+
 ## 0.0.4
 
 ### Patch Changes
