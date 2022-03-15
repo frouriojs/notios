@@ -1,7 +1,0 @@
-.DS_Store
-.vscode/
-.idea/
-node_modules/
-*.local
-build/
-.pnpm-debug.log*
