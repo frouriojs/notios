@@ -1,7 +1,5 @@
 # Notios
 
-[![Luma Style Guide](https://img.shields.io/badge/styled%20with-luma-%23c5ebeb?style=flat-square)](https://github.com/luma-dev/luma-style-guide#readme)
-
 **WARNING**: Under development.
 
 ![](https://user-images.githubusercontent.com/29811106/156586923-e36b8eb9-41de-46fa-a6a6-760c0be42200.gif)
