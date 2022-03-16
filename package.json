@@ -15,13 +15,6 @@
     "run-p": "./bin/run-p",
     "run-s": "./bin/run-s"
   },
-  "scripts": {
-    "build": "ts-node -T ./scripts/build.ts --from-dir ./src/entrypoints --to-dir ./build --clean --target es2015",
-    "check": "run-p check:*",
-    "check:tsc": "tsc --noEmit",
-    "dev": "pnpm run build -- --watch",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "dependencies": {
     "commander": "^9.0.0",
     "ink": "^3.2.0",
