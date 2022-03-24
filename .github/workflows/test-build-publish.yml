@@ -48,12 +48,12 @@ jobs:
           run_install: |
             - recursive: true
               args: [--frozen-lockfile, --prefer-offline]
-      - name: Build
-        run: pnpm build
       - name: Run lint
         run: pnpm lint
       - name: Run typecheck
         run: pnpm typecheck
+      - name: Build
+        run: pnpm build
       - if: ${{ github.event_name == 'push' && github.event.ref == 'refs/heads/main' }}
         name: Configure npm token
         run: pnpm config set //registry.npmjs.org/:_authToken ${{ secrets.NPM_TOKEN }}
