@@ -1,0 +1,10 @@
+{
+  "pluginSearchDirs": [
+    "."
+  ],
+  "arrowParens": "always",
+  "singleQuote": true,
+  "trailingComma": "all",
+  "tabWidth": 2,
+  "printWidth": 120
+}
