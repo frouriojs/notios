@@ -1,5 +1,11 @@
 # notios
 
+## 0.0.6
+
+### Patch Changes
+
+- [#25](https://github.com/frouriojs/notios/pull/25) [`43a59be`](https://github.com/frouriojs/notios/commit/43a59befe4bd4775307c9cd7525978a937b7afb7) Thanks [@LumaKernel](https://github.com/LumaKernel)! - update rules and styles
+
 ## 0.0.5
 
 ### Patch Changes
