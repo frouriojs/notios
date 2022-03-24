@@ -50,7 +50,9 @@ jobs:
               args: [--frozen-lockfile, --prefer-offline]
       - name: Build
         run: pnpm build
-      - name: Run check
+      - name: Run lint
+        run: pnpm lint
+      - name: Run typecheck
         run: pnpm typecheck
       - if: ${{ github.event_name == 'push' && github.event.ref == 'refs/heads/main' }}
         name: Configure npm token
