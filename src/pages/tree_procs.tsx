@@ -128,7 +128,7 @@ const TreeProcs: FC<TreeProcsProps> = ({}) => {
     <>
       <Box flexDirection="column" flexGrow={1}>
         {lines.map((line, i) => (
-          <Box>
+          <Box key={line.node.token}>
             <Text>{line.indent}</Text>
             <Box minWidth={1}>
               <Text color="yellow" inverse={index === i}>

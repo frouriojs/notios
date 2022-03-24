@@ -2,9 +2,15 @@
   "name": "notios",
   "version": "0.0.5",
   "description": "",
-  "keywords": [],
+  "keywords": [
+    "notios",
+    "npm",
+    "npm-scripts",
+    "ui",
+    "TUI"
+  ],
   "license": "MIT",
-  "author": "",
+  "author": "Frourio Inc.",
   "main": "index.js",
   "bin": {
     "n-npm-run-all": "./bin/npm-run-all",
@@ -14,6 +20,14 @@
     "npm-run-all": "./bin/npm-run-all",
     "run-p": "./bin/run-p",
     "run-s": "./bin/run-s"
+  },
+  "scripts": {
+    "build": "ts-node -T ./scripts/build.ts --from-dir ./src/entrypoints --to-dir ./build --clean --target es2015",
+    "typecheck": "tsc --noEmit",
+    "dev": "pnpm run build -- --watch",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint --ext .ts,.js,.tsx . && prettier --check \"./**/*.{js,ts,tsx}\"",
+    "lint:fix": "eslint --ext .ts,.js,.tsx . --fix && prettier --check \"./**/*.{js,ts,tsx}\" --write"
   },
   "dependencies": {
     "commander": "^9.0.0",
@@ -36,11 +50,22 @@
     "@types/node-ipc": "^9.2.0",
     "@types/react": "^17.0.40",
     "@types/wcwidth": "^1.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.16.0",
+    "@typescript-eslint/parser": "^5.16.0",
     "arg": "^5.0.1",
     "better-typescript-lib": "^2.0.0",
     "esbuild": "^0.14.25",
     "esbuild-node-externals": "^1.4.1",
+    "eslint": "^8.11.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-import-resolver-node": "^0.3.6",
+    "eslint-import-resolver-typescript": "^2.7.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-react": "^7.29.4",
+    "eslint-plugin-react-hooks": "^4.3.0",
     "ink-testing-library": "^2.1.0",
+    "prettier": "^2.6.0",
+    "prettier-plugin-organize-imports": "^2.3.4",
     "ts-node": "^10.7.0",
     "typescript": "~4.5"
   }
