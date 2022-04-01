@@ -54,7 +54,7 @@
     "@typescript-eslint/parser": "^5.16.0",
     "arg": "^5.0.1",
     "better-typescript-lib": "^2.0.0",
-    "esbuild": "^0.14.25",
+    "esbuild": "^0.14.29",
     "esbuild-node-externals": "^1.4.1",
     "eslint": "^8.11.0",
     "eslint-config-prettier": "^8.5.0",
