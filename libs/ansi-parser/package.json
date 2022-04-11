@@ -1,0 +1,54 @@
+{
+  "name": "ansi-parser",
+  "version": "0.0.0",
+  "description": "",
+  "private": true,
+  "keywords": [
+    "ansi",
+    "parser",
+    "context"
+  ],
+  "homepage": "https://github.com/frouriojs/ansi-context#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/frouriojs/ansi-context"
+  },
+  "license": "MIT",
+  "author": "Frourio Inc",
+  "main": "build/index.js",
+  "scripts": {
+    "build": "tsc -p ./tsconfig.build.json",
+    "build-dev": "tsc -p ./tsconfig.build.json --watch",
+    "check": "run-s check:*",
+    "check-dev": "run-p check-dev:*",
+    "check-dev:root": "pnpm run check:root -- --watch",
+    "check-dev:test": "pnpm run check:test -- --watch",
+    "check:root": "tsc --noEmit",
+    "check:test": "cd test && tsc --noEmit",
+    "coverage-to-html": "vitest run --coverage",
+    "dev": "run-p test-dev build-dev",
+    "lint": "eslint \"**/*.{js,cjs,mjs,ts,tsx,json}\"",
+    "lint-fix": "pnpm run lint -- --fix",
+    "lint-quiet": "pnpm run lint -- --quiet",
+    "test": "vitest run --coverage",
+    "test-dev": "vitest dev"
+  },
+  "devDependencies": {
+    "@changesets/changelog-github": "^0.4.3",
+    "@changesets/cli": "^2.21.1",
+    "@typescript-eslint/eslint-plugin": "^5.16.0",
+    "@typescript-eslint/parser": "^5.16.0",
+    "c8": "^7.11.0",
+    "eslint": "^8.11.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-import-resolver-node": "^0.3.6",
+    "eslint-import-resolver-typescript": "^2.7.0",
+    "eslint-plugin-import": "^2.25.4",
+    "notios": "^0.0.6",
+    "prettier": "^2.5.1",
+    "prettier-plugin-organize-imports": "^2.3.4",
+    "ts-node": "^10.7.0",
+    "typescript": "~4.6",
+    "vitest": "^0.6.0"
+  }
+}
