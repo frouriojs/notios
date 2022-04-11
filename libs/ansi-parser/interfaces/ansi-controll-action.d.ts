@@ -415,4 +415,3 @@ export type AnsiActionControll =
   | AnsiActionControll1d
   | AnsiActionControll1e
   | AnsiActionControll1f;
-
