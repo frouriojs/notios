@@ -1,4 +1,5 @@
-import childProcess from 'child_process';
+import type childProcess from 'child_process';
+import cp from 'cross-spawn';
 import tty from 'tty';
 import { envVarNames } from '../constants/ipc';
 
@@ -194,7 +195,7 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
         (tty.isatty(1) && process.env.TERM !== 'dumb') ||
         'CI' in process.env);
 
-    const p = childProcess.spawn(node.own.npmPath, ['run', node.name], {
+    const p = cp.spawn(node.own.npmPath, ['run', node.name], {
       stdio: ['pipe', 'pipe', 'pipe'],
       cwd: node.own.cwd,
       env: {
@@ -216,6 +217,7 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
         [envVarNames.parentToken]: node.token,
       },
     });
+    node.own.$raw = p;
 
     node.$notifyUpdate('');
 
