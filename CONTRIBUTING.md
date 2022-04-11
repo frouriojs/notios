@@ -46,6 +46,19 @@ Following snippet is also useful.
 
 `echo > ~/notios-debug.log; pnpm exec notios`
 
+## Maintaining notios with notios
+
+If you love self-development, you may do that.
+
+```
+# after running pnpm build
+node ./build/main.js dev
+
+# or
+npx -p notios@${version} notios
+```
+
+
 ## Create PR
 
 ### Changeset
