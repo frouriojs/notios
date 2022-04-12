@@ -25,12 +25,14 @@
     "build": "ts-node -T ./scripts/build.ts --from-dir ./src/entrypoints --to-dir ./build --clean --target es2015",
     "typecheck": "tsc --noEmit",
     "dev": "pnpm run build -- --watch",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "run-p test:*",
+    "test:libs": "pnpm run --filter=./libs test",
     "lint": "eslint --ext .ts,.js,.tsx . && prettier --check \"./**/*.{js,ts,tsx}\"",
     "lint:fix": "eslint --ext .ts,.js,.tsx . --fix && prettier --check \"./**/*.{js,ts,tsx}\" --write"
   },
   "dependencies": {
     "commander": "^9.0.0",
+    "cross-spawn": "^7.0.3",
     "ink": "^3.2.0",
     "ink-big-text": "^1.2.0",
     "ink-divider": "^3.0.0",
@@ -46,9 +48,10 @@
   "devDependencies": {
     "@changesets/changelog-github": "^0.4.3",
     "@changesets/cli": "^2.21.1",
+    "@types/cross-spawn": "^6.0.2",
     "@types/node": "^17.0.21",
     "@types/node-ipc": "^9.2.0",
-    "@types/react": "^17.0.40",
+    "@types/react": "^18.0.2",
     "@types/wcwidth": "^1.0.0",
     "@typescript-eslint/eslint-plugin": "^5.16.0",
     "@typescript-eslint/parser": "^5.16.0",
