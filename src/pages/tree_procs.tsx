@@ -108,7 +108,12 @@ const TreeProcs: FC<TreeProcsProps> = ({}) => {
       setPage('select-script');
     }
 
-    if (key.backspace || (key.ctrl && !key.meta && input === 'h') || (key.ctrl && !key.meta && input === 'o')) {
+    if (
+      key.backspace ||
+      key.delete ||
+      (key.ctrl && !key.meta && input === 'h') ||
+      (key.ctrl && !key.meta && input === 'o')
+    ) {
     }
 
     if (!key.ctrl && !key.meta && input === 'r') {
