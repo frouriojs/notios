@@ -16,7 +16,7 @@ const initiateProcManager = ({ uiOptions }: InitiateProcManagerParams): ProcMana
       name: scriptName,
       type: 'none',
       status: 'running',
-      own: {
+      procOwn: {
         cwd,
         command: scriptName,
         npmPath: detectNpmClient({ cwd }),

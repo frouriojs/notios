@@ -43,7 +43,7 @@ export const setupIpc = ({ procManager }: setupIpcParams): void => {
             name: task.name,
             status: !first && !group.parallel ? 'waiting' : 'running',
             type: 'none',
-            own: {
+            procOwn: {
               cwd: data.cwd,
               command: task.command,
               npmPath: data.npmPath ?? data.npmClient,

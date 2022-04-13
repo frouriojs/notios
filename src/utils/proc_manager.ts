@@ -1,7 +1,20 @@
+import { AnsiParser } from 'ansi-parser/interfaces/ansi-parser';
+import { decodeAnsiBytes, defaultAnsiParser } from 'ansi-parser/src';
 import type childProcess from 'child_process';
 import cp from 'cross-spawn';
 import tty from 'tty';
 import { envVarNames } from '../constants/ipc';
+import { applyActionToSty, defaultStyContext, restoreSty, StyContext } from './sty';
+
+export const dump = (obj: unknown) => {
+  const fs = require('fs');
+  const util = require('util');
+  const path = require('path');
+  const { homedir } = require('os');
+  const debugLogFile = path.resolve(homedir(), 'notios-debug.log');
+
+  fs.appendFileSync(debugLogFile, `${new Date().toLocaleTimeString()}: ${util.inspect(obj)}\n`);
+};
 
 export type ProcStatus = 'waiting' | 'running' | 'finished';
 
@@ -18,18 +31,64 @@ export interface ProcOwnInternal {
   $raw?: childProcess.ChildProcessWithoutNullStreams;
 }
 
+export interface LogOwn {
+  readonly currentSty: StyContext;
+  readonly currentParser: AnsiParser;
+}
+export interface LogOwnInternal {
+  currentSty: StyContext;
+  currentParser: AnsiParser;
+}
+
+export interface LogLine {
+  timestamp?: Date;
+  title: string;
+  id: number;
+  content: LogContent;
+}
+export interface LogLineReadonly {
+  readonly timestamp?: Date;
+  readonly title: string;
+  readonly content: LogContentReadonly;
+}
+export type LogLines = LogLine[];
+export type LogLinesReadonly = readonly LogLineReadonly[];
+export type LogContent = Array<
+  | {
+      readonly type: 'style';
+      readonly bytes: Uint8Array;
+    }
+  | {
+      readonly type: 'print';
+      readonly byte: number;
+    }
+>;
+export type LogContentReadonly = Readonly<LogContent>;
+
+export interface LogAccumulated {
+  readonly lineCount: number;
+  // TODO(perf): better to use deque
+  readonly lines: LogLinesReadonly;
+}
+export interface LogAccumulatedInternal {
+  lineCount: number;
+  lines: LogLines;
+  $lastLineToTitle: Record<string, LogLine>;
+}
+
 export type ProcNodeType = 'none' | 'serial' | 'parallel';
 
 export interface ProcNode {
   readonly name: string;
   readonly type: ProcNodeType;
   readonly parent?: ProcNode;
-  readonly own?: ProcOwn;
+  readonly procOwn?: ProcOwn;
+  readonly logOwn?: LogOwn;
   readonly exitCode?: number | null;
   readonly children: readonly ProcNode[];
   readonly token: string;
   readonly status: ProcStatus;
-  readonly log: string;
+  readonly logAccumulated: LogAccumulated;
   readonly addUpdateListener: AddUpdateListener;
   readonly removeUpdateListener: RemoveUpdateListener;
 }
@@ -38,16 +97,17 @@ export interface ProcNodeInternal {
   name: string;
   type: ProcNodeType;
   parent?: ProcNodeInternal;
-  own?: ProcOwnInternal;
+  procOwn?: ProcOwnInternal;
+  logOwn?: LogOwnInternal;
   children: ProcNodeInternal[];
   token: string;
   status: ProcStatus;
   exitCode?: number | null;
-  log: string;
+  logAccumulated: LogAccumulatedInternal;
   npmPath?: string;
   addUpdateListener: AddUpdateListener;
   removeUpdateListener: RemoveUpdateListener;
-  $notifyUpdate: (newLog: string) => void;
+  $notifyUpdate: () => void;
 }
 export type ProcNodeInternalInitial = Omit<
   ProcNodeInternal,
@@ -123,7 +183,7 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
       addUpdateListener,
       removeUpdateListener,
       token,
-      $notifyUpdate: (newLog: string): void => {
+      $notifyUpdate: (): void => {
         [...$updateListenerSet].forEach((listener) => {
           listener();
         });
@@ -138,21 +198,144 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
           })();
           node.exitCode = node.children.reduce((accum, n) => accum || n.exitCode, null as null | number | undefined);
         }
-        node.log += newLog;
         $checkSerial(node);
+        const knownTitle: Record<string, boolean> = {};
+        node.logAccumulated.lineCount = 0;
+        const beingAdded: LogLines = [];
+        for (const child of node.children) {
+          node.logAccumulated.lineCount += child.logAccumulated.lineCount;
 
-        node.parent?.$notifyUpdate(newLog);
+          let title = node.name;
+          let titleCnt = 0;
+          while (knownTitle[title]) {
+            titleCnt += 1;
+            title = `${node.name}(${titleCnt})`;
+          }
+          knownTitle[title] = true;
+          const childLines = child.logAccumulated.lines;
+          const lastLine = node.logAccumulated.$lastLineToTitle[title];
+          let from = 0;
+          if (lastLine) {
+            from = childLines.length - 1;
+            while (from >= 1 && childLines[from].id !== lastLine.id) from -= 1;
+            // The last line may be wiped out from history.
+            if (childLines[from].id === lastLine.id) from += 1;
+          }
+          if (childLines.length > 0) {
+            node.logAccumulated.$lastLineToTitle[title] = childLines[childLines.length - 1];
+          }
+          beingAdded.push(...childLines.slice(from));
+        }
+        const lines = node.logAccumulated.lines;
+        lines.push(
+          ...beingAdded.filter((e) => e.timestamp).sort((a, b) => a.timestamp!.getTime() - b.timestamp!.getTime()),
+        );
+
+        // Wiping out the history.
+        node.logAccumulated.lines = lines.slice(-3000);
+
+        node.parent?.$notifyUpdate();
       },
     };
     $tokenToNodeMap.set(token, node);
     return node;
   };
 
+  const $appendLogToNode = (newLog: Buffer, node: ProcNodeInternal) => {
+    if (!node.logOwn) throw new Error('[INTERNAL UNREACHABLE ERROR]: appending to log-accumulate-only node');
+    const [newParser, actions] = decodeAnsiBytes(node.logOwn.currentParser, new Uint8Array(newLog));
+    node.logOwn.currentParser = newParser;
+    for (const action of actions) {
+      const lines = node.logAccumulated.lines;
+      if (lines.length === 0) {
+        const title = '';
+        const logLine: LogLine = {
+          timestamp: undefined,
+          title,
+          id: lines.length,
+          content: [],
+        };
+        lines.push(logLine);
+        node.logAccumulated.$lastLineToTitle[title] = logLine;
+      }
+      const lastLine = lines[lines.length - 1];
+      const checkTimestamp = (line: LogLine) => {
+        if (!line.timestamp) {
+          line.timestamp = new Date();
+          node.logAccumulated.lineCount += 1;
+        }
+      };
+      switch (action.actionType) {
+        case 'print':
+          checkTimestamp(lastLine);
+          lastLine.content.push({
+            type: 'print',
+            byte: action.byte,
+          });
+          break;
+        case 'controll':
+          switch (action.char) {
+            case '\t':
+              checkTimestamp(lastLine);
+              lastLine.content.push({
+                type: 'print',
+                byte: 0x20,
+              });
+              break;
+            case '\n': {
+              checkTimestamp(lastLine);
+              const title = '';
+              const logLine: LogLine = {
+                timestamp: undefined,
+                title,
+                id: lines.length,
+                content: [
+                  {
+                    type: 'style',
+                    bytes: restoreSty(node.logOwn.currentSty),
+                  },
+                ],
+              };
+              lines.push(logLine);
+              node.logAccumulated.$lastLineToTitle[title] = logLine;
+              break;
+            }
+            default:
+              // ignore
+              break;
+          }
+          break;
+        default:
+          node.logOwn.currentSty = applyActionToSty(node.logOwn.currentSty, action);
+          lastLine.content.push({
+            type: 'style',
+            bytes: restoreSty(node.logOwn.currentSty),
+          });
+          break;
+      }
+    }
+  };
+
+  const $createEmptyLogOwn = (): LogOwnInternal => {
+    return {
+      currentSty: defaultStyContext(),
+      currentParser: defaultAnsiParser(),
+    };
+  };
+
+  const $createEmptyLogAccumulated = (): LogAccumulatedInternal => {
+    return {
+      lineCount: 0,
+      lines: [],
+    };
+  };
+
   const rootNode = $createNode({
     name: '<root>',
     status: 'waiting',
     type: 'none',
-    log: '',
+    logOwn: $createEmptyLogOwn(),
+    logAccumulated: $createEmptyLogAccumulated(),
     children: [],
   });
 
@@ -165,7 +348,7 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
 
   const $startRunning = (node: ProcNodeInternal) => {
     node.status = 'running';
-    if (!node.own) {
+    if (!node.procOwn) {
       $checkSerial(node);
       return;
     }
@@ -173,14 +356,16 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
       name: '<out>',
       status: 'running',
       type: 'none',
-      log: '',
+      logOwn: $createEmptyLogOwn(),
+      logAccumulated: $createEmptyLogAccumulated(),
       children: [],
     });
     const nodeStderr = $createNode({
       name: '<err>',
       status: 'running',
       type: 'none',
-      log: '',
+      logOwn: $createEmptyLogOwn(),
+      logAccumulated: $createEmptyLogAccumulated(),
       children: [],
     });
     node.children = [nodeStdout, nodeStderr, ...node.children];
@@ -195,9 +380,9 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
         (tty.isatty(1) && process.env.TERM !== 'dumb') ||
         'CI' in process.env);
 
-    const p = cp.spawn(node.own.npmPath, ['run', node.name], {
+    const p = cp.spawn(node.procOwn.npmPath, ['run', node.name], {
       stdio: ['pipe', 'pipe', 'pipe'],
-      cwd: node.own.cwd,
+      cwd: node.procOwn.cwd,
       env: {
         ...process.env,
         ...(isColorSupported
@@ -217,23 +402,25 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
         [envVarNames.parentToken]: node.token,
       },
     });
-    node.own.$raw = p;
+    node.procOwn.$raw = p;
 
-    node.$notifyUpdate('');
+    node.$notifyUpdate();
 
-    p.stdout.on('data', (buf) => {
-      nodeStdout.$notifyUpdate(buf.toString());
+    p.stdout.on('data', (buf: Buffer) => {
+      $appendLogToNode(buf, nodeStdout);
+      nodeStdout.$notifyUpdate();
     });
-    p.stderr.on('data', (buf) => {
-      nodeStderr.$notifyUpdate(buf.toString());
+    p.stderr.on('data', (buf: Buffer) => {
+      $appendLogToNode(buf, nodeStderr);
+      nodeStderr.$notifyUpdate();
     });
     p.on('exit', (exitCode) => {
       nodeStdout.status = 'finished';
       nodeStderr.status = 'finished';
       nodeStdout.exitCode = exitCode;
       nodeStderr.exitCode = exitCode;
-      nodeStdout.$notifyUpdate('');
-      nodeStderr.$notifyUpdate('');
+      nodeStdout.$notifyUpdate();
+      nodeStderr.$notifyUpdate();
     });
   };
 
@@ -244,14 +431,15 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
 
     const node = $createNode({
       ...params,
-      log: '',
+      logOwn: $createEmptyLogOwn(),
+      logAccumulated: $createEmptyLogAccumulated(),
       children: [],
     });
 
     parentNode.children.push(node);
     node.parent = parentNode;
 
-    if (params.own && params.status === 'running') {
+    if (params.procOwn && params.status === 'running') {
       $startRunning(node);
     }
     return node;
@@ -266,10 +454,10 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
   const restartNode: RestartNode = (node) => {
     if (!node) return;
     const inode: ProcNodeInternal = node as any;
-    if (!inode.own) return;
+    if (!inode.procOwn) return;
     if (inode.status !== 'finished') return;
     inode.children = [];
-    inode.log += '\n\nRestarting...\n';
+    // TODO: show something description about restarting
     $startRunning(inode);
   };
 

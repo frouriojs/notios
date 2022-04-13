@@ -42,7 +42,7 @@ const SelectScript: FC<SelectScriptProps> = ({}) => {
       procManager.createNode({
         name: scripts[index].name,
         type: 'none',
-        own: {
+        procOwn: {
           command: scripts[index].command,
           cwd: path.dirname(manifestFullPath),
           npmPath: npmClient,

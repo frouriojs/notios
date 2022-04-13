@@ -26,7 +26,7 @@ const TreeProcs: FC<TreeProcsProps> = ({}) => {
   const dfs = (n: ProcNode, ind: string): Line[] => {
     const main = ` ${n.name}`;
     const linesStat = ` (${n.log.split('\n').length} LINES)`;
-    const command = n.own?.command ? ` (${n.own.command})` : '';
+    const command = n.procOwn?.command ? ` (${n.procOwn.command})` : '';
     if (openMap[n.token] && n.children.length > 0) {
       return [
         {
@@ -68,7 +68,7 @@ const TreeProcs: FC<TreeProcsProps> = ({}) => {
   const lines = rootNode.children.flatMap((child) => dfs(child, '  '));
 
   const canRestart = useMemo(() => {
-    if (!lines[index].node.own) return false;
+    if (!lines[index].node.procOwn) return false;
     if (lines[index].node.status !== 'finished') return false;
     return true;
   }, [lines, index]);

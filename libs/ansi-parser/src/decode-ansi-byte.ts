@@ -4,30 +4,6 @@ import { ansiActionControllList } from './controll-actions';
 import decodeAnsiColor8bit from './decode-ansi-color-8bit';
 import { defaultAnsiParser } from './default-ansi-parser';
 
-// export const defaultAnsiSty = (): AnsiStyleTerminal => {
-//   return {
-//     cursorVisibility: null,
-//     auxPort: null,
-//     fgColor: null,
-//     bgColor: null,
-//     intensity: null,
-//     italic: null,
-//     underlined: null,
-//     blink: null,
-//     invert: null,
-//     hide: null,
-//     strike: null,
-//     font: null,
-//     doublyUnderlined: null,
-//     frame: null,
-//     encircled: null,
-//     overlined: null,
-//     superscript: null,
-//     subscript: null,
-//     alternatScreen: null,
-//   };
-// };
-
 const lessThan256 = (n: string) => {
   if (n.length < 3) return true;
   if (n.length > 3) return false;

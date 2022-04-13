@@ -20,6 +20,7 @@ export type AnsiAction =
   | AnsiActionEmojiVariation
   | AnsiActionOverlined
   | AnsiActionScript
+  // | AnsiActionAlternateScreen
   | AnsiActionPrint
   | AnsiActionCuu
   | AnsiActionCud
@@ -117,9 +118,9 @@ export type AnsiActionScript = {
   readonly actionType: 'script';
   readonly script: AnsiScript;
 };
-export type AnsiActionalternatScreen = {
-  readonly actionType: 'alternat_screen';
-  readonly alternatScreen: boolean;
+export type AnsiActionAlternateScreen = {
+  readonly actionType: 'alternate_screen';
+  readonly alternateScreen: boolean;
 };
 
 export type AnsiActionPrint = {

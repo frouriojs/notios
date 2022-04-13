@@ -4,6 +4,7 @@ import React, { useCallback } from 'react';
 import stringLength from 'string-length';
 import wcslice from 'wcslice';
 import wcwidth from 'wcwidth';
+import { LogLinesReadonly } from '../utils/proc_manager';
 import BoxWithSize from './box_with_size';
 
 interface Line {
@@ -14,7 +15,7 @@ interface Line {
 }
 
 export interface ScrollableProps {
-  lines: string[];
+  lines: LogLinesReadonly;
   top?: number;
   left?: number;
 }
@@ -26,6 +27,7 @@ const Scrollable: FC<ScrollableProps> = ({ lines, top = 0, left = 0 }) => {
         const line = lines[i];
         const wcstart = left;
         const wcend = left + width - 2.5;
+        // TODO
         const text = wcslice(line, wcstart, wcend);
         shownLines.push({
           abs: top + i,
