@@ -30,16 +30,23 @@ export interface LogOwnInternal {
   currentParser: AnsiParser;
 }
 
-export interface LogLine {
+export interface LogLineMain {
   timestamp?: Date;
-  title: string;
   id: number;
   content: LogContent;
 }
-export interface LogLineReadonly {
+export interface LogLineMainReadonly {
   readonly timestamp?: Date;
-  readonly title: string;
   readonly content: LogContentReadonly;
+}
+
+export interface LogLine {
+  title: string;
+  main: LogLineMain;
+}
+export interface LogLineReadonly {
+  readonly title: string;
+  readonly main: LogLineMain;
 }
 export type LogLines = LogLine[];
 export type LogLinesReadonly = readonly LogLineReadonly[];
@@ -108,7 +115,7 @@ export type FindNodeByTokenInternal = (token?: string | undefined) => ProcNodeIn
 
 export type CreateNodeParams = Omit<
   ProcNode,
-  'parent' | 'children' | 'token' | 'addUpdateListener' | 'removeUpdateListener' | 'log'
+  'parent' | 'children' | 'token' | 'addUpdateListener' | 'removeUpdateListener' | 'logAccumulated' | 'logOwn'
 > & { parentToken?: string | undefined };
 
 export type CreateNode = (createNodeParams: CreateNodeParams) => ProcNode | null;
@@ -125,6 +132,18 @@ export interface ProcManager {
   readonly removeUpdateListener: RemoveUpdateListener;
   readonly findNodeByToken: FindNodeByToken;
 }
+
+const $createEmptyLogAccumulated = (): LogAccumulatedInternal => {
+  return {
+    lineCount: 0,
+    lines: [],
+    $lastLineToTitle: {},
+  };
+};
+
+export const createEmptyLogAccumulated = (): LogAccumulated => {
+  return $createEmptyLogAccumulated();
+};
 
 export interface CreateProcManagerParams {
   forceNoColor: boolean;
@@ -189,40 +208,48 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
           node.exitCode = node.children.reduce((accum, n) => accum || n.exitCode, null as null | number | undefined);
         }
         $checkSerial(node);
-        const knownTitle: Record<string, boolean> = {};
-        node.logAccumulated.lineCount = 0;
-        const beingAdded: LogLines = [];
-        for (const child of node.children) {
-          node.logAccumulated.lineCount += child.logAccumulated.lineCount;
 
-          let title = node.name;
-          let titleCnt = 0;
-          while (knownTitle[title]) {
-            titleCnt += 1;
-            title = `${node.name}(${titleCnt})`;
+        if (node.children.length > 0) {
+          const knownTitle: Record<string, boolean> = {};
+          node.logAccumulated.lineCount = 0;
+          const beingAdded: LogLines = [];
+          for (const child of node.children) {
+            node.logAccumulated.lineCount += child.logAccumulated.lineCount;
+
+            let title = child.name;
+            let titleCnt = 0;
+            while (knownTitle[title]) {
+              titleCnt += 1;
+              title = `${node.name}(${titleCnt})`;
+            }
+            knownTitle[title] = true;
+            const childLines = child.logAccumulated.lines;
+            const realLen =
+              childLines.length === 0
+                ? 0
+                : childLines[childLines.length - 1].main.timestamp
+                ? childLines.length
+                : childLines.length - 1;
+            const lastLine = node.logAccumulated.$lastLineToTitle[title];
+            let from = 0;
+            if (lastLine) {
+              from = realLen - 1;
+              while (from >= 1 && childLines[from].main.id !== lastLine.main.id) from -= 1;
+              // The last line may be wiped out from history.
+              if (childLines[from].main.id === lastLine.main.id) from += 1;
+            }
+            if (realLen > 0) {
+              node.logAccumulated.$lastLineToTitle[title] = childLines[realLen - 1];
+            }
+            beingAdded.push(...childLines.slice(from, realLen).map((e) => ({ title, main: e.main })));
           }
-          knownTitle[title] = true;
-          const childLines = child.logAccumulated.lines;
-          const lastLine = node.logAccumulated.$lastLineToTitle[title];
-          let from = 0;
-          if (lastLine) {
-            from = childLines.length - 1;
-            while (from >= 1 && childLines[from].id !== lastLine.id) from -= 1;
-            // The last line may be wiped out from history.
-            if (childLines[from].id === lastLine.id) from += 1;
-          }
-          if (childLines.length > 0) {
-            node.logAccumulated.$lastLineToTitle[title] = childLines[childLines.length - 1];
-          }
-          beingAdded.push(...childLines.slice(from));
+          const lines = node.logAccumulated.lines;
+          lines.push(...beingAdded.sort((a, b) => a.main.timestamp!.getTime() - b.main.timestamp!.getTime()));
         }
-        const lines = node.logAccumulated.lines;
-        lines.push(
-          ...beingAdded.filter((e) => e.timestamp).sort((a, b) => a.timestamp!.getTime() - b.timestamp!.getTime()),
-        );
 
         // Wiping out the history.
-        node.logAccumulated.lines = lines.slice(-3000);
+        // TODO: buggy
+        // node.logAccumulated.lines = node.logAccumulated.lines.slice(-3000);
 
         node.parent?.$notifyUpdate();
       },
@@ -240,25 +267,27 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
       if (lines.length === 0) {
         const title = '';
         const logLine: LogLine = {
-          timestamp: undefined,
+          main: {
+            timestamp: undefined,
+            id: lines.length,
+            content: [],
+          },
           title,
-          id: lines.length,
-          content: [],
         };
         lines.push(logLine);
         node.logAccumulated.$lastLineToTitle[title] = logLine;
       }
       const lastLine = lines[lines.length - 1];
       const checkTimestamp = (line: LogLine) => {
-        if (!line.timestamp) {
-          line.timestamp = new Date();
+        if (!line.main.timestamp) {
+          line.main.timestamp = new Date();
           node.logAccumulated.lineCount += 1;
         }
       };
       switch (action.actionType) {
         case 'print':
           checkTimestamp(lastLine);
-          lastLine.content.push({
+          lastLine.main.content.push({
             type: 'print',
             byte: action.byte,
           });
@@ -267,7 +296,7 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
           switch (action.char) {
             case '\t':
               checkTimestamp(lastLine);
-              lastLine.content.push({
+              lastLine.main.content.push({
                 type: 'print',
                 byte: 0x20,
               });
@@ -276,15 +305,17 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
               checkTimestamp(lastLine);
               const title = '';
               const logLine: LogLine = {
-                timestamp: undefined,
+                main: {
+                  timestamp: undefined,
+                  id: lines.length,
+                  content: [
+                    {
+                      type: 'style',
+                      bytes: restoreSty(node.logOwn.currentSty),
+                    },
+                  ],
+                },
                 title,
-                id: lines.length,
-                content: [
-                  {
-                    type: 'style',
-                    bytes: restoreSty(node.logOwn.currentSty),
-                  },
-                ],
               };
               lines.push(logLine);
               node.logAccumulated.$lastLineToTitle[title] = logLine;
@@ -297,7 +328,7 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
           break;
         default:
           node.logOwn.currentSty = applyActionToSty(node.logOwn.currentSty, action);
-          lastLine.content.push({
+          lastLine.main.content.push({
             type: 'style',
             bytes: restoreSty(node.logOwn.currentSty),
           });
@@ -310,13 +341,6 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
     return {
       currentSty: defaultStyContext(),
       currentParser: defaultAnsiParser(),
-    };
-  };
-
-  const $createEmptyLogAccumulated = (): LogAccumulatedInternal => {
-    return {
-      lineCount: 0,
-      lines: [],
     };
   };
 

@@ -25,7 +25,7 @@ const TreeProcs: FC<TreeProcsProps> = ({}) => {
   const { openMap, setIndex, index, setOpenMap } = useTreeProcContext();
   const dfs = (n: ProcNode, ind: string): Line[] => {
     const main = ` ${n.name}`;
-    const linesStat = ` (${n.log.split('\n').length} LINES)`;
+    const linesStat = ` (${n.logAccumulated.lineCount} LINES)`;
     const command = n.procOwn?.command ? ` (${n.procOwn.command})` : '';
     if (openMap[n.token] && n.children.length > 0) {
       return [
@@ -174,11 +174,11 @@ const TreeProcs: FC<TreeProcsProps> = ({}) => {
           <Text>[left] close</Text>
         </Box>
         <Box marginRight={2}>
-          <Text>[N] new</Text>
+          <Text>[n] new</Text>
         </Box>
         {canRestart && (
           <Box marginRight={2}>
-            <Text>[R] restart</Text>
+            <Text>[r] restart</Text>
           </Box>
         )}
       </Box>

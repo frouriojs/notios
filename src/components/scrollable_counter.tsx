@@ -1,10 +1,13 @@
 import type { FC } from 'react';
 import React from 'react';
+import { LogLinesReadonly } from '../utils/proc_manager';
 import BoxWithSize from './box_with_size';
 import Scrollable from './scrollable';
 
 export interface ScrollableCounterProps {
-  lines: string[];
+  lines: LogLinesReadonly;
+  showTimestamp?: boolean;
+  showTitle?: boolean;
   bottom?: number;
   left?: number;
 }
