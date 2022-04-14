@@ -1,4 +1,3 @@
-import { encodeAnsiAction } from 'ansi-parser';
 import type {
   AnsiAction,
   AnsiActionBgColor,
@@ -16,6 +15,7 @@ import type {
   AnsiActionStrike,
   AnsiActionUnderline,
 } from 'ansi-parser/interfaces/ansi-action';
+import { encodeAnsiAction } from 'ansi-parser/src';
 
 export type StyContext = Partial<
   Omit<AnsiActionFgColor, 'actionType'> &
