@@ -6,16 +6,6 @@ import tty from 'tty';
 import { envVarNames } from '../constants/ipc';
 import { applyActionToSty, defaultStyContext, restoreSty, StyContext } from './sty';
 
-export const dump = (obj: unknown) => {
-  const fs = require('fs');
-  const util = require('util');
-  const path = require('path');
-  const { homedir } = require('os');
-  const debugLogFile = path.resolve(homedir(), 'notios-debug.log');
-
-  fs.appendFileSync(debugLogFile, `${new Date().toLocaleTimeString()}: ${util.inspect(obj)}\n`);
-};
-
 export type ProcStatus = 'waiting' | 'running' | 'finished';
 
 export interface ProcOwn {
