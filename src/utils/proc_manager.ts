@@ -4,9 +4,10 @@ import type childProcess from 'child_process';
 import cp from 'cross-spawn';
 import tty from 'tty';
 import { envVarNames } from '../constants/ipc';
+import crossKill from './cross_kill';
 import { applyActionToSty, defaultStyContext, restoreSty, StyContext } from './sty';
 
-export type ProcStatus = 'waiting' | 'running' | 'finished';
+export type ProcStatus = 'waiting' | 'running' | 'killed' | 'finished';
 
 export interface ProcOwn {
   readonly command: string;
@@ -120,6 +121,7 @@ export type CreateNodeParams = Omit<
 
 export type CreateNode = (createNodeParams: CreateNodeParams) => ProcNode | null;
 export type RestartNode = (node?: ProcNode | null | undefined) => void;
+export type KillNode = (node?: ProcNode | null | undefined) => void;
 export type UpdateListener = () => void;
 export type AddUpdateListener = (updateListener: UpdateListener) => void;
 export type RemoveUpdateListener = (updateListener: UpdateListener) => void;
@@ -127,6 +129,7 @@ export type RemoveUpdateListener = (updateListener: UpdateListener) => void;
 export interface ProcManager {
   readonly createNode: CreateNode;
   readonly restartNode: RestartNode;
+  readonly killNode: KillNode;
   readonly rootNode: ProcNode;
   readonly addUpdateListener: AddUpdateListener;
   readonly removeUpdateListener: RemoveUpdateListener;
@@ -149,6 +152,13 @@ export interface CreateProcManagerParams {
   forceNoColor: boolean;
 }
 export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): ProcManager => {
+  const isColorSupported =
+    !('NO_COLOR' in process.env || forceNoColor) &&
+    ('FORCE_COLOR' in process.env ||
+      process.platform === 'win32' ||
+      (tty.isatty(1) && process.env.TERM !== 'dumb') ||
+      'CI' in process.env);
+
   const $updateListenerSet = new Set<UpdateListener>();
   // Call when tree structure changed.
   const $notifyUpdate = (): void => {
@@ -199,8 +209,10 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
         if (node.children.length > 0) {
           node.status = (() => {
             const statuses = node.children.map((child) => child.status);
+            const allKilled = Math.max(...statuses.map((s) => (s === 'killed' ? 0 : 1))) === 0;
             const allFinished = Math.max(...statuses.map((s) => (s === 'finished' ? 0 : 1))) === 0;
             const allWaiting = Math.max(...statuses.map((s) => (s === 'waiting' ? 0 : 1))) === 0;
+            if (node.procOwn && allKilled) return 'killed';
             if (allFinished) return 'finished';
             if (allWaiting) return 'waiting';
             return 'running';
@@ -220,7 +232,7 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
             let titleCnt = 0;
             while (knownTitle[title]) {
               titleCnt += 1;
-              title = `${node.name}(${titleCnt})`;
+              title = `${child.name}(${titleCnt})`;
             }
             knownTitle[title] = true;
             const childLines = child.logAccumulated.lines;
@@ -230,18 +242,18 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
                 : childLines[childLines.length - 1].main.timestamp
                 ? childLines.length
                 : childLines.length - 1;
-            const lastLine = node.logAccumulated.$lastLineToTitle[title];
-            let from = 0;
-            if (lastLine) {
-              from = realLen - 1;
-              while (from >= 1 && childLines[from].main.id !== lastLine.main.id) from -= 1;
-              // The last line may be wiped out from history.
-              if (childLines[from].main.id === lastLine.main.id) from += 1;
-            }
             if (realLen > 0) {
+              const lastLine = node.logAccumulated.$lastLineToTitle[title] as LogLine | undefined;
+              let from = 0;
+              if (lastLine) {
+                from = realLen - 1;
+                while (from >= 1 && childLines[from].main.id !== lastLine.main.id) from -= 1;
+                // The last line may be wiped out from history.
+                if (childLines[from].main.id === lastLine.main.id) from += 1;
+              }
               node.logAccumulated.$lastLineToTitle[title] = childLines[realLen - 1];
+              beingAdded.push(...childLines.slice(from, realLen).map((e) => ({ title, main: e.main })));
             }
-            beingAdded.push(...childLines.slice(from, realLen).map((e) => ({ title, main: e.main })));
           }
           const lines = node.logAccumulated.lines;
           lines.push(...beingAdded.sort((a, b) => a.main.timestamp!.getTime() - b.main.timestamp!.getTime()));
@@ -387,13 +399,6 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
     nodeStderr.parent = node;
     $notifyUpdate();
 
-    const isColorSupported =
-      !('NO_COLOR' in process.env || forceNoColor) &&
-      ('FORCE_COLOR' in process.env ||
-        process.platform === 'win32' ||
-        (tty.isatty(1) && process.env.TERM !== 'dumb') ||
-        'CI' in process.env);
-
     const p = cp.spawn(node.procOwn.npmPath, ['run', node.name], {
       stdio: ['pipe', 'pipe', 'pipe'],
       cwd: node.procOwn.cwd,
@@ -429,8 +434,12 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
       nodeStderr.$notifyUpdate();
     });
     p.on('exit', (exitCode) => {
-      nodeStdout.status = 'finished';
-      nodeStderr.status = 'finished';
+      if (nodeStdout.status === 'running') {
+        nodeStdout.status = 'finished';
+      }
+      if (nodeStderr.status === 'running') {
+        nodeStderr.status = 'finished';
+      }
       nodeStdout.exitCode = exitCode;
       nodeStderr.exitCode = exitCode;
       nodeStdout.$notifyUpdate();
@@ -465,19 +474,37 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
     $updateListenerSet.delete(listener);
   };
 
+  const RESET = isColorSupported ? '\x1b[0m' : '';
+  const YELLOW = isColorSupported ? '\x1b[33m' : '';
+
   const restartNode: RestartNode = (node) => {
     if (!node) return;
     const inode: ProcNodeInternal = node as any;
     if (!inode.procOwn) return;
-    if (inode.status !== 'finished') return;
-    inode.children = [];
-    // TODO: show something description about restarting
+    if (inode.status !== 'finished' && inode.status !== 'killed') return;
     $startRunning(inode);
+    $appendLogToNode(Buffer.from(`${RESET}${YELLOW}[NOTIOS] MANUALLY RESTARTED${RESET}\n`), inode.children[0]);
+  };
+
+  const killNode: KillNode = (node) => {
+    if (!node) return;
+    const inode: ProcNodeInternal = node as any;
+    if (!inode.procOwn) return;
+    if (!inode.procOwn.$raw) return;
+    if (inode.status !== 'running') return;
+    crossKill(inode.procOwn.$raw.pid);
+    delete inode.procOwn.$raw;
+    inode.status = 'killed';
+    inode.children[0].status = 'killed';
+    inode.children[1].status = 'killed';
+    $appendLogToNode(Buffer.from(`\n${RESET}${YELLOW}[NOTIOS] MANUALLY KILLED${RESET}\n`), inode.children[0]);
+    inode.$notifyUpdate();
   };
 
   return {
     createNode,
     restartNode,
+    killNode,
     rootNode,
     addUpdateListener,
     removeUpdateListener,

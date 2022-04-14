@@ -22,7 +22,7 @@ const TreeProcs: FC<TreeProcsProps> = ({}) => {
   const { setPage } = usePageContext();
   const { setInspectingToken } = useInspectContext();
   const procManager = useProcManagerContext();
-  const { openMap, setIndex, index, setOpenMap } = useTreeProcContext();
+  const { openMap, selectedNodeToken, setSelectedNodeToken, setOpenMap } = useTreeProcContext();
   const dfs = (n: ProcNode, ind: string): Line[] => {
     const main = ` ${n.name}`;
     const linesStat = ` (${n.logAccumulated.lineCount} LINES)`;
@@ -66,12 +66,25 @@ const TreeProcs: FC<TreeProcsProps> = ({}) => {
   }, [procManager]);
 
   const lines = rootNode.children.flatMap((child) => dfs(child, '  '));
+  const selectedIndex = useMemo(() => {
+    if (selectedNodeToken === null) return 0;
+    const i = lines.findIndex((line) => line.node.token === selectedNodeToken);
+    if (i === -1) return 0;
+    return i;
+  }, [lines, selectedNodeToken]);
+  const selectedNode = useMemo(() => lines[selectedIndex].node, [lines, selectedIndex]);
 
   const canRestart = useMemo(() => {
-    if (!lines[index].node.procOwn) return false;
-    if (lines[index].node.status !== 'finished') return false;
+    if (!selectedNode.procOwn) return false;
+    if (selectedNode.status !== 'finished' && selectedNode.status !== 'killed') return false;
     return true;
-  }, [lines, index]);
+  }, [lines, selectedIndex]);
+
+  const canKill = useMemo(() => {
+    if (!selectedNode.procOwn) return false;
+    if (selectedNode.status !== 'running') return false;
+    return true;
+  }, [lines, selectedIndex]);
 
   useInput((input, key) => {
     if (
@@ -80,7 +93,10 @@ const TreeProcs: FC<TreeProcsProps> = ({}) => {
       (key.ctrl && !key.meta && input === 'n') ||
       (!key.ctrl && !key.meta && input === 'j')
     ) {
-      setIndex((prev) => (prev + 1) % lines.length);
+      if (lines.length > 0) {
+        const newIndex = (selectedIndex + 1) % lines.length;
+        setSelectedNodeToken(lines[newIndex].node.token);
+      }
     }
 
     if (
@@ -89,18 +105,21 @@ const TreeProcs: FC<TreeProcsProps> = ({}) => {
       (key.ctrl && !key.meta && input === 'p') ||
       (!key.ctrl && !key.meta && input === 'k')
     ) {
-      setIndex((prev) => (prev + lines.length - 1) % lines.length);
+      if (lines.length > 0) {
+        const newIndex = (selectedIndex + lines.length - 1) % lines.length;
+        setSelectedNodeToken(lines[newIndex].node.token);
+      }
     }
 
     if (key.rightArrow || (!key.ctrl && !key.meta && input === 'l')) {
-      if (lines[index].node.children.length > 0) {
-        setOpenMap((m) => ({ ...m, [lines[index].node.token]: true }));
+      if (selectedNode.children.length > 0) {
+        setOpenMap((m) => ({ ...m, [selectedNode.token]: true }));
       }
     }
 
     if (key.leftArrow || (!key.ctrl && !key.meta && input === 'h')) {
-      if (lines[index].node.children.length > 0) {
-        setOpenMap((m) => ({ ...m, [lines[index].node.token]: false }));
+      if (selectedNode.children.length > 0) {
+        setOpenMap((m) => ({ ...m, [selectedNode.token]: false }));
       }
     }
 
@@ -118,12 +137,18 @@ const TreeProcs: FC<TreeProcsProps> = ({}) => {
 
     if (!key.ctrl && !key.meta && input === 'r') {
       if (canRestart) {
-        procManager.restartNode(lines[index].node);
+        procManager.restartNode(selectedNode);
+      }
+    }
+
+    if (!key.ctrl && !key.meta && input === 'x') {
+      if (canKill) {
+        procManager.killNode(selectedNode);
       }
     }
 
     if (key.return || (key.ctrl && !key.meta && input === 'm')) {
-      const token = lines[index].node.token;
+      const token = selectedNode.token;
       setInspectingToken(token);
       setPage('inspect-proc');
     }
@@ -136,7 +161,7 @@ const TreeProcs: FC<TreeProcsProps> = ({}) => {
           <Box key={line.node.token}>
             <Text>{line.indent}</Text>
             <Box minWidth={1}>
-              <Text color="yellow" inverse={index === i}>
+              <Text color="yellow" inverse={selectedIndex === i}>
                 {line.symbol}
               </Text>
             </Box>
@@ -146,6 +171,7 @@ const TreeProcs: FC<TreeProcsProps> = ({}) => {
                 if (line.node.status !== 'finished' && code !== 0) return 'magenta';
                 if (line.node.status === 'waiting') return 'gray';
                 if (line.node.status === 'running') return undefined;
+                if (line.node.status === 'killed') return 'yellow';
                 if (line.node.status === 'finished') {
                   if (code === 0) return 'green';
                   return 'red';
@@ -176,6 +202,11 @@ const TreeProcs: FC<TreeProcsProps> = ({}) => {
         <Box marginRight={2}>
           <Text>[n] new</Text>
         </Box>
+        {canKill && (
+          <Box marginRight={2}>
+            <Text>[x] kill</Text>
+          </Box>
+        )}
         {canRestart && (
           <Box marginRight={2}>
             <Text>[r] restart</Text>

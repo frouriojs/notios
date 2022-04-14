@@ -75,6 +75,8 @@ const main = async ({ fromDir, toDir, watch, target, clean }: Params) => {
         allowList: [
           // small ESM packages
           'string-length',
+          // in workspace
+          'ansi-parser',
         ],
       }),
     ],

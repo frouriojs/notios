@@ -1,16 +1,16 @@
 import React, { useContext, useState } from 'react';
 
 export type TreeProcContextValue = {
-  index: number;
-  setIndex: React.Dispatch<React.SetStateAction<number>>;
+  selectedNodeToken: null | string;
+  setSelectedNodeToken: React.Dispatch<React.SetStateAction<null | string>>;
   openMap: Record<string, boolean>;
   setOpenMap: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
 };
 
 export const useTreeProcContextDefaultValue = (): TreeProcContextValue => {
-  const [index, setIndex] = useState(0);
+  const [selectedNodeToken, setSelectedNodeToken] = useState<null | string>(null);
   const [openMap, setOpenMap] = useState<Record<string, boolean>>({});
-  return { index, setIndex, openMap, setOpenMap };
+  return { selectedNodeToken, setSelectedNodeToken, openMap, setOpenMap };
 };
 
 const createTreeProcContext = (): React.Context<TreeProcContextValue> => {
