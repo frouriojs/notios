@@ -44,7 +44,6 @@
     "eslint-import-resolver-node": "^0.3.6",
     "eslint-import-resolver-typescript": "^2.7.0",
     "eslint-plugin-import": "^2.25.4",
-    "notios": "^0.0.6",
     "prettier": "^2.5.1",
     "prettier-plugin-organize-imports": "^2.3.4",
     "ts-node": "^10.7.0",
