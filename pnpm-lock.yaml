@@ -10,6 +10,7 @@ importers:
       '@types/node': ^17.0.21
       '@types/node-ipc': ^9.2.0
       '@types/react': ^17.0.40
+      '@types/source-map-support': ^0.5.4
       '@types/wcwidth': ^1.0.0
       '@typescript-eslint/eslint-plugin': ^5.16.0
       '@typescript-eslint/parser': ^5.16.0
@@ -38,6 +39,7 @@ importers:
       prettier: ^2.6.0
       prettier-plugin-organize-imports: ^2.3.4
       react: ^17.0.2
+      source-map-support: ^0.5.21
       string-length: ^5.0.1
       ts-node: ^10.7.0
       typescript: ~4.6
@@ -54,6 +56,7 @@ importers:
       node-ipc: 10.1.0
       npm-run-all: 4.1.5
       react: 17.0.2
+      source-map-support: 0.5.21
       string-length: 5.0.1
       wcslice: 0.0.2
       wcwidth: 1.0.1
@@ -64,6 +67,7 @@ importers:
       '@types/node': 17.0.21
       '@types/node-ipc': 9.2.0
       '@types/react': 17.0.40
+      '@types/source-map-support': 0.5.4
       '@types/wcwidth': 1.0.0
       '@typescript-eslint/eslint-plugin': 5.16.0_3fed250b11519414a4c7d52468dd6bf5
       '@typescript-eslint/parser': 5.16.0_eslint@8.11.0+typescript@4.6.2
@@ -657,6 +661,12 @@ packages:
     resolution: {integrity: sha512-KQf+QAMWKMrtBMsB8/24w53tEsxllMj6TuA80TT/5igJalLI/zm0L3oXRbIAl4Ohfc85gyHX/jhMwsVkmhLU4A==}
     dev: true
 
+  /@types/source-map-support/0.5.4:
+    resolution: {integrity: sha512-9zGujX1sOPg32XLyfgEB/0G9ZnrjthL/Iv1ZfuAjj8LEilHZEpQSQs1scpRXPhHzGYgWiLz9ldF1cI8JhL+yMw==}
+    dependencies:
+      source-map: 0.6.1
+    dev: true
+
   /@types/wcwidth/1.0.0:
     resolution: {integrity: sha512-X/WFfwGCIisEnd9EOSsX/jt7BHPDkcvQVYwVzc1nsE2K5bC56mWKnmNs0wyjcGcQsP7Wxq2zWSmhDDbF5Z7dDg==}
     dev: true
@@ -982,6 +992,10 @@ packages:
     dependencies:
       wcwidth: 1.0.1
     dev: true
+
+  /buffer-from/1.1.2:
+    resolution: {integrity: sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==}
+    dev: false
 
   /c8/7.11.0:
     resolution: {integrity: sha512-XqPyj1uvlHMr+Y1IeRndC2X5P7iJzJlEJwBpCdBbq2JocXOgJfr+JVfJkyNMGROke5LfKrhSFXGFXnwnRJAUJw==}
@@ -3793,6 +3807,17 @@ packages:
     resolution: {integrity: sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==}
     engines: {node: '>=0.10.0'}
     dev: true
+
+  /source-map-support/0.5.21:
+    resolution: {integrity: sha512-uBHU3L3czsIyYXKX88fdrGovxdSCoTGDRZ6SYXtSRxLZUzHg5P/66Ht6uoUlHu9EZod+inXhKo3qQgwXUT/y1w==}
+    dependencies:
+      buffer-from: 1.1.2
+      source-map: 0.6.1
+    dev: false
+
+  /source-map/0.6.1:
+    resolution: {integrity: sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==}
+    engines: {node: '>=0.10.0'}
 
   /source-map/0.7.3:
     resolution: {integrity: sha512-CkCj6giN3S+n9qrYiBTX5gystlENnRW5jZeNLHpe6aue+SrHcG5VYwujhW9s4dY31mEGsxBDrHR6oI69fTXsaQ==}
