@@ -1,5 +1,17 @@
 # notios
 
+## 0.0.7
+
+### Patch Changes
+
+- [#42](https://github.com/frouriojs/notios/pull/42) [`4a6d38c`](https://github.com/frouriojs/notios/commit/4a6d38c898560de825efe7a266777139f62a9c4e) Thanks [@LumaKernel](https://github.com/LumaKernel)! - feat: show label and timestamp
+
+* [#42](https://github.com/frouriojs/notios/pull/42) [`b80c257`](https://github.com/frouriojs/notios/commit/b80c257ccc2cbcda30e1ce29f93fc88cb2a694f5) Thanks [@LumaKernel](https://github.com/LumaKernel)! - feat: manual kill
+
+- [#38](https://github.com/frouriojs/notios/pull/38) [`57ca95c`](https://github.com/frouriojs/notios/commit/57ca95c1b858281a4d13a6f8042de0f36df3bc16) Thanks [@LumaKernel](https://github.com/LumaKernel)! - Fix win and more
+
+* [#42](https://github.com/frouriojs/notios/pull/42) [`7009f3b`](https://github.com/frouriojs/notios/commit/7009f3b037022e3a13c9f2c0e2d0152026717f46) Thanks [@LumaKernel](https://github.com/LumaKernel)! - feat: ansi-sensitive horizontal scroll
+
 ## 0.0.6
 
 ### Patch Changes
