@@ -6,16 +6,6 @@ export type BoxWithSizeProps = Omit<Parameters<typeof Box>[0], 'ref' | 'children
   children: (size: { height: number; width: number }) => React.ReactNode;
 };
 
-export const dump = (obj: unknown) => {
-  const fs = require('fs');
-  const util = require('util');
-  const path = require('path');
-  const { homedir } = require('os');
-  const debugLogFile = path.resolve(homedir(), 'notios-debug.log');
-
-  fs.appendFileSync(debugLogFile, `${new Date().toLocaleTimeString()}: ${util.inspect(obj)}\n`);
-};
-
 const BoxWithSize = ({ children, ...rest }: BoxWithSizeProps) => {
   const ref = useRef<any>(null);
   const [realHeight, setRealHeight] = useState(1);

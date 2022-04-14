@@ -23,7 +23,12 @@ const SelectScript: FC<SelectScriptProps> = ({}) => {
       setIndex((prev) => (prev + scripts.length - 1) % scripts.length);
     }
 
-    if (key.backspace || (key.ctrl && !key.meta && input === 'h') || (key.ctrl && !key.meta && input === 'o')) {
+    if (
+      key.backspace ||
+      key.delete ||
+      (key.ctrl && !key.meta && input === 'h') ||
+      (key.ctrl && !key.meta && input === 'o')
+    ) {
       setPage('tree-procs');
     }
 
@@ -37,7 +42,7 @@ const SelectScript: FC<SelectScriptProps> = ({}) => {
       procManager.createNode({
         name: scripts[index].name,
         type: 'none',
-        own: {
+        procOwn: {
           command: scripts[index].command,
           cwd: path.dirname(manifestFullPath),
           npmPath: npmClient,
