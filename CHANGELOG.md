@@ -1,5 +1,11 @@
 # notios
 
+## 0.0.8
+
+### Patch Changes
+
+- [#46](https://github.com/frouriojs/notios/pull/46) [`048994f`](https://github.com/frouriojs/notios/commit/048994fda9fd287154eeade3af4a31c3733fee59) Thanks [@LumaKernel](https://github.com/LumaKernel)! - Fix for windows and fix scrolling width calculation.
+
 ## 0.0.7
 
 ### Patch Changes
