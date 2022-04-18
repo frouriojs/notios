@@ -1,7 +1,16 @@
 import wcwidth from 'wcwidth';
 import { LogContentReadonly } from '../utils/proc_manager';
 
-const logWcslice = (content: LogContentReadonly, start?: number | undefined, end?: number | undefined) => {
+export interface LogWcsliceResult {
+  stylePrintableBytesLength: number;
+  sliced: string;
+}
+
+const logWcslice = (
+  content: LogContentReadonly,
+  start?: number | undefined,
+  end?: number | undefined,
+): LogWcsliceResult => {
   const wclen = (to: number) => {
     const bytes = [];
     for (let i = 0; i < to; i += 1) {
@@ -58,19 +67,24 @@ const logWcslice = (content: LogContentReadonly, start?: number | undefined, end
     return [-1, []];
   })();
   if (firstStyleIndex === sliceStart) sliceStart += 1;
-  const bytes = content.slice(sliceStart, sliceEnd).flatMap((c) => {
+  const bytes = firstStyleBytes;
+  let stylePrintableBytesLength = firstStyleBytes.filter((b) => 0x20 <= b && b <= 0x7e).length;
+  for (let i = sliceStart; i < sliceEnd; i += 1) {
+    const c = content[i];
     switch (c.type) {
       case 'style':
-        return [...c.bytes];
+        stylePrintableBytesLength += c.bytes.filter((b) => 0x20 <= b && b <= 0x7e).length;
+        bytes.push(...c.bytes);
+        break;
       default:
-        return [c.byte];
+        bytes.push(c.byte);
+        break;
     }
-  });
-  if (firstStyleIndex === -1) {
-    return Buffer.from(bytes).toString('utf-8');
-  } else {
-    return Buffer.from([...firstStyleBytes, ...bytes]).toString('utf-8');
   }
+  return {
+    stylePrintableBytesLength,
+    sliced: Buffer.from(bytes).toString('utf-8'),
+  };
 };
 
 export default logWcslice;

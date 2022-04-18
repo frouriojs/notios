@@ -11,7 +11,7 @@ export interface SetupUiParams {
 }
 export const setupUi = ({ uiOptions, procManager }: SetupUiParams) => {
   // Switching into alternate screen.
-  if (process.env[envVarNames.doNotAlternate] !== '1') {
+  if (process.platform !== 'win32' && process.env[envVarNames.doNotAlternate] !== '1') {
     process.stdin.write('\u001B[?1049h');
 
     process.on('beforeExit', () => {

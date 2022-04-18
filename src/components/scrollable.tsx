@@ -42,6 +42,7 @@ interface Line {
   left: string;
   text: string;
   right: string;
+  fixWidth: number;
 }
 
 export interface ScrollableProps {
@@ -61,15 +62,22 @@ const Scrollable: FC<ScrollableProps> = ({ lines, top = 0, left = 0, showTimesta
         const ts = showTimestamp ? `(${line.main.timestamp ? formatDate(line.main.timestamp) : '???'})` : '';
         const title = showTitle ? (line.title ? `[${line.title}]` : '') : '';
         const wcstart = left;
-        const wcend = left + width - 8 - ts.length - wcwidth(title);
-        const text = logWcslice(line.main.content, wcstart, wcend);
+        const wcend = left + width - 6 - ts.length - wcwidth(title);
+        const { sliced: text, stylePrintableBytesLength } = logWcslice(line.main.content, wcstart, wcend);
+        const textPrinted = logWcslice(
+          line.main.content.filter((c) => c.type === 'print'),
+          wcstart,
+          wcend,
+        ).sliced;
+        const fixWidth = wcwidth(text) - (textPrinted.length - stringLength(textPrinted)) - stylePrintableBytesLength;
         shownLines.push({
           ts,
           title,
+          fixWidth,
           abs: top + i,
           left: wcstart > 0 ? '~' : '',
           text,
-          right: text !== logWcslice(line.main.content, wcstart) ? '~' : '',
+          right: text !== logWcslice(line.main.content, wcstart).sliced ? '~' : '',
         });
       }
       return shownLines;
@@ -79,7 +87,7 @@ const Scrollable: FC<ScrollableProps> = ({ lines, top = 0, left = 0, showTimesta
   return (
     <BoxWithSize height="100%" width="100%" flexDirection="column">
       {({ width, height }) =>
-        trimmedLines({ width, height }).map(({ ts, title, text, left, right, abs }) => (
+        trimmedLines({ width, height }).map(({ ts, fixWidth, title, text, left, right, abs }) => (
           <Box key={abs} height={1}>
             <Box>
               <Text color="gray">{ts}</Text>
@@ -92,7 +100,7 @@ const Scrollable: FC<ScrollableProps> = ({ lines, top = 0, left = 0, showTimesta
                 {left}
               </Text>
             </Box>
-            <Box width={wcwidth(text) - (text.length - stringLength(text))}>
+            <Box width={fixWidth}>
               <Text wrap="end">{text}</Text>
             </Box>
             <Box width={1}>
