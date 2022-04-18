@@ -1,8 +1,26 @@
+<br />
+<img src="/docs/assets/images/ogp.svg" width="1280" alt="frourio" />
+
+<div align="center">
+  <a href="https://www.npmjs.com/package/notios">
+    <img src="https://img.shields.io/npm/v/notios" alt="npm version" />
+  </a>
+  <a href="https://www.npmjs.com/package/notios">
+    <img src="https://img.shields.io/npm/dm/notios" alt="npm download" />
+  </a>
+  <a href="https://github.com/frouriojs/notios/actions?query=workflow%3A%22Test+Build+and+Publish%22">
+    <img src="https://github.com/frouriojs/notios/workflows/Test%20Build%20and%20Publish/badge.svg?branch=main" alt="Node.js CI" />
+  </a>
+  <a href="https://lgtm.com/projects/g/frouriojs/notios/context:javascript">
+    <img src="https://img.shields.io/lgtm/grade/javascript/g/frouriojs/notios.svg" alt="Language grade: JavaScript" />
+  </a>
+</div>
+
+<br />
+<br />
+<br />
+
 # Notios
-
-**WARNING**: Under development.
-
-![](https://user-images.githubusercontent.com/29811106/156586923-e36b8eb9-41de-46fa-a6a6-760c0be42200.gif)
 
 ## Setup
 
