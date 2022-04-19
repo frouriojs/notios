@@ -8,9 +8,9 @@ import { LogLinesReadonly } from '../utils/proc_manager';
 import BoxWithSize from './box_with_size';
 
 const formatDate = (d: Date) => {
-  return `${d.getFullYear()}/${`0${d.getMonth()}`.slice(-2)}/${`0${d.getDate()}`.slice(-2)} ${`0${d.getHours()}`.slice(
+  return `${d.getFullYear()}/${`0${d.getMonth() + 1}`.slice(-2)}/${`0${d.getDate()}`.slice(
     -2,
-  )}:${`0${d.getMinutes()}`.slice(-2)}:${`0${d.getSeconds()}`.slice(-2)}`;
+  )} ${`0${d.getHours()}`.slice(-2)}:${`0${d.getMinutes()}`.slice(-2)}:${`0${d.getSeconds()}`.slice(-2)}`;
 };
 
 const colorOfStr = (s: string) => {
