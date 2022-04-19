@@ -118,7 +118,14 @@ export type FindNodeByTokenInternal = (token?: string | undefined) => ProcNodeIn
 
 export type CreateNodeParams = Omit<
   ProcNode,
-  'parent' | 'children' | 'token' | 'addUpdateListener' | 'removeUpdateListener' | 'logAccumulated' | 'logOwn' | 'old'
+  | 'parent'
+  | 'children'
+  | 'token'
+  | 'addUpdateListener'
+  | 'removeUpdateListener'
+  | 'logAccumulated'
+  | 'logOwn'
+  | 'ignored'
 > & { parentToken?: string | undefined };
 
 export type CreateNode = (createNodeParams: CreateNodeParams) => ProcNode | null;
