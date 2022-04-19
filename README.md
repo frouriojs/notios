@@ -1,5 +1,5 @@
 <br />
-<img src="/docs/assets/images/ogp.svg" width="1280" alt="frourio" />
+<img src="/docs/assets/images/ogp.svg" width="1280" alt="notios" />
 
 <div align="center">
   <a href="https://www.npmjs.com/package/notios">
@@ -17,10 +17,12 @@
 </div>
 
 <br />
-<br />
-<br />
 
 # Notios
+
+<div align="center">
+  <img src="/docs/assets/images/demo.gif" width="1280" alt="notios demo" />
+</div>
 
 ## Setup
 
