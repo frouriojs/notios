@@ -160,7 +160,7 @@ const TreeProcs: FC<TreeProcsProps> = ({}) => {
         {lines.map((line, i) => (
           <Box key={line.node.token}>
             <Text>{line.indent}</Text>
-            <Box minWidth={1}>
+            <Box width={1}>
               <Text color="yellow" inverse={selectedIndex === i}>
                 {line.symbol}
               </Text>
@@ -181,7 +181,11 @@ const TreeProcs: FC<TreeProcsProps> = ({}) => {
               {line.main}
             </Text>
             <Text>{line.linesStat}</Text>
-            <Text color="cyan">{line.command}</Text>
+            <Box flexShrink={1}>
+              <Text color="cyan" wrap="truncate-end">
+                {line.command}
+              </Text>
+            </Box>
           </Box>
         ))}
       </Box>
