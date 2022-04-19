@@ -89,6 +89,7 @@ export interface ProcNode {
   readonly logAccumulated: LogAccumulated;
   readonly addUpdateListener: AddUpdateListener;
   readonly removeUpdateListener: RemoveUpdateListener;
+  readonly ignored: boolean;
 }
 
 export interface ProcNodeInternal {
@@ -105,6 +106,7 @@ export interface ProcNodeInternal {
   npmPath?: string;
   addUpdateListener: AddUpdateListener;
   removeUpdateListener: RemoveUpdateListener;
+  ignored: boolean;
   $notifyUpdate: () => void;
 }
 export type ProcNodeInternalInitial = Omit<
@@ -116,7 +118,14 @@ export type FindNodeByTokenInternal = (token?: string | undefined) => ProcNodeIn
 
 export type CreateNodeParams = Omit<
   ProcNode,
-  'parent' | 'children' | 'token' | 'addUpdateListener' | 'removeUpdateListener' | 'logAccumulated' | 'logOwn'
+  | 'parent'
+  | 'children'
+  | 'token'
+  | 'addUpdateListener'
+  | 'removeUpdateListener'
+  | 'logAccumulated'
+  | 'logOwn'
+  | 'ignored'
 > & { parentToken?: string | undefined };
 
 export type CreateNode = (createNodeParams: CreateNodeParams) => ProcNode | null;
@@ -206,9 +215,10 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
         [...$updateListenerSet].forEach((listener) => {
           listener();
         });
-        if (node.children.length > 0) {
+        const children = node.children.filter((child) => !child.ignored);
+        if (children.length > 0) {
           node.status = (() => {
-            const statuses = node.children.map((child) => child.status);
+            const statuses = children.map((child) => child.status);
             const allKilled = Math.max(...statuses.map((s) => (s === 'killed' ? 0 : 1))) === 0;
             const allFinished = Math.max(...statuses.map((s) => (s === 'finished' ? 0 : 1))) === 0;
             const allWaiting = Math.max(...statuses.map((s) => (s === 'waiting' ? 0 : 1))) === 0;
@@ -217,15 +227,15 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
             if (allWaiting) return 'waiting';
             return 'running';
           })();
-          node.exitCode = node.children.reduce((accum, n) => accum || n.exitCode, null as null | number | undefined);
+          node.exitCode = children.reduce((accum, n) => accum || n.exitCode, null as null | number | undefined);
         }
         $checkSerial(node);
 
-        if (node.children.length > 0) {
+        if (children.length > 0) {
           const knownTitle: Record<string, boolean> = {};
           node.logAccumulated.lineCount = 0;
           const beingAdded: LogLines = [];
-          for (const child of node.children) {
+          for (const child of children) {
             node.logAccumulated.lineCount += child.logAccumulated.lineCount;
 
             let title = child.name;
@@ -363,6 +373,7 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
     logOwn: $createEmptyLogOwn(),
     logAccumulated: $createEmptyLogAccumulated(),
     children: [],
+    ignored: false,
   });
 
   const findNodeByToken: FindNodeByTokenInternal = (token) => {
@@ -385,6 +396,7 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
       logOwn: $createEmptyLogOwn(),
       logAccumulated: $createEmptyLogAccumulated(),
       children: [],
+      ignored: false,
     });
     const nodeStderr = $createNode({
       name: '<err>',
@@ -393,6 +405,7 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
       logOwn: $createEmptyLogOwn(),
       logAccumulated: $createEmptyLogAccumulated(),
       children: [],
+      ignored: false,
     });
     node.children = [nodeStdout, nodeStderr, ...node.children];
     nodeStdout.parent = node;
@@ -457,6 +470,7 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
       logOwn: $createEmptyLogOwn(),
       logAccumulated: $createEmptyLogAccumulated(),
       children: [],
+      ignored: false,
     });
 
     parentNode.children.push(node);
@@ -482,6 +496,8 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
     const inode: ProcNodeInternal = node as any;
     if (!inode.procOwn) return;
     if (inode.status !== 'finished' && inode.status !== 'killed') return;
+    inode.children[0].ignored = true;
+    inode.children[1].ignored = true;
     $startRunning(inode);
     $appendLogToNode(Buffer.from(`${RESET}${YELLOW}[NOTIOS] MANUALLY RESTARTED${RESET}\n`), inode.children[0]);
   };
