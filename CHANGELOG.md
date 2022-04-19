@@ -1,5 +1,13 @@
 # notios
 
+## 0.0.9
+
+### Patch Changes
+
+- [#49](https://github.com/frouriojs/notios/pull/49) [`27426ac`](https://github.com/frouriojs/notios/commit/27426ace2e2269afcdae42d1231e88ef69955fd9) Thanks [@LumaKernel](https://github.com/LumaKernel)! - docs: update readme
+
+* [#50](https://github.com/frouriojs/notios/pull/50) [`63b40de`](https://github.com/frouriojs/notios/commit/63b40de9808d3dccc57a03bacc9e3802ecafb868) Thanks [@LumaKernel](https://github.com/LumaKernel)! - Fix month format and node info propagation
+
 ## 0.0.8
 
 ### Patch Changes
