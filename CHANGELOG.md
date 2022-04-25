@@ -1,5 +1,15 @@
 # notios
 
+## 0.1.0
+
+### Minor Changes
+
+- [#55](https://github.com/frouriojs/notios/pull/55) [`486fb46`](https://github.com/frouriojs/notios/commit/486fb461f9a24c42a1d4057defc399e546134f11) Thanks [@LumaKernel](https://github.com/LumaKernel)! - bump minor version
+
+### Patch Changes
+
+- [#53](https://github.com/frouriojs/notios/pull/53) [`e437b7c`](https://github.com/frouriojs/notios/commit/e437b7c5ec24c6c3cdd218e8202c6f9b548f37e2) Thanks [@LumaKernel](https://github.com/LumaKernel)! - docs: fix image lnks
+
 ## 0.0.9
 
 ### Patch Changes
