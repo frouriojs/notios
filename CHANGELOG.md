@@ -1,5 +1,11 @@
 # notios
 
+## 0.2.1
+
+### Patch Changes
+
+- [#71](https://github.com/frouriojs/notios/pull/71) [`44c0ff2`](https://github.com/frouriojs/notios/commit/44c0ff2449a92042eca0a62b71a08999f06b293e) Thanks [@LumaKernel](https://github.com/LumaKernel)! - fix: drop engine-strict restriction
+
 ## 0.2.0
 
 ### Minor Changes
