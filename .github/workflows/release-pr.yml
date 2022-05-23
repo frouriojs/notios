@@ -41,7 +41,7 @@ jobs:
             ${{ runner.os }}-
       - uses: pnpm/action-setup@v2
         with:
-          version: 6
+          version: 7
           run_install: |
             - recursive: true
               args: [--frozen-lockfile, --prefer-offline]
