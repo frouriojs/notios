@@ -76,10 +76,5 @@
     "ts-node": "^10.7.0",
     "typescript": "~4.6",
     "vitest": "^0.6.0"
-  },
-  "engines": {
-    "npm": "use pnpm",
-    "yarn": "use pnpm",
-    "pnpm": "^7"
   }
 }
