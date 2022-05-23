@@ -3,6 +3,7 @@ import path from 'path';
 import type { FC } from 'react';
 import React, { useState } from 'react';
 import FullDivider from '../components/full_divider';
+import VerticalScrollable from '../components/vertical_scrollable';
 import { usePageContext } from '../contexts/page_context';
 import { useProcManagerContext } from '../contexts/proc_manager_context';
 import { useUiOptionsContext } from '../contexts/ui_options_context';
@@ -13,6 +14,7 @@ const SelectScript: FC<SelectScriptProps> = ({}) => {
   const procManager = useProcManagerContext();
   const { scripts, manifestFullPath, npmClient } = useUiOptionsContext();
   const [index, setIndex] = useState(0);
+  const [scrollTop, setScrollTop] = useState(0);
 
   useInput((input, key) => {
     if (key.downArrow || (key.ctrl && !key.meta && input === 'n') || (!key.ctrl && !key.meta && input === 'j')) {
@@ -57,16 +59,23 @@ const SelectScript: FC<SelectScriptProps> = ({}) => {
     <Box flexDirection="column" flexGrow={1}>
       <Box flexDirection="column" flexGrow={1}>
         <Text>{manifestFullPath}</Text>
-        {scripts.map((script, i) => {
-          return (
-            <Box key={script.name}>
-              <Text color="yellow" inverse={index === i}>
-                {script.name}
-              </Text>
-              <Text color="cyan"> ({script.command})</Text>
-            </Box>
-          );
-        })}
+        <VerticalScrollable
+          top={scrollTop}
+          select={index}
+          onScrollRequest={(newTop) => {
+            setScrollTop(newTop);
+          }}
+          lines={scripts.map((script, i) => {
+            return (
+              <Box key={script.name}>
+                <Text color="yellow" inverse={index === i}>
+                  {script.name}
+                </Text>
+                <Text color="cyan"> ({script.command})</Text>
+              </Box>
+            );
+          })}
+        />
       </Box>
       <FullDivider />
       <Box>
@@ -84,3 +93,7 @@ const SelectScript: FC<SelectScriptProps> = ({}) => {
   );
 };
 export default SelectScript;
+
+function setScrollTop(newTop: any) {
+  throw new Error('Function not implemented.');
+}

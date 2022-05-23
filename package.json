@@ -24,7 +24,7 @@
   "scripts": {
     "build": "ts-node -T ./scripts/build.ts --from-dir ./src/entrypoints --to-dir ./build --clean --target es2015",
     "typecheck": "tsc --noEmit",
-    "dev": "pnpm run build -- --watch",
+    "dev": "pnpm run build --watch",
     "test": "run-p test:*",
     "test:libs": "pnpm run --filter=./libs test",
     "lint": "eslint --ext .ts,.js,.tsx . && prettier --check \"./**/*.{js,ts,tsx}\"",
@@ -76,5 +76,10 @@
     "ts-node": "^10.7.0",
     "typescript": "~4.6",
     "vitest": "^0.6.0"
+  },
+  "engines": {
+    "npm": "use pnpm",
+    "yarn": "use pnpm",
+    "pnpm": "^7"
   }
 }
