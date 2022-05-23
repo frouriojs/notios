@@ -6,6 +6,8 @@ Thank you for your contribution.
 pnpm i
 ```
 
+Please check pnpm version satisfies `^7`.
+
 ## Development cycle
 
 ```
