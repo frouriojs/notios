@@ -1,7 +1,7 @@
 import { Box, Text, useInput } from 'ink';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import FullDivider from '../components/full_divider';
-import ScrollableCounter from '../components/scrollable_counter';
+import LogScrollableCounter from '../components/log_scrollable_counter';
 import { useInspectContext } from '../contexts/inspect_context';
 import { usePageContext } from '../contexts/page_context';
 import { useProcManagerContext } from '../contexts/proc_manager_context';
@@ -53,6 +53,7 @@ const InspectProc: FC<InspectProcProps> = ({}) => {
       (key.ctrl && !key.meta && input === 'h') ||
       (key.ctrl && !key.meta && input === 'o')
     ) {
+      procManager.markNodeAsRead(procNode);
       setPage('tree-procs');
     }
     if (
@@ -135,7 +136,7 @@ const InspectProc: FC<InspectProcProps> = ({}) => {
   return (
     <>
       <Box height="100%" width="100%" flexDirection="column" flexGrow={1}>
-        <ScrollableCounter
+        <LogScrollableCounter
           lines={log.lines}
           left={left}
           bottom={rbottom}

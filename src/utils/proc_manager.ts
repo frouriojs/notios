@@ -33,6 +33,7 @@ export interface LogOwnInternal {
 
 export interface LogLineMain {
   timestamp?: Date;
+  read: boolean;
   id: number;
   content: LogContent;
 }
@@ -134,6 +135,7 @@ export type KillNode = (node?: ProcNode | null | undefined) => void;
 export type UpdateListener = () => void;
 export type AddUpdateListener = (updateListener: UpdateListener) => void;
 export type RemoveUpdateListener = (updateListener: UpdateListener) => void;
+export type MarkNodeAsRead = (node?: ProcNode | null | undefined) => void;
 
 export interface ProcManager {
   readonly createNode: CreateNode;
@@ -143,6 +145,7 @@ export interface ProcManager {
   readonly addUpdateListener: AddUpdateListener;
   readonly removeUpdateListener: RemoveUpdateListener;
   readonly findNodeByToken: FindNodeByToken;
+  readonly markNodeAsRead: MarkNodeAsRead;
 }
 
 const $createEmptyLogAccumulated = (): LogAccumulatedInternal => {
@@ -291,6 +294,7 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
         const logLine: LogLine = {
           main: {
             timestamp: undefined,
+            read: false,
             id: lines.length,
             content: [],
           },
@@ -329,6 +333,7 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
               const logLine: LogLine = {
                 main: {
                   timestamp: undefined,
+                  read: false,
                   id: lines.length,
                   content: [
                     {
@@ -517,6 +522,22 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
     inode.$notifyUpdate();
   };
 
+  const markNodeAsRead: MarkNodeAsRead = (node) => {
+    if (!node) return;
+    const inode: ProcNodeInternal = node as any;
+    const internal = (inode: ProcNodeInternal) => {
+      for (let i = inode.logAccumulated.lines.length - 1; i >= 0; i -= 1) {
+        const line = inode.logAccumulated.lines[i];
+        line.main.read = true;
+      }
+      inode.children.forEach((c) => {
+        markNodeAsRead(c);
+      });
+    };
+    internal(inode);
+    inode.$notifyUpdate();
+  };
+
   return {
     createNode,
     restartNode,
@@ -525,5 +546,6 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
     addUpdateListener,
     removeUpdateListener,
     findNodeByToken,
+    markNodeAsRead,
   };
 };
