@@ -8,19 +8,19 @@ const crossKill = (pid: number | undefined) => {
       stdio: 'ignore',
     });
   } else {
-    // try {
-    pidtree(pid, (err, ps) => {
-      try {
-        process.kill(pid);
-      } catch {}
-      if (err) return;
-      for (const p of ps) {
+    try {
+      pidtree(pid, (err, ps) => {
         try {
-          process.kill(p);
+          process.kill(pid);
         } catch {}
-      }
-    });
-    // } catch {}
+        if (err) return;
+        for (const p of ps) {
+          try {
+            process.kill(p);
+          } catch {}
+        }
+      });
+    } catch {}
   }
 };
 

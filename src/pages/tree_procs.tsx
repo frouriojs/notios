@@ -2,6 +2,7 @@ import { Box, Text, useInput } from 'ink';
 import type { FC } from 'react';
 import React, { useEffect, useMemo, useState } from 'react';
 import FullDivider from '../components/full_divider';
+import VerticalScrollable from '../components/vertical_scrollable';
 import { useInspectContext } from '../contexts/inspect_context';
 import { usePageContext } from '../contexts/page_context';
 import { useProcManagerContext } from '../contexts/proc_manager_context';
@@ -73,6 +74,8 @@ const TreeProcs: FC<TreeProcsProps> = ({}) => {
     return i;
   }, [lines, selectedNodeToken]);
   const selectedNode = useMemo(() => lines[selectedIndex].node, [lines, selectedIndex]);
+
+  const [scrollTop, setScrollTop] = useState(0);
 
   const canRestart = useMemo(() => {
     if (!selectedNode.procOwn) return false;
@@ -157,37 +160,44 @@ const TreeProcs: FC<TreeProcsProps> = ({}) => {
   return (
     <>
       <Box flexDirection="column" flexGrow={1}>
-        {lines.map((line, i) => (
-          <Box key={line.node.token}>
-            <Text>{line.indent}</Text>
-            <Box width={1}>
-              <Text color="yellow" inverse={selectedIndex === i}>
-                {line.symbol}
+        <VerticalScrollable
+          top={scrollTop}
+          select={selectedIndex}
+          onScrollRequest={(newTop) => {
+            setScrollTop(newTop);
+          }}
+          lines={lines.map((line, i) => (
+            <Box key={line.node.token}>
+              <Text>{line.indent}</Text>
+              <Box width={1}>
+                <Text color="yellow" inverse={selectedIndex === i}>
+                  {line.symbol}
+                </Text>
+              </Box>
+              <Text
+                color={(() => {
+                  const code = line.node.exitCode ?? 0;
+                  if (line.node.status !== 'finished' && code !== 0) return 'magenta';
+                  if (line.node.status === 'waiting') return 'gray';
+                  if (line.node.status === 'running') return undefined;
+                  if (line.node.status === 'killed') return 'yellow';
+                  if (line.node.status === 'finished') {
+                    if (code === 0) return 'green';
+                    return 'red';
+                  }
+                })()}
+              >
+                {line.main}
               </Text>
+              <Text>{line.linesStat}</Text>
+              <Box flexShrink={1}>
+                <Text color="cyan" wrap="truncate-end">
+                  {line.command}
+                </Text>
+              </Box>
             </Box>
-            <Text
-              color={(() => {
-                const code = line.node.exitCode ?? 0;
-                if (line.node.status !== 'finished' && code !== 0) return 'magenta';
-                if (line.node.status === 'waiting') return 'gray';
-                if (line.node.status === 'running') return undefined;
-                if (line.node.status === 'killed') return 'yellow';
-                if (line.node.status === 'finished') {
-                  if (code === 0) return 'green';
-                  return 'red';
-                }
-              })()}
-            >
-              {line.main}
-            </Text>
-            <Text>{line.linesStat}</Text>
-            <Box flexShrink={1}>
-              <Text color="cyan" wrap="truncate-end">
-                {line.command}
-              </Text>
-            </Box>
-          </Box>
-        ))}
+          ))}
+        />
       </Box>
       <FullDivider />
       <Box>
