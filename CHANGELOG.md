@@ -1,5 +1,13 @@
 # notios
 
+## 0.2.0
+
+### Minor Changes
+
+- [#69](https://github.com/frouriojs/notios/pull/69) [`eccffbb`](https://github.com/frouriojs/notios/commit/eccffbb2ab977179ba641ff684dcc4b4a23bb820) Thanks [@LumaKernel](https://github.com/LumaKernel)! - feat: mark unread as at mark and brightness indicator for freshness of messages
+
+* [#65](https://github.com/frouriojs/notios/pull/65) [`654da32`](https://github.com/frouriojs/notios/commit/654da32143001d3806352ad9907975f983d10743) Thanks [@LumaKernel](https://github.com/LumaKernel)! - feat: scroll for select-script and tree-proc
+
 ## 0.1.0
 
 ### Minor Changes
