@@ -1,16 +1,21 @@
-import { Box, Text, useInput } from 'ink';
+import { Box, Text } from 'ink';
 import React, { FC, useEffect, useMemo, useState } from 'react';
+import { pageActions } from '../../libs/notios-config/src/action_definitions';
 import FullDivider from '../components/full_divider';
+import HelpPortal from '../components/help_portal';
 import LogScrollableCounter from '../components/log_scrollable_counter';
 import { useInspectContext } from '../contexts/inspect_context';
+import { useNotiosConfigContext } from '../contexts/notios_config_context';
 import { usePageContext } from '../contexts/page_context';
 import { useProcManagerContext } from '../contexts/proc_manager_context';
 import { useTermShapeContext } from '../contexts/term_shape_context';
+import useAction from '../hooks/use_action';
 import { createEmptyLogAccumulated } from '../utils/proc_manager';
 
 export interface InspectProcProps {}
 const InspectProc: FC<InspectProcProps> = ({}) => {
   const { setPage } = usePageContext();
+  const { notiosConfig } = useNotiosConfigContext();
   const { inspectingToken } = useInspectContext();
   const [bottom, setBottom] = useState(0);
   const [left, setLeft] = useState(0);
@@ -19,8 +24,10 @@ const InspectProc: FC<InspectProcProps> = ({}) => {
   const [log, setLog] = useState(procNode?.logAccumulated ?? createEmptyLogAccumulated());
   const [lastLogLength, setLastLogLength] = useState(log.lines.length);
   const { termWidth, termHeight } = useTermShapeContext();
-  const [showTitle, setShowTitle] = useState(true);
-  const [showTimestamp, setShowTimestamp] = useState(false);
+  const [showTitle, setShowTitle] = useState(notiosConfig.showLabelByDefault);
+  const [showTimestamp, setShowTimestamp] = useState(notiosConfig.showTimestampByDefault);
+  const [helpOpen, setHelpOpen] = useState(false);
+
   const bottomMax = Math.max(0, log.lines.length - termHeight + 2);
   const bottomMin = Math.min(0, -termHeight + 2 + 1);
   const moveBottomBy = (d: number) => {
@@ -41,87 +48,77 @@ const InspectProc: FC<InspectProcProps> = ({}) => {
     }
     setLastLogLength(log.lines.length);
   }, [log, bottom, lastLogLength, bottomMax, bottomMin]);
-
   useEffect(() => {
     moveBottomBy(0);
     moveLeftBy(0);
   }, [termWidth, termHeight]);
-  useInput((input, key) => {
-    if (
-      key.backspace ||
-      key.delete ||
-      (key.ctrl && !key.meta && input === 'h') ||
-      (key.ctrl && !key.meta && input === 'o')
-    ) {
-      procManager.markNodeAsRead(procNode);
-      setPage('tree-procs');
-    }
-    if (
-      key.upArrow ||
-      (key.ctrl && !key.meta && input === 'y') ||
-      (!key.ctrl && !key.meta && input === 'k') ||
-      (key.ctrl && !key.meta && input === 'p')
-    ) {
-      moveBottomBy(1);
-    }
-    if (
-      key.downArrow ||
-      (key.ctrl && !key.meta && input === 'e') ||
-      (!key.ctrl && !key.meta && input === 'j') ||
-      (key.ctrl && !key.meta && input === 'n')
-    ) {
-      moveBottomBy(-1);
-    }
-    if (
-      (!key.ctrl && key.rightArrow) ||
-      (!key.ctrl && !key.meta && input === 'l') ||
-      (key.ctrl && !key.meta && input === 'f')
-    ) {
-      moveLeftBy(1);
-    }
-    if (
-      (!key.ctrl && key.leftArrow) ||
-      (!key.ctrl && !key.meta && input === 'h') ||
-      (key.ctrl && !key.meta && input === 'b')
-    ) {
-      moveLeftBy(-1);
-    }
-    if ((!key.ctrl && !key.meta && input === '^') || (!key.ctrl && !key.meta && input === '0')) {
-      setLeft(0);
-    }
-    if (!key.ctrl && !key.meta && input === 'G') {
-      setBottom(0);
-    }
-    if (!key.ctrl && !key.meta && input === 'g') {
-      setBottom(bottomMax);
-    }
-    if ((!key.ctrl && !key.meta && input === 'd') || (!key.ctrl && !key.meta && key.pageDown)) {
-      moveBottomBy(-(termHeight >> 1));
-    }
-    if ((!key.ctrl && !key.meta && input === 'u') || (!key.ctrl && !key.meta && key.pageUp)) {
-      moveBottomBy(termHeight >> 1);
-    }
-    if (
-      (key.ctrl && key.rightArrow) ||
-      (!key.ctrl && !key.meta && input === 'e') ||
-      (!key.ctrl && key.meta && input === 'f')
-    ) {
-      moveLeftBy(5);
-    }
-    if (
-      (key.ctrl && key.leftArrow) ||
-      (!key.ctrl && !key.meta && input === 'b') ||
-      (!key.ctrl && key.meta && input === 'b')
-    ) {
-      moveLeftBy(-5);
-    }
-    if (!key.ctrl && !key.meta && input === 't') {
-      setShowTimestamp((v) => !v);
-    }
-    if (!key.ctrl && !key.meta && input === 'v') {
-      setShowTitle((v) => !v);
-    }
+
+  useAction({
+    page: 'inspect-proc',
+    actionMaps: {
+      help: () => {
+        setHelpOpen(true);
+      },
+      back: () => {
+        procManager.markNodeAsRead(procNode);
+        setPage('tree-procs');
+      },
+      'scroll-down-line': () => {
+        moveBottomBy(-1);
+      },
+      'scroll-up-line': () => {
+        moveBottomBy(1);
+      },
+      'scroll-down-paragraph': () => {
+        moveBottomBy(-notiosConfig.paragraphSize);
+      },
+      'scroll-up-paragraph': () => {
+        moveBottomBy(notiosConfig.paragraphSize);
+      },
+      'scroll-down-page': () => {
+        moveBottomBy(-termHeight);
+      },
+      'scroll-up-page': () => {
+        moveBottomBy(termHeight);
+      },
+      'scroll-down-half-page': () => {
+        moveBottomBy(-(termHeight >> 1));
+      },
+      'scroll-up-half-page': () => {
+        moveBottomBy(termHeight >> 1);
+      },
+      'scroll-to-bottom': () => {
+        setBottom(0);
+      },
+      'scroll-to-top': () => {
+        setBottom(bottomMax);
+      },
+      'scroll-to-leftmost': () => {
+        setLeft(0);
+      },
+      'scroll-right-char': () => {
+        moveLeftBy(1);
+      },
+      'scroll-left-char': () => {
+        moveLeftBy(-1);
+      },
+      'scroll-right-word': () => {
+        moveLeftBy(5);
+      },
+      'scroll-left-word': () => {
+        moveLeftBy(-5);
+      },
+      'toggle-timestamp': () => {
+        setShowTimestamp((v) => !v);
+      },
+      'toggle-lable': () => {
+        setShowTitle((v) => !v);
+      },
+    },
+    notiosConfig,
+    disabled: helpOpen,
   });
+
   useEffect(() => {
     if (!procNode) return;
     const listener = () => {
@@ -132,7 +129,25 @@ const InspectProc: FC<InspectProcProps> = ({}) => {
       procNode.removeUpdateListener(listener);
     };
   }, [procNode]);
-  if (!procNode) return <Text color="red">Process not found.</Text>;
+
+  if (helpOpen) {
+    return (
+      <HelpPortal
+        page="inspect-proc"
+        actions={pageActions['inspect-proc']}
+        title="Help for inspect process page"
+        onClose={() => setHelpOpen(false)}
+      />
+    );
+  }
+
+  if (!procNode)
+    return (
+      <Text wrap="truncate" color="red">
+        Process not found.
+      </Text>
+    );
+
   return (
     <>
       <Box height="100%" width="100%" flexDirection="column" flexGrow={1}>
@@ -151,25 +166,11 @@ const InspectProc: FC<InspectProcProps> = ({}) => {
       />
       <Box>
         <Box marginRight={2}>
-          <Text>[arrow] scroll</Text>
-        </Box>
-        <Box marginRight={2}>
-          <Text>[backspace] back</Text>
-        </Box>
-        <Box marginRight={2}>
-          <Text>[v] label {showTitle ? 'ON' : 'OFF'}</Text>
-        </Box>
-        <Box marginRight={2}>
-          <Text>[t] timestamp {showTimestamp ? 'ON' : 'OFF'}</Text>
-        </Box>
-        <Box marginRight={2}>
-          <Text>[G] bottom</Text>
-        </Box>
-        <Box marginRight={2}>
-          <Text>[0] leftmost</Text>
+          <Text wrap="truncate">Press [?] to open help.</Text>
         </Box>
       </Box>
     </>
   );
 };
+
 export default InspectProc;

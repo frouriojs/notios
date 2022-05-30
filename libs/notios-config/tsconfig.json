@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "skipLibCheck": false,
+    "strict": true,
+    "target": "ES2015",
+    "incremental": true
+  },
+  "exclude": [
+    "node_modules",
+    "test"
+  ],
+  "include": [
+    "**/*.ts",
+    "**/*.tsx"
+  ]
+}

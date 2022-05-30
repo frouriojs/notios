@@ -69,3 +69,31 @@ npm i -D @notios/npm-run-all@npm:npm-run-all@^3
 ```
 
 Note that you should replace `run-p`, `run-s` and `npm-run-all` with `n-` prefixed ones.
+
+## Configuration
+
+Notios can be configured with config file. Please `npx notios --help` to check default config file location or explicitly specify the location by `--config` flag.
+
+For linux, `~/.cache/notios/notios.config.cjs` is the default location of configuration.
+
+```bash
+# Install configuration tool **globally**.
+npm i -g @notios/config
+
+mkdir -p ~/.cache/notios
+edit ~/.cache/notios/notios.config.cjs
+```
+
+```js
+const { defineNotiosConfig, defaultConfig } = require('@notios/config');
+
+module.exports = defineNotiosConfig({
+  ...defaultConfig,
+  // your configurations...
+});
+```
+
+Notios never fallbacks to any value of configuration to default values. You should use `defaultConfig` to explicitly specify what and how you want to fallback.
+
+Until the detailed documatation is ready, please refer to the [default configuration](./libs/notios-config/src/default_config.ts).
+

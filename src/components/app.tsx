@@ -1,6 +1,8 @@
 import type { FC } from 'react';
 import React, { useEffect, useMemo } from 'react';
+import { NotiosConfig } from '../../libs/notios-config/interfaces/notios-config';
 import { inspectContext, useInspectContextDefaultValue } from '../contexts/inspect_context';
+import { notiosConfigContext, NotiosConfigContextValue } from '../contexts/notios_config_context';
 import { pageContext, usePageContextDefaultValue } from '../contexts/page_context';
 import { procManagerContext } from '../contexts/proc_manager_context';
 import { termShapeContext, useTermShapeContextDefaultValue } from '../contexts/term_shape_context';
@@ -16,8 +18,12 @@ import GlobalWrapper from './global_wrapper';
 export interface AppProps {
   uiOptions: UiOptions;
   procManager: ProcManager;
+  notiosConfig: NotiosConfig;
 }
-const App: FC<AppProps> = ({ uiOptions, procManager }) => {
+const App: FC<AppProps> = ({ uiOptions, procManager, notiosConfig }) => {
+  const notiosConfigContextValue: NotiosConfigContextValue = {
+    notiosConfig,
+  };
   const termShapeContextValue = useTermShapeContextDefaultValue();
   const treeProcContextValue = useTreeProcContextDefaultValue();
   const inspectContextValue = useInspectContextDefaultValue();
@@ -42,19 +48,21 @@ const App: FC<AppProps> = ({ uiOptions, procManager }) => {
   }, [page]);
 
   return (
-    <termShapeContext.Provider value={termShapeContextValue}>
-      <treeProcContext.Provider value={treeProcContextValue}>
-        <inspectContext.Provider value={inspectContextValue}>
-          <procManagerContext.Provider value={procManager}>
-            <uiOptionsContext.Provider value={uiOptions}>
-              <pageContext.Provider value={pageContextValue}>
-                <GlobalWrapper>{activePage}</GlobalWrapper>
-              </pageContext.Provider>
-            </uiOptionsContext.Provider>
-          </procManagerContext.Provider>
-        </inspectContext.Provider>
-      </treeProcContext.Provider>
-    </termShapeContext.Provider>
+    <notiosConfigContext.Provider value={notiosConfigContextValue}>
+      <termShapeContext.Provider value={termShapeContextValue}>
+        <treeProcContext.Provider value={treeProcContextValue}>
+          <inspectContext.Provider value={inspectContextValue}>
+            <procManagerContext.Provider value={procManager}>
+              <uiOptionsContext.Provider value={uiOptions}>
+                <pageContext.Provider value={pageContextValue}>
+                  <GlobalWrapper>{activePage}</GlobalWrapper>
+                </pageContext.Provider>
+              </uiOptionsContext.Provider>
+            </procManagerContext.Provider>
+          </inspectContext.Provider>
+        </treeProcContext.Provider>
+      </termShapeContext.Provider>
+    </notiosConfigContext.Provider>
   );
 };
 
