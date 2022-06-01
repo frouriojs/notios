@@ -1,5 +1,11 @@
 # @notios/config
 
+## 0.0.4
+
+### Patch Changes
+
+- [#82](https://github.com/frouriojs/notios/pull/82) [`6699c61`](https://github.com/frouriojs/notios/commit/6699c61c0c4da508f67d0a2f18623835206b33c4) Thanks [@LumaKernel](https://github.com/LumaKernel)! - ci: correct and revert CI and build settings to create build/
+
 ## 0.0.3
 
 ### Patch Changes
