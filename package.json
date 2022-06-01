@@ -22,7 +22,9 @@
     "run-s": "./bin/run-s"
   },
   "scripts": {
-    "build": "ts-node -T ./scripts/build.ts --from-dir ./src/entrypoints --to-dir ./build --clean --target es2015",
+    "build-all": "run-p build:notios build:libs",
+    "build:libs": "pnpm run \"--filter=./libs/*\" build",
+    "build:notios": "ts-node -T ./scripts/build.ts --from-dir ./src/entrypoints --to-dir ./build --clean --target es2015",
     "typecheck": "tsc --noEmit",
     "dev": "pnpm run build --watch",
     "test": "run-p test:*",

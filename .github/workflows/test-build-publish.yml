@@ -54,8 +54,8 @@ jobs:
         run: pnpm typecheck
       - name: Run test
         run: pnpm test
-      - name: Build
-        run: pnpm build
+      - name: Build all
+        run: pnpm build-all
       - if: ${{ github.event_name == 'push' && github.event.ref == 'refs/heads/main' }}
         name: Configure npm token
         run: pnpm config set //registry.npmjs.org/:_authToken ${{ secrets.NPM_TOKEN }}
