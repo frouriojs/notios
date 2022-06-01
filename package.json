@@ -31,7 +31,7 @@
     "lint:fix": "eslint --ext .ts,.js,.tsx . --fix && prettier --check \"./**/*.{js,ts,tsx}\" --write"
   },
   "dependencies": {
-    "commander": "^9.0.0",
+    "commander": "^9.3.0",
     "cross-spawn": "7.0.3",
     "ink": "^3.2.0",
     "ink-divider": "^3.0.0",
