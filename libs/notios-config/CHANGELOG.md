@@ -1,5 +1,11 @@
 # @notios/config
 
+## 0.0.3
+
+### Patch Changes
+
+- [#80](https://github.com/frouriojs/notios/pull/80) [`223af1f`](https://github.com/frouriojs/notios/commit/223af1f79cb45597885fbd0701250a098388f240) Thanks [@LumaKernel](https://github.com/LumaKernel)! - ci: build children projects correctly
+
 ## 0.0.2
 
 ### Patch Changes
