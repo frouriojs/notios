@@ -74,15 +74,16 @@ Note that you should replace `run-p`, `run-s` and `npm-run-all` with `n-` prefix
 
 Notios can be configured with config file. Please `npx notios --help` to check default config file location or explicitly specify the location by `--config` flag.
 
-For linux, `~/.cache/notios/notios.config.cjs` is the default location of configuration.
+For linux, `~/.config/notios/notios.config.cjs` is the default location of configuration.
 
 ```bash
-# Install configuration tool **globally**.
-npm i -g @notios/config
-
-mkdir -p ~/.cache/notios
-edit ~/.cache/notios/notios.config.cjs
+mkdir -p ~/.config/notios
+cd ~/.config/notios
+npm init -y
+npm i @notios/config
 ```
+
+Then edit `~/.config/notios/notios.config.cjs` like following.
 
 ```js
 // @ts-check
@@ -91,10 +92,41 @@ const { defineNotiosConfig, defaultConfig } = require('@notios/config');
 module.exports = defineNotiosConfig({
   ...defaultConfig,
   // your configurations...
+
+  // Example for the configuration to show timestamp by default.
+
+  showTimestampByDefault: true,
+
+  // Following is just an example for keymapping.
+
+  // My original safe [CTRL-X then CTRL-X] kill keymapping 😅
+  keymappings: {
+    ...defaultConfig.keymappings,
+    "tree-procs": {
+      ...defaultConfig.keymappings["tree-procs"],
+      kill: [
+        {
+          type: "seq",
+          seq: [
+            {
+              type: "char",
+              char: "x",
+              ctrl: true,
+            },
+            {
+              type: "char",
+              char: "x",
+              ctrl: true,
+            },
+          ],
+        }
+      ],
+    }
+  },
 });
 ```
 
-Utility `defineNotiosConfig` enables you use completion. Directive `// @ts-check` enables you write configuration type-safely.
+Utility `defineNotiosConfig` enables you use completion and not necessary. Directive `// @ts-check` enables you write configuration type-safely.
 
 Notios never fallbacks to any value of configuration to default values. You should use `defaultConfig` to explicitly specify what and how you want to fallback.
 
