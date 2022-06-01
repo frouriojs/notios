@@ -6,4 +6,4 @@ node_modules/
 build/
 coverage/
 .pnpm-debug.log*
-tsconfig.tsbuildinfo
+*.tsbuildinfo
