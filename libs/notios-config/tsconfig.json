@@ -3,7 +3,7 @@
     "esModuleInterop": true,
     "module": "CommonJS",
     "moduleResolution": "Node",
-    "skipLibCheck": false,
+    "skipLibCheck": true,
     "strict": true,
     "target": "ES2015",
     "incremental": true
