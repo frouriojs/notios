@@ -85,6 +85,7 @@ edit ~/.cache/notios/notios.config.cjs
 ```
 
 ```js
+// @ts-check
 const { defineNotiosConfig, defaultConfig } = require('@notios/config');
 
 module.exports = defineNotiosConfig({
@@ -92,6 +93,8 @@ module.exports = defineNotiosConfig({
   // your configurations...
 });
 ```
+
+Utility `defineNotiosConfig` enables you use completion. Directive `// @ts-check` enables you write configuration type-safely.
 
 Notios never fallbacks to any value of configuration to default values. You should use `defaultConfig` to explicitly specify what and how you want to fallback.
 
