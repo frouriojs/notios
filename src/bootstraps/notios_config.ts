@@ -1,7 +1,7 @@
 import fs from 'fs';
-import { NotiosConfig } from '../../libs/notios-config/interfaces/notios-config';
 import { defaultConfig } from '../../libs/notios-config/src';
 import { actionablePages } from '../../libs/notios-config/src/action_definitions';
+import { NotiosConfig } from '../../libs/notios-config/src/interfaces/notios-config';
 import { UiOptions } from '../interfaces/ui_options';
 import { tryWithHint } from '../utils/error';
 import { constructKeymapping } from '../utils/keymapping';

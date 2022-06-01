@@ -1,6 +1,6 @@
 import { render } from 'ink';
 import React from 'react';
-import { NotiosConfig } from '../../libs/notios-config/interfaces/notios-config';
+import { NotiosConfig } from '../../libs/notios-config/src/interfaces/notios-config';
 import App from '../components/app';
 import { envVarNames } from '../constants/ipc';
 import type { UiOptions } from '../interfaces/ui_options';

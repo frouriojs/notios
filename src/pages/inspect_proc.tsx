@@ -103,10 +103,10 @@ const InspectProc: FC<InspectProcProps> = ({}) => {
         moveLeftBy(-1);
       },
       'scroll-right-word': () => {
-        moveLeftBy(5);
+        moveLeftBy(notiosConfig.wordSize);
       },
       'scroll-left-word': () => {
-        moveLeftBy(-5);
+        moveLeftBy(-notiosConfig.wordSize);
       },
       'toggle-timestamp': () => {
         setShowTimestamp((v) => !v);
