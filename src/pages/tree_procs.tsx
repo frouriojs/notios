@@ -1,12 +1,16 @@
-import { Box, Text, useInput } from 'ink';
+import { Box, Text } from 'ink';
 import type { FC } from 'react';
 import React, { useEffect, useMemo, useState } from 'react';
+import { pageActions } from '../../libs/notios-config/src/action_definitions';
 import FullDivider from '../components/full_divider';
+import HelpPortal from '../components/help_portal';
 import VerticalScrollable from '../components/vertical_scrollable';
 import { useInspectContext } from '../contexts/inspect_context';
+import { useNotiosConfigContext } from '../contexts/notios_config_context';
 import { usePageContext } from '../contexts/page_context';
 import { useProcManagerContext } from '../contexts/proc_manager_context';
 import { useTreeProcContext } from '../contexts/tree_proc_context';
+import useAction from '../hooks/use_action';
 import type { ProcNode } from '../utils/proc_manager';
 
 interface Line {
@@ -21,9 +25,12 @@ interface Line {
 export interface TreeProcsProps {}
 const TreeProcs: FC<TreeProcsProps> = ({}) => {
   const { setPage } = usePageContext();
+  const { notiosConfig } = useNotiosConfigContext();
   const { setInspectingToken } = useInspectContext();
   const procManager = useProcManagerContext();
   const { openMap, selectedNodeToken, setSelectedNodeToken, setOpenMap } = useTreeProcContext();
+  const [helpOpen, setHelpOpen] = useState(false);
+
   const dfs = (n: ProcNode, ind: string): Line[] => {
     const main = ` ${n.name}`;
     const linesStat = ` (${n.logAccumulated.lineCount} LINES)`;
@@ -89,73 +96,67 @@ const TreeProcs: FC<TreeProcsProps> = ({}) => {
     return true;
   }, [lines, selectedIndex]);
 
-  useInput((input, key) => {
-    if (
-      (!key.shift && key.tab) ||
-      key.downArrow ||
-      (key.ctrl && !key.meta && input === 'n') ||
-      (!key.ctrl && !key.meta && input === 'j')
-    ) {
-      if (lines.length > 0) {
-        const newIndex = (selectedIndex + 1) % lines.length;
-        setSelectedNodeToken(lines[newIndex].node.token);
-      }
-    }
-
-    if (
-      (key.shift && key.tab) ||
-      key.upArrow ||
-      (key.ctrl && !key.meta && input === 'p') ||
-      (!key.ctrl && !key.meta && input === 'k')
-    ) {
-      if (lines.length > 0) {
-        const newIndex = (selectedIndex + lines.length - 1) % lines.length;
-        setSelectedNodeToken(lines[newIndex].node.token);
-      }
-    }
-
-    if (key.rightArrow || (!key.ctrl && !key.meta && input === 'l')) {
-      if (selectedNode.children.length > 0) {
-        setOpenMap((m) => ({ ...m, [selectedNode.token]: true }));
-      }
-    }
-
-    if (key.leftArrow || (!key.ctrl && !key.meta && input === 'h')) {
-      if (selectedNode.children.length > 0) {
-        setOpenMap((m) => ({ ...m, [selectedNode.token]: false }));
-      }
-    }
-
-    if (!key.ctrl && !key.meta && input === 'n') {
-      setPage('select-script');
-    }
-
-    if (
-      key.backspace ||
-      key.delete ||
-      (key.ctrl && !key.meta && input === 'h') ||
-      (key.ctrl && !key.meta && input === 'o')
-    ) {
-    }
-
-    if (!key.ctrl && !key.meta && input === 'r') {
-      if (canRestart) {
-        procManager.restartNode(selectedNode);
-      }
-    }
-
-    if (!key.ctrl && !key.meta && input === 'x') {
-      if (canKill) {
-        procManager.killNode(selectedNode);
-      }
-    }
-
-    if (key.return || (key.ctrl && !key.meta && input === 'm')) {
-      const token = selectedNode.token;
-      setInspectingToken(token);
-      setPage('inspect-proc');
-    }
+  useAction({
+    page: 'tree-procs',
+    actionMaps: {
+      help: () => {
+        setHelpOpen(true);
+      },
+      'cursor-prev': () => {
+        if (lines.length > 0) {
+          const newIndex = (selectedIndex + lines.length - 1) % lines.length;
+          setSelectedNodeToken(lines[newIndex].node.token);
+        }
+      },
+      'cursor-next': () => {
+        if (lines.length > 0) {
+          const newIndex = (selectedIndex + 1) % lines.length;
+          setSelectedNodeToken(lines[newIndex].node.token);
+        }
+      },
+      'select-script': () => {
+        setPage('select-script');
+      },
+      expand: () => {
+        if (selectedNode.children.length > 0) {
+          setOpenMap((m) => ({ ...m, [selectedNode.token]: true }));
+        }
+      },
+      collapse: () => {
+        if (selectedNode.children.length > 0) {
+          setOpenMap((m) => ({ ...m, [selectedNode.token]: false }));
+        }
+      },
+      restart: () => {
+        if (canRestart) {
+          procManager.restartNode(selectedNode);
+        }
+      },
+      kill: () => {
+        if (canKill) {
+          procManager.killNode(selectedNode);
+        }
+      },
+      inspect: () => {
+        const token = selectedNode.token;
+        setInspectingToken(token);
+        setPage('inspect-proc');
+      },
+    },
+    notiosConfig,
+    disabled: helpOpen,
   });
+
+  if (helpOpen) {
+    return (
+      <HelpPortal
+        page="tree-procs"
+        actions={pageActions['tree-procs']}
+        title="Help for tree processes page"
+        onClose={() => setHelpOpen(false)}
+      />
+    );
+  }
 
   return (
     <>
@@ -168,13 +169,14 @@ const TreeProcs: FC<TreeProcsProps> = ({}) => {
           }}
           lines={lines.map((line, i) => (
             <Box key={line.node.token}>
-              <Text>{line.indent}</Text>
+              <Text wrap="truncate">{line.indent}</Text>
               <Box width={1}>
-                <Text color="yellow" inverse={selectedIndex === i}>
+                <Text wrap="truncate" color="yellow" inverse={selectedIndex === i}>
                   {line.symbol}
                 </Text>
               </Box>
               <Text
+                wrap="truncate"
                 color={(() => {
                   const code = line.node.exitCode ?? 0;
                   if (line.node.status !== 'finished' && code !== 0) return 'magenta';
@@ -189,12 +191,14 @@ const TreeProcs: FC<TreeProcsProps> = ({}) => {
               >
                 {line.main}
               </Text>
-              <Text>{line.linesStat}</Text>
-              <Box flexShrink={1}>
-                <Text color="cyan" wrap="truncate-end">
-                  {line.command}
-                </Text>
-              </Box>
+              <Text wrap="truncate">{line.linesStat}</Text>
+              {notiosConfig.showScriptCommandInTreeProcs && (
+                <Box flexShrink={1}>
+                  <Text wrap="truncate-end" color="cyan">
+                    {line.command}
+                  </Text>
+                </Box>
+              )}
             </Box>
           ))}
         />
@@ -202,28 +206,24 @@ const TreeProcs: FC<TreeProcsProps> = ({}) => {
       <FullDivider />
       <Box>
         <Box marginRight={2}>
-          <Text>[Enter] log</Text>
+          <Text wrap="truncate">Press [?] to open help.</Text>
         </Box>
-        <Box marginRight={2}>
-          <Text>[up/down] cursor</Text>
+        <Box marginRight={1}>
+          <Text wrap="truncate">Status:</Text>
         </Box>
-        <Box marginRight={2}>
-          <Text>[right] open</Text>
-        </Box>
-        <Box marginRight={2}>
-          <Text>[left] close</Text>
-        </Box>
-        <Box marginRight={2}>
-          <Text>[n] new</Text>
-        </Box>
+        {!canKill && !canRestart && (
+          <Box marginRight={1}>
+            <Text wrap="truncate">(cannot kill or restart)</Text>
+          </Box>
+        )}
         {canKill && (
-          <Box marginRight={2}>
-            <Text>[x] kill</Text>
+          <Box marginRight={1}>
+            <Text wrap="truncate">(can kill)</Text>
           </Box>
         )}
         {canRestart && (
           <Box marginRight={2}>
-            <Text>[r] restart</Text>
+            <Text wrap="truncate">(can restart)</Text>
           </Box>
         )}
       </Box>

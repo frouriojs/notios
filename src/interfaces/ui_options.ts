@@ -9,4 +9,5 @@ export interface UiOptions {
   initialScriptNames: string[];
   scripts: ScriptDefinition[];
   npmClient: NpmClient;
+  configFileFullPath: string;
 }

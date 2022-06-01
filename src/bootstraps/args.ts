@@ -1,22 +1,29 @@
 import { program } from 'commander';
 import fs from 'fs';
 import path from 'path';
+import xdg from 'xdg-portable';
 import type { UiOptions } from '../interfaces/ui_options';
 import detectNpmClient from '../utils/detect_npm_client';
 import { tryWithHint } from '../utils/error';
 
 export const setupArgs = (): UiOptions => {
+  const defaultNotiosConfigFilePath = path.resolve(xdg.config(), 'notios', 'notios.config.cjs');
+
   program.option('--manifest <string>', 'package.json path', 'package.json');
   program.option('--no-color', 'force to suppress coloring');
+  program.option('--config <string>', 'notios config file location', defaultNotiosConfigFilePath);
   program.name('notios');
   program.argument('[run-script-name...]');
   program.version(require('../../package.json').version, '-v, --version');
   program.parse();
+
   const initialScriptNames = program.args;
   const options = program.opts();
   const forceNoColor = !options.color;
   const manifestFullPath = path.resolve(process.cwd(), options.manifest);
   const manifestRelativePath = path.relative(process.cwd(), manifestFullPath);
+  const configFileFullPath = path.resolve(process.cwd(), options.config);
+
   const manifestJsonString = tryWithHint(
     () => fs.readFileSync(manifestFullPath).toString(),
     `Failed to read file ${JSON.stringify(manifestFullPath)}.\nPlease check existense of file and access permissions.`,
@@ -51,5 +58,6 @@ export const setupArgs = (): UiOptions => {
     initialScriptNames,
     scripts,
     npmClient: detectNpmClient({ cwd: process.cwd() }),
+    configFileFullPath,
   };
 };

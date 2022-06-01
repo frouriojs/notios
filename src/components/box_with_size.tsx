@@ -21,7 +21,7 @@ const BoxWithSize = ({ children, ...rest }: BoxWithSizeProps) => {
         setRealHeight(height);
         clearInterval(interval);
       }
-    }, 10);
+    }, 50);
     return () => {
       clearInterval(interval);
     };

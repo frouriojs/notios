@@ -1,64 +1,85 @@
-import { Box, Text, useInput } from 'ink';
+import { Box, Text } from 'ink';
 import path from 'path';
 import type { FC } from 'react';
 import React, { useState } from 'react';
+import { pageActions } from '../../libs/notios-config/src/action_definitions';
 import FullDivider from '../components/full_divider';
+import HelpPortal from '../components/help_portal';
 import VerticalScrollable from '../components/vertical_scrollable';
+import { useNotiosConfigContext } from '../contexts/notios_config_context';
 import { usePageContext } from '../contexts/page_context';
 import { useProcManagerContext } from '../contexts/proc_manager_context';
 import { useUiOptionsContext } from '../contexts/ui_options_context';
+import useAction from '../hooks/use_action';
 
 export interface SelectScriptProps {}
 const SelectScript: FC<SelectScriptProps> = ({}) => {
   const { setPage } = usePageContext();
+  const { notiosConfig } = useNotiosConfigContext();
   const procManager = useProcManagerContext();
   const { scripts, manifestFullPath, npmClient } = useUiOptionsContext();
   const [index, setIndex] = useState(0);
   const [scrollTop, setScrollTop] = useState(0);
+  const [helpOpen, setHelpOpen] = useState(false);
 
-  useInput((input, key) => {
-    if (key.downArrow || (key.ctrl && !key.meta && input === 'n') || (!key.ctrl && !key.meta && input === 'j')) {
-      setIndex((prev) => (prev + 1) % scripts.length);
-    }
+  const startCurrentSelecting = () => {
+    procManager.createNode({
+      name: scripts[index].name,
+      type: 'none',
+      procOwn: {
+        command: scripts[index].command,
+        cwd: path.dirname(manifestFullPath),
+        npmPath: npmClient,
+      },
+      status: 'running',
+    });
+  };
 
-    if (key.upArrow || (key.ctrl && !key.meta && input === 'p') || (!key.ctrl && !key.meta && input === 'k')) {
-      setIndex((prev) => (prev + scripts.length - 1) % scripts.length);
-    }
-
-    if (
-      key.backspace ||
-      key.delete ||
-      (key.ctrl && !key.meta && input === 'h') ||
-      (key.ctrl && !key.meta && input === 'o')
-    ) {
-      setPage('tree-procs');
-    }
-
-    if (
-      key.return ||
-      key.rightArrow ||
-      (key.ctrl && !key.meta && input === 'm') ||
-      (!key.ctrl && !key.meta && input === 'l') ||
-      (key.ctrl && !key.meta && input === 'f')
-    ) {
-      procManager.createNode({
-        name: scripts[index].name,
-        type: 'none',
-        procOwn: {
-          command: scripts[index].command,
-          cwd: path.dirname(manifestFullPath),
-          npmPath: npmClient,
-        },
-        status: 'running',
-      });
-      setPage('tree-procs');
-    }
+  useAction({
+    page: 'select-script',
+    actionMaps: {
+      help: () => {
+        setHelpOpen(true);
+      },
+      'cursor-prev': () => {
+        setIndex((prev) => (prev + scripts.length - 1) % scripts.length);
+      },
+      'cursor-next': () => {
+        setIndex((prev) => (prev + 1) % scripts.length);
+      },
+      back: () => {
+        if (procManager.rootNode.children.length === 0) {
+          return;
+        }
+        setPage('tree-procs');
+      },
+      'start-and-back': () => {
+        startCurrentSelecting();
+        setPage('tree-procs');
+      },
+      start: () => {
+        startCurrentSelecting();
+      },
+    },
+    notiosConfig,
+    disabled: helpOpen,
   });
+
+  if (helpOpen) {
+    return (
+      <HelpPortal
+        page="select-script"
+        actions={pageActions['select-script']}
+        title="Help for select script page"
+        onClose={() => setHelpOpen(false)}
+      />
+    );
+  }
 
   return (
     <Box flexDirection="column" flexGrow={1}>
       <Box flexDirection="column" flexGrow={1}>
-        <Text>{manifestFullPath}</Text>
+        <Text wrap="truncate">{manifestFullPath}</Text>
         <VerticalScrollable
           top={scrollTop}
           select={index}
@@ -68,10 +89,15 @@ const SelectScript: FC<SelectScriptProps> = ({}) => {
           lines={scripts.map((script, i) => {
             return (
               <Box key={script.name}>
-                <Text color="yellow" inverse={index === i}>
+                <Text wrap="truncate" color="yellow" inverse={index === i}>
                   {script.name}
                 </Text>
-                <Text color="cyan"> ({script.command})</Text>
+                {notiosConfig.showScriptCommandInSelectScript && (
+                  <Text wrap="truncate" color="cyan">
+                    {' '}
+                    ({script.command})
+                  </Text>
+                )}
               </Box>
             );
           })}
@@ -80,20 +106,10 @@ const SelectScript: FC<SelectScriptProps> = ({}) => {
       <FullDivider />
       <Box>
         <Box marginRight={2}>
-          <Text>[Enter] run</Text>
-        </Box>
-        <Box marginRight={2}>
-          <Text>[up/down] cursor</Text>
-        </Box>
-        <Box marginRight={2}>
-          <Text>[backspace] back</Text>
+          <Text wrap="truncate">Press [?] to open help.</Text>
         </Box>
       </Box>
     </Box>
   );
 };
 export default SelectScript;
-
-function setScrollTop(newTop: any) {
-  throw new Error('Function not implemented.');
-}
