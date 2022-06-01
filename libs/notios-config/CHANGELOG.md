@@ -1,0 +1,7 @@
+# @notios/config
+
+## 0.0.2
+
+### Patch Changes
+
+- [#79](https://github.com/frouriojs/notios/pull/79) [`d61e52e`](https://github.com/frouriojs/notios/commit/d61e52ee56c320dfaa5904fd1943093cb76d99d5) Thanks [@LumaKernel](https://github.com/LumaKernel)! - fix(notios/config): fix and withdraw release prep for notios temporary
