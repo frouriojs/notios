@@ -1,7 +1,7 @@
 import { useInput } from 'ink';
 import { useMemo, useState } from 'react';
-import { NotiosConfig } from '../../libs/notios-config/interfaces/notios-config';
 import { ActionablePage, pageActions } from '../../libs/notios-config/src/action_definitions';
+import { NotiosConfig } from '../../libs/notios-config/src/interfaces/notios-config';
 import { constructKeymapping, matchKeymapping } from '../utils/keymapping';
 
 type ActionImpl = () => void;

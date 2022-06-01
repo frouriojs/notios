@@ -6,7 +6,7 @@ import {
   NotiosConfigActionKeymappings,
   NotiosConfigKeymapping,
   NotiosConfigKeymappingRoot,
-} from '../../libs/notios-config/interfaces/notios-config';
+} from '../../libs/notios-config/src/interfaces/notios-config';
 import { specialKeyNames } from '../../libs/notios-config/src/special_key_names';
 
 type KeymappingNode = {

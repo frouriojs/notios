@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import React, { useEffect, useMemo } from 'react';
-import { NotiosConfig } from '../../libs/notios-config/interfaces/notios-config';
+import { NotiosConfig } from '../../libs/notios-config/src/interfaces/notios-config';
 import { inspectContext, useInspectContextDefaultValue } from '../contexts/inspect_context';
 import { notiosConfigContext, NotiosConfigContextValue } from '../contexts/notios_config_context';
 import { pageContext, usePageContextDefaultValue } from '../contexts/page_context';

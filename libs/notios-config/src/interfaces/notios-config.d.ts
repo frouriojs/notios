@@ -3,8 +3,8 @@ import {
   NotiosInspectProcAction,
   NotiosSelectScriptAction,
   NotiosTreeProcsAction,
-} from '../src/action_definitions';
-import { specialKeyNames } from '../src/special_key_names';
+} from '../action_definitions';
+import { specialKeyNames } from '../special_key_names';
 
 // TODO: dirty monkey patch for ink
 type ExtraSpecialKeyName = 'home' | 'end';

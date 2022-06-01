@@ -22,11 +22,15 @@
     "run-s": "./bin/run-s"
   },
   "scripts": {
-    "build-all": "run-p build:notios build:libs",
+    "build": "run-p build:*",
     "build:libs": "pnpm run \"--filter=./libs/*\" build",
     "build:notios": "ts-node -T ./scripts/build.ts --from-dir ./src/entrypoints --to-dir ./build --clean --target es2015",
-    "typecheck": "tsc --noEmit",
-    "dev": "pnpm run build --watch",
+    "typecheck": "run-p typecheck:*",
+    "typecheck:notios": "tsc --noEmit",
+    "typecheck:libs": "pnpm run \"--filter=./libs/*\" typecheck",
+    "dev": "run-p dev:*",
+    "dev:libs": "pnpm run \"--filter=./libs/*\" build-dev",
+    "dev:notios": "pnpm run build:notios --watch",
     "test": "run-p test:*",
     "test:libs": "pnpm run --filter=./libs test",
     "lint": "eslint --ext .ts,.js,.tsx . && prettier --check \"./**/*.{js,ts,tsx}\"",
