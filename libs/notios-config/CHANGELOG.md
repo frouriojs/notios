@@ -1,5 +1,11 @@
 # @notios/config
 
+## 0.1.0
+
+### Minor Changes
+
+- [#85](https://github.com/frouriojs/notios/pull/85) [`5a73973`](https://github.com/frouriojs/notios/commit/5a739733824639fd1d5d3900034dc7a2c460d1c6) Thanks [@LumaKernel](https://github.com/LumaKernel)! - fix: move interfaces/ under src/ and ready for v0.1.0
+
 ## 0.0.4
 
 ### Patch Changes

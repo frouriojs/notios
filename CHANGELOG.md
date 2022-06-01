@@ -1,5 +1,11 @@
 # notios
 
+## 0.3.0
+
+### Minor Changes
+
+- [#85](https://github.com/frouriojs/notios/pull/85) [`89c630d`](https://github.com/frouriojs/notios/commit/89c630ded98ade91209eab2236a79109269cbc3d) Thanks [@LumaKernel](https://github.com/LumaKernel)! - feat: user config and keymapping
+
 ## 0.2.1
 
 ### Patch Changes
