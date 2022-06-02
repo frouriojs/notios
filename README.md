@@ -101,11 +101,12 @@ module.exports = defineNotiosConfig((defaultConfig) => {
 
     // Following is just an example for keymapping.
 
-    // My original safe [CTRL-X then CTRL-X] kill keymapping 😅
     keymappings: {
-      ...defaultConfig.keymappings,
+      ...defaultConfig.v1.keymappings,
       "tree-procs": {
-        ...defaultConfig.keymappings["tree-procs"],
+        ...defaultConfig.v1.keymappings["tree-procs"],
+
+        // My original safe kill keymapping [CTRL-X then CTRL-X]
         kill: [
           {
             type: "seq",
@@ -123,7 +124,31 @@ module.exports = defineNotiosConfig((defaultConfig) => {
             ],
           }
         ],
-      }
+
+        // Add my own keymapping [CTRL-R] for restart over the default keymapping
+        restart: [
+          ...defaultConfig.v1.keymappings["tree-procs"].restart,
+          {
+            type: "char",
+            char: "r",
+            ctrl: true,
+          }
+        ],
+      },
+
+      // Common keymappings should be avoided confliction with any other keymappings
+      common: {
+        ...defaultConfig.v1.keymappings.common,
+
+        // Change exit mapping from [CTRL-C] to [CTRL-Q]
+        exit: [
+          {
+            type: "char",
+            char: "q",
+            ctrl: true,
+          }
+        ],
+      },
     },
   },
 });
