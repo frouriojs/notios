@@ -6,6 +6,12 @@
 // - The identical property should mean the identical
 //   functionality all over the time.
 
+// NOTE:
+//   Creating the other property that means the same
+//   function in different notios versions.
+//   For example, renaming property name. Old property
+//   MUST be remained because of avobe rule.
+
 import {
   NotiosHelpAction,
   NotiosInspectProcAction,
@@ -52,7 +58,6 @@ export type NotiosConfigKeymappingChar = {
     | 'l'
     | 'm'
     | 'n'
-    | 'l'
     | 'o'
     | 'p'
     | 'q'
@@ -96,7 +101,8 @@ export type NotiosConfigKeymappingChar = {
     | ':'
     | ';'
     | '`'
-    | '~';
+    | '~'
+    | ' ';
   shift?: boolean;
   ctrl?: boolean;
   meta?: boolean;
@@ -120,6 +126,7 @@ export type NotiosConfigActionKeymapping = ReadonlyArray<NotiosConfigKeymappingR
 
 declare const notiosConfigV1KeymappingSymbol: unique symbol;
 
+declare const notiosConfigV1KeymappingCommonSymbol: unique symbol;
 declare const notiosConfigV1KeymappingInspectProcSymbol: unique symbol;
 declare const notiosConfigV1KeymappingTreeProcsSymbol: unique symbol;
 declare const notiosConfigV1KeymappingSelectScriptSymbol: unique symbol;
@@ -127,6 +134,7 @@ declare const notiosConfigV1KeymappingHelpSymbol: unique symbol;
 
 type NotiosConfigV1Keymapping = {
   [notiosConfigV1KeymappingSymbol]: unknown;
+  common: Record<NotiosCommonAction | typeof notiosConfigV1KeymappingCommonSymbol, NotiosConfigActionKeymapping>;
   'inspect-proc': Record<
     NotiosInspectProcAction | typeof notiosConfigV1KeymappingInspectProcSymbol,
     NotiosConfigActionKeymapping

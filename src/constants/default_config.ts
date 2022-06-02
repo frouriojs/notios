@@ -292,6 +292,16 @@ const scrollToTopCommon = [
 const defaultConfigOriginal = {
   v1: {
     keymappings: {
+      common: {
+        exit: [
+          // general
+          {
+            type: 'char',
+            char: 'c',
+            ctrl: true,
+          },
+        ],
+      },
       help: {
         back: backCommon,
         'scroll-down-line': scrollDownLineCommon,
@@ -322,12 +332,14 @@ const defaultConfigOriginal = {
             char: 'r',
           },
         ],
+        'restart-recrusive': [],
         kill: [
           {
             type: 'char',
             char: 'x',
           },
         ],
+        'kill-recrusive': [],
         inspect: enterCommon,
       },
       'select-script': {
@@ -439,6 +451,10 @@ const defaultConfigOriginal = {
       ...defaultConfigOriginal.v1,
       keymappings: {
         ...d.v1.keymappings,
+        common: {
+          ...d.v1.keymappings['common'],
+          ...defaultConfigOriginal.v1.keymappings['common'],
+        },
         'inspect-proc': {
           ...d.v1.keymappings['inspect-proc'],
           ...defaultConfigOriginal.v1.keymappings['inspect-proc'],

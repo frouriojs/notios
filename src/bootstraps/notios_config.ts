@@ -27,11 +27,19 @@ export const setupNotiosConfig = ({ uiOptions: { configFileFullPath } }: setupNo
     }
   })();
 
-  actionablePages.map((page) => {
+  actionablePages
+    .filter((page) => page !== 'common')
+    .map((page) => {
+      tryWithHint(() => {
+        constructKeymapping({ ...config.v1.keymappings.common, ...config.v1.keymappings[page] });
+      }, [`Detected the confliction of keymapping or invalid configuration for page "${page}"(including "common" keymapping).`, `See error message for more details.`, `Review your notios configuration.`].join(' '));
+    });
+
+  if (config.v1.keymappings.common.exit.length < 1) {
     tryWithHint(() => {
-      constructKeymapping(config.v1.keymappings[page]);
-    }, `Detected the confliction of keymapping or invalid configuration for page "${page}". Please review your notios configuration.`);
-  });
+      throw new Error(`no keymapping for exit`);
+    }, 'Keymapping for common.exit is necessary because you would be unable to exit notios.');
+  }
 
   return config;
 };

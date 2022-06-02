@@ -59,7 +59,7 @@ export const keymappingToText = (keymapping: NotiosConfigKeymappingRoot): React.
             </>
           )}
           <Text wrap="truncate" color={baseColor}>
-            {keymapping.char}
+            {keymapping.char === ' ' ? '<SPACE>' : keymapping.char}
           </Text>
         </>
       );

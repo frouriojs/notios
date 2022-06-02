@@ -131,7 +131,9 @@ export type CreateNodeParams = Omit<
 
 export type CreateNode = (createNodeParams: CreateNodeParams) => ProcNode | null;
 export type RestartNode = (node?: ProcNode | null | undefined) => void;
+export type RestartAllNode = (node?: ProcNode | null | undefined) => void;
 export type KillNode = (node?: ProcNode | null | undefined) => void;
+export type KillAllNode = (node?: ProcNode | null | undefined) => void;
 export type UpdateListener = () => void;
 export type AddUpdateListener = (updateListener: UpdateListener) => void;
 export type RemoveUpdateListener = (updateListener: UpdateListener) => void;
@@ -140,7 +142,9 @@ export type MarkNodeAsRead = (node?: ProcNode | null | undefined) => void;
 export interface ProcManager {
   readonly createNode: CreateNode;
   readonly restartNode: RestartNode;
+  readonly restartAllNode: RestartAllNode;
   readonly killNode: KillNode;
+  readonly killAllNode: KillAllNode;
   readonly rootNode: ProcNode;
   readonly addUpdateListener: AddUpdateListener;
   readonly removeUpdateListener: RemoveUpdateListener;
@@ -443,15 +447,17 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
 
     node.$notifyUpdate();
 
-    p.stdout.on('data', (buf: Buffer) => {
+    const stdoutDataListener = (buf: Buffer) => {
       $appendLogToNode(buf, nodeStdout);
       nodeStdout.$notifyUpdate();
-    });
-    p.stderr.on('data', (buf: Buffer) => {
+    };
+    const stderrDataListener = (buf: Buffer) => {
       $appendLogToNode(buf, nodeStderr);
       nodeStderr.$notifyUpdate();
-    });
-    p.on('exit', (exitCode) => {
+    };
+    p.stdout.on('data', stdoutDataListener);
+    p.stderr.on('data', stderrDataListener);
+    p.once('exit', (exitCode) => {
       if (nodeStdout.status === 'running') {
         nodeStdout.status = 'finished';
       }
@@ -462,6 +468,9 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
       nodeStderr.exitCode = exitCode;
       nodeStdout.$notifyUpdate();
       nodeStderr.$notifyUpdate();
+
+      p.stdout.off('data', stdoutDataListener);
+      p.stderr.off('data', stderrDataListener);
     });
   };
 
@@ -507,6 +516,14 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
     $appendLogToNode(Buffer.from(`${RESET}${YELLOW}[NOTIOS] MANUALLY RESTARTED${RESET}\n`), inode.children[0]);
   };
 
+  const restartAllNode: RestartAllNode = (node) => {
+    if (!node) return;
+    restartNode(node);
+    node.children.forEach((c) => {
+      restartAllNode(c);
+    });
+  };
+
   const killNode: KillNode = (node) => {
     if (!node) return;
     const inode: ProcNodeInternal = node as any;
@@ -520,6 +537,14 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
     inode.children[1].status = 'killed';
     $appendLogToNode(Buffer.from(`\n${RESET}${YELLOW}[NOTIOS] MANUALLY KILLED${RESET}\n`), inode.children[0]);
     inode.$notifyUpdate();
+  };
+
+  const killAllNode: KillAllNode = (node) => {
+    if (!node) return;
+    killNode(node);
+    node.children.forEach((c) => {
+      killAllNode(c);
+    });
   };
 
   const markNodeAsRead: MarkNodeAsRead = (node) => {
@@ -541,7 +566,9 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
   return {
     createNode,
     restartNode,
+    restartAllNode,
     killNode,
+    killAllNode,
     rootNode,
     addUpdateListener,
     removeUpdateListener,

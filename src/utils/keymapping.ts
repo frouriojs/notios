@@ -28,7 +28,10 @@ export const keymappingToRepr = (keymapping: NotiosConfigKeymapping) => {
   switch (keymapping.type) {
     case 'char':
       return (
-        (keymapping.ctrl ? 'C-' : '') + (keymapping.meta ? 'M-' : '') + (keymapping.shift ? 'S-' : '') + keymapping.char
+        (keymapping.ctrl ? 'C-' : '') +
+        (keymapping.meta ? 'M-' : '') +
+        (keymapping.shift ? 'S-' : '') +
+        (keymapping.char === ' ' ? '<SPACE>' : keymapping.char)
       );
     case 'special':
       return (keymapping.ctrl ? 'C-' : '') + (keymapping.shift ? 'S-' : '') + keymapping.special;

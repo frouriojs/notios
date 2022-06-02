@@ -6,6 +6,12 @@ const defineAction = (action: Action) => {
   return action;
 };
 
+const commonActions = {
+  exit: defineAction({
+    description: 'Exit notios app.',
+  }),
+} as const;
+
 const helpActions = {
   back: defineAction({
     description: 'Close help page.',
@@ -114,8 +120,14 @@ const treeProcsActions = {
   restart: defineAction({
     description: 'Restart process node under the cursor if possible.',
   }),
+  'restart-recrusive': defineAction({
+    description: 'Restart processes of all node of subtree of node under the cursor.',
+  }),
   kill: defineAction({
     description: 'Kill process node under the cursor if possible.',
+  }),
+  'kill-recrusive': defineAction({
+    description: 'Kill processes of all node of subtree of node under the cursor.',
   }),
   inspect: defineAction({
     description: 'Inspect process node under the cursor.',
@@ -141,17 +153,19 @@ const selectScriptActions = {
 } as const;
 
 export const pageActions = {
+  common: commonActions,
   'inspect-proc': inspectProcActions,
   'tree-procs': treeProcsActions,
   'select-script': selectScriptActions,
   help: helpActions,
 } as const;
 
-export const actionablePages = ['inspect-proc', 'tree-procs', 'select-script', 'help'] as const;
+export const actionablePages = ['common', 'inspect-proc', 'tree-procs', 'select-script', 'help'] as const;
 
 // This is not the same as Page.
 export type ActionablePage = keyof typeof pageActions;
 
+export type NotiosCommonAction = keyof typeof commonActions;
 export type NotiosInspectProcAction = keyof typeof inspectProcActions;
 export type NotiosTreeProcsAction = keyof typeof treeProcsActions;
 export type NotiosSelectScriptAction = keyof typeof selectScriptActions;
