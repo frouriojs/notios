@@ -72,6 +72,7 @@ export interface LogAccumulated {
 export interface LogAccumulatedInternal {
   lineCount: number;
   lines: LogLines;
+  $unreadLines: Set<LogLine>;
   $lastLineToTitle: Record<string, LogLine>;
 }
 
@@ -156,6 +157,7 @@ const $createEmptyLogAccumulated = (): LogAccumulatedInternal => {
   return {
     lineCount: 0,
     lines: [],
+    $unreadLines: new Set(),
     $lastLineToTitle: {},
   };
 };
@@ -273,7 +275,11 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
             }
           }
           const lines = node.logAccumulated.lines;
-          lines.push(...beingAdded.sort((a, b) => a.main.timestamp!.getTime() - b.main.timestamp!.getTime()));
+          const beingAddedSorted = beingAdded.sort((a, b) => a.main.timestamp!.getTime() - b.main.timestamp!.getTime());
+          lines.push(...beingAddedSorted);
+          beingAddedSorted.forEach((e) => {
+            node.logAccumulated.$unreadLines.add(e);
+          });
         }
 
         // Wiping out the history.
@@ -551,12 +557,12 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
     if (!node) return;
     const inode: ProcNodeInternal = node as any;
     const internal = (inode: ProcNodeInternal) => {
-      for (let i = inode.logAccumulated.lines.length - 1; i >= 0; i -= 1) {
-        const line = inode.logAccumulated.lines[i];
+      [...inode.logAccumulated.$unreadLines].forEach((line) => {
         line.main.read = true;
-      }
+      });
+      inode.logAccumulated.$unreadLines.clear();
       inode.children.forEach((c) => {
-        markNodeAsRead(c);
+        internal(c);
       });
     };
     internal(inode);
