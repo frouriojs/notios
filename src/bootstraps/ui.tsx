@@ -18,8 +18,9 @@ export const setupUi = ({ uiOptions, procManager, notiosConfig }: SetupUiParams)
 
     process.on('beforeExit', () => {
       process.stdin.write('\u001B[?1049l');
+      return true;
     });
   }
 
-  render(<App uiOptions={uiOptions} procManager={procManager} notiosConfig={notiosConfig} />);
+  render(<App uiOptions={uiOptions} procManager={procManager} notiosConfig={notiosConfig.v1} />);
 };

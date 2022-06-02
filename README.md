@@ -87,41 +87,44 @@ Then edit `~/.config/notios/notios.config.cjs` like following.
 
 ```js
 // @ts-check
-const { defineNotiosConfig, defaultConfig } = require('@notios/config');
+const { defineNotiosConfig } = require('@notios/config');
 
-module.exports = defineNotiosConfig({
+module.exports = defineNotiosConfig((defaultConfig) => {
   ...defaultConfig,
-  // your configurations...
+  v1: {
+    ...defaultConfig.v1,
 
-  // Example for the configuration to show timestamp by default.
+    // your configurations...
 
-  showTimestampByDefault: true,
+    // Example for the configuration to show timestamp by default.
+    showTimestampByDefault: true,
 
-  // Following is just an example for keymapping.
+    // Following is just an example for keymapping.
 
-  // My original safe [CTRL-X then CTRL-X] kill keymapping 😅
-  keymappings: {
-    ...defaultConfig.keymappings,
-    "tree-procs": {
-      ...defaultConfig.keymappings["tree-procs"],
-      kill: [
-        {
-          type: "seq",
-          seq: [
-            {
-              type: "char",
-              char: "x",
-              ctrl: true,
-            },
-            {
-              type: "char",
-              char: "x",
-              ctrl: true,
-            },
-          ],
-        }
-      ],
-    }
+    // My original safe [CTRL-X then CTRL-X] kill keymapping 😅
+    keymappings: {
+      ...defaultConfig.keymappings,
+      "tree-procs": {
+        ...defaultConfig.keymappings["tree-procs"],
+        kill: [
+          {
+            type: "seq",
+            seq: [
+              {
+                type: "char",
+                char: "x",
+                ctrl: true,
+              },
+              {
+                type: "char",
+                char: "x",
+                ctrl: true,
+              },
+            ],
+          }
+        ],
+      }
+    },
   },
 });
 ```
@@ -129,6 +132,7 @@ module.exports = defineNotiosConfig({
 Utility `defineNotiosConfig` enables you use completion and not necessary. Directive `// @ts-check` enables you write configuration type-safely.
 
 Notios never fallbacks to any value of configuration to default values. You should use `defaultConfig` to explicitly specify what and how you want to fallback.
+Spreading in any nesting level like `...defaultConfig.v1,` is necessary to make your configuration working properly for various notios versions.
 
 Until the detailed documatation is ready, please refer to the [default configuration](./libs/notios-config/src/default_config.ts).
 

@@ -3,7 +3,6 @@
 import { Key } from 'ink';
 import {
   NotiosConfigActionKeymapping,
-  NotiosConfigActionKeymappings,
   NotiosConfigKeymapping,
   NotiosConfigKeymappingRoot,
 } from '../../libs/notios-config/src/interfaces/notios-config';
@@ -41,7 +40,7 @@ const toSeq = (keymappingRoot: NotiosConfigKeymappingRoot) => {
   return seq;
 };
 
-export const constructKeymapping = (actionKeymappings: NotiosConfigActionKeymappings<string>) => {
+export const constructKeymapping = (actionKeymappings: Record<string, NotiosConfigActionKeymapping>) => {
   const trie: KeymappingNode = { children: new Map() };
 
   const sortedSeqEntries = (() => {

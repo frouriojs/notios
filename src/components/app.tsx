@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import React, { useEffect, useMemo } from 'react';
-import { NotiosConfig } from '../../libs/notios-config/src/interfaces/notios-config';
+import { NotiosConfigV1 } from '../../libs/notios-config/src/interfaces/notios-config';
 import { inspectContext, useInspectContextDefaultValue } from '../contexts/inspect_context';
 import { notiosConfigContext, NotiosConfigContextValue } from '../contexts/notios_config_context';
 import { pageContext, usePageContextDefaultValue } from '../contexts/page_context';
@@ -18,7 +18,7 @@ import GlobalWrapper from './global_wrapper';
 export interface AppProps {
   uiOptions: UiOptions;
   procManager: ProcManager;
-  notiosConfig: NotiosConfig;
+  notiosConfig: NotiosConfigV1;
 }
 const App: FC<AppProps> = ({ uiOptions, procManager, notiosConfig }) => {
   const notiosConfigContextValue: NotiosConfigContextValue = {
