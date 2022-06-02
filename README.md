@@ -72,9 +72,11 @@ Note that you should replace `run-p`, `run-s` and `npm-run-all` with `n-` prefix
 
 ## Configuration
 
-Notios can be configured with config file. Please `npx notios --help` to check default config file location or explicitly specify the location by `--config` flag.
+Notios can be configured with user level config file. Please `npx notios --help` to check default config file location or explicitly specify the location by `--config` flag.
 
-For linux, `~/.config/notios/notios.config.cjs` is the default location of configuration.
+Project level configuration is not recommended.
+
+For linux users, `~/.config/notios/notios.config.cjs` is the default location of configuration.
 
 ```bash
 mkdir -p ~/.config/notios
