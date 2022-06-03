@@ -160,6 +160,10 @@ export type NotiosConfigV1 = {
   showLabelByDefault: boolean;
   showScriptCommandInSelectScript: boolean;
   showScriptCommandInTreeProcs: boolean;
+  enableUnreadMarker: boolean;
+  enableTimeElapseGradationBar: boolean;
+  historyAlwaysKeepHeadSize: number;
+  historyCacheSize: number;
 };
 
 declare const notiosConfigSymbol: unique symbol;

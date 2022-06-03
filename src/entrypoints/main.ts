@@ -12,7 +12,7 @@ sourceMapSupport.install();
 catchWithHint(() => {
   const uiOptions = setupArgs();
   const notiosConfig = setupNotiosConfig({ uiOptions });
-  const procManager = initiateProcManager({ uiOptions });
+  const procManager = initiateProcManager({ uiOptions, notiosConfig });
 
   // For situatinos like killed by kill command,
   // but this does not work properly.

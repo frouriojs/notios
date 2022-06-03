@@ -438,6 +438,10 @@ const defaultConfigOriginal = {
     showLabelByDefault: true,
     showScriptCommandInSelectScript: true,
     showScriptCommandInTreeProcs: true,
+    enableUnreadMarker: true,
+    enableTimeElapseGradationBar: true,
+    historyAlwaysKeepHeadSize: 100,
+    historyCacheSize: 3000,
   },
 } as const;
 

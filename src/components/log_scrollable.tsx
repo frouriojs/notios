@@ -58,8 +58,18 @@ export interface LogScrollableProps {
   showTitle?: boolean;
   top?: number;
   left?: number;
+  enableUnreadMarker: boolean;
+  enableTimeElapseGradationBar: boolean;
 }
-const LogScrollable: FC<LogScrollableProps> = ({ lines, top = 0, left = 0, showTimestamp, showTitle }) => {
+const LogScrollable: FC<LogScrollableProps> = ({
+  lines,
+  top = 0,
+  left = 0,
+  showTimestamp,
+  showTitle,
+  enableUnreadMarker,
+  enableTimeElapseGradationBar,
+}) => {
   const trimmedLines = useCallback(
     ({ height, width }: { height: number; width: number }) => {
       const shownLines: Line[] = [];
@@ -69,7 +79,9 @@ const LogScrollable: FC<LogScrollableProps> = ({ lines, top = 0, left = 0, showT
         const ts = showTimestamp ? `(${line.main.timestamp ? formatDate(line.main.timestamp) : '???'})` : '';
         const title = showTitle ? (line.title ? `[${line.title}]` : '') : '';
         const wcstart = left;
-        const wcend = left + width - 9 - ts.length - wcwidth(title);
+        const noticeBarLenght = enableUnreadMarker || enableTimeElapseGradationBar ? 3 : 0;
+        const padRightLength = 6;
+        const wcend = left + width - padRightLength - noticeBarLenght - ts.length - wcwidth(title);
         const { sliced: text, stylePrintableBytesLength } = logWcslice(line.main.content, wcstart, wcend);
         const textPrinted = logWcslice(
           line.main.content.filter((c) => c.type === 'print'),
@@ -108,11 +120,25 @@ const LogScrollable: FC<LogScrollableProps> = ({ lines, top = 0, left = 0, showT
     const rate = timestamp == null ? 1 : Math.min(0.04 + 0.93 ** ((ms - timestamp.getTime()) / 1000), 1);
     return (
       <Box height={1}>
-        <Box>
-          <Text color={rate < 0.5 ? '#ffffff' : '#000000'} backgroundColor={rateToRgbHex(rate)}>
-            {read ? '   ' : ' @ '}
-          </Text>
-        </Box>
+        {(() => {
+          if (enableTimeElapseGradationBar) {
+            return (
+              <Box>
+                <Text color={rate < 0.5 ? '#ffffff' : '#000000'} backgroundColor={rateToRgbHex(rate)}>
+                  {!read && enableUnreadMarker ? ' @ ' : '   '}
+                </Text>
+              </Box>
+            );
+          } else {
+            if (enableUnreadMarker) {
+              return (
+                <Box>
+                  <Text>{!read ? ' @ ' : '   '}</Text>
+                </Box>
+              );
+            }
+          }
+        })()}
         <Box>
           <Text color="gray">{ts}</Text>
         </Box>
