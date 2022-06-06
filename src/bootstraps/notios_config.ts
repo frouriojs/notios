@@ -1,7 +1,8 @@
 import fs from 'fs';
-import { defaultConfig } from '../../libs/notios-config/src';
 import { actionablePages } from '../../libs/notios-config/src/action_definitions';
+import { ConfigFn } from '../../libs/notios-config/src/define_notios_config';
 import { NotiosConfig } from '../../libs/notios-config/src/interfaces/notios-config';
+import defaultConfig from '../constants/default_config';
 import { UiOptions } from '../interfaces/ui_options';
 import { tryWithHint } from '../utils/error';
 import { constructKeymapping } from '../utils/keymapping';
@@ -21,15 +22,24 @@ export const setupNotiosConfig = ({ uiOptions: { configFileFullPath } }: setupNo
     if (configFileContent === null) {
       return defaultConfig;
     } else {
-      return require(configFileFullPath);
+      const fn: ConfigFn = require(configFileFullPath);
+      return fn(defaultConfig);
     }
   })();
 
-  actionablePages.map((page) => {
+  actionablePages
+    .filter((page) => page !== 'common')
+    .map((page) => {
+      tryWithHint(() => {
+        constructKeymapping({ ...config.v1.keymappings.common, ...config.v1.keymappings[page] });
+      }, [`Detected the confliction of keymapping or invalid configuration for page "${page}"(including "common" keymapping).`, `See error message for more details.`, `Review your notios configuration.`].join(' '));
+    });
+
+  if (config.v1.keymappings.common.exit.length < 1) {
     tryWithHint(() => {
-      constructKeymapping(config.keymappings[page]);
-    }, `Detected the confliction of keymapping or invalid configuration for page "${page}". Please review your notios configuration.`);
-  });
+      throw new Error(`no keymapping for exit`);
+    }, 'Keymapping for common.exit is necessary because you would be unable to exit notios.');
+  }
 
   return config;
 };

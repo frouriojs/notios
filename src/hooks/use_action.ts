@@ -1,7 +1,7 @@
 import { useInput } from 'ink';
 import { useMemo, useState } from 'react';
 import { ActionablePage, pageActions } from '../../libs/notios-config/src/action_definitions';
-import { NotiosConfig } from '../../libs/notios-config/src/interfaces/notios-config';
+import { NotiosConfigV1 } from '../../libs/notios-config/src/interfaces/notios-config';
 import { constructKeymapping, matchKeymapping } from '../utils/keymapping';
 
 type ActionImpl = () => void;
@@ -9,7 +9,7 @@ type ActionImpl = () => void;
 export type UseActionParams<T extends ActionablePage> = {
   page: T;
   actionMaps: Record<keyof typeof pageActions[T] | 'help', ActionImpl>;
-  notiosConfig: NotiosConfig;
+  notiosConfig: NotiosConfigV1;
   disabled?: boolean;
 };
 const useAction = <T extends ActionablePage>({ page, actionMaps, notiosConfig, disabled }: UseActionParams<T>) => {

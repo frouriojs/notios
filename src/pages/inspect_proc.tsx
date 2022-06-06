@@ -157,6 +157,8 @@ const InspectProc: FC<InspectProcProps> = ({}) => {
           bottom={rbottom}
           showTitle={showTitle}
           showTimestamp={showTimestamp}
+          enableUnreadMarker={notiosConfig.enableUnreadMarker}
+          enableTimeElapseGradationBar={notiosConfig.enableTimeElapseGradationBar}
         />
       </Box>
       <FullDivider

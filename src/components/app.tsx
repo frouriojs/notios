@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import React, { useEffect, useMemo } from 'react';
-import { NotiosConfig } from '../../libs/notios-config/src/interfaces/notios-config';
+import { NotiosConfigV1 } from '../../libs/notios-config/src/interfaces/notios-config';
 import { inspectContext, useInspectContextDefaultValue } from '../contexts/inspect_context';
 import { notiosConfigContext, NotiosConfigContextValue } from '../contexts/notios_config_context';
 import { pageContext, usePageContextDefaultValue } from '../contexts/page_context';
@@ -8,6 +8,7 @@ import { procManagerContext } from '../contexts/proc_manager_context';
 import { termShapeContext, useTermShapeContextDefaultValue } from '../contexts/term_shape_context';
 import { treeProcContext, useTreeProcContextDefaultValue } from '../contexts/tree_proc_context';
 import { uiOptionsContext } from '../contexts/ui_options_context';
+import useAction from '../hooks/use_action';
 import type { UiOptions } from '../interfaces/ui_options';
 import InspectProc from '../pages/inspect_proc';
 import SelectScript from '../pages/select_script';
@@ -18,9 +19,10 @@ import GlobalWrapper from './global_wrapper';
 export interface AppProps {
   uiOptions: UiOptions;
   procManager: ProcManager;
-  notiosConfig: NotiosConfig;
+  notiosConfig: NotiosConfigV1;
+  onExit?: () => void;
 }
-const App: FC<AppProps> = ({ uiOptions, procManager, notiosConfig }) => {
+const App: FC<AppProps> = ({ uiOptions, procManager, notiosConfig, onExit }) => {
   const notiosConfigContextValue: NotiosConfigContextValue = {
     notiosConfig,
   };
@@ -29,6 +31,17 @@ const App: FC<AppProps> = ({ uiOptions, procManager, notiosConfig }) => {
   const inspectContextValue = useInspectContextDefaultValue();
   const pageContextValue = usePageContextDefaultValue();
   const { page, setPage } = pageContextValue;
+
+  useAction({
+    page: 'common',
+    actionMaps: {
+      help: () => {},
+      exit: () => {
+        onExit?.();
+      },
+    },
+    notiosConfig,
+  });
 
   useEffect(() => {
     if (procManager.rootNode.children.length > 0) {

@@ -1,3 +1,17 @@
+// Config Interface Rule:
+// - This should be compatible in long term.
+//   Do not remove properties even if major bumped.
+// - This is because to configure various versions of
+//   notios with single config file.
+// - The identical property should mean the identical
+//   functionality all over the time.
+
+// NOTE:
+//   Creating the other property that means the same
+//   function in different notios versions.
+//   For example, renaming property name. Old property
+//   MUST be remained because of avobe rule.
+
 import {
   NotiosHelpAction,
   NotiosInspectProcAction,
@@ -44,7 +58,6 @@ export type NotiosConfigKeymappingChar = {
     | 'l'
     | 'm'
     | 'n'
-    | 'l'
     | 'o'
     | 'p'
     | 'q'
@@ -88,7 +101,8 @@ export type NotiosConfigKeymappingChar = {
     | ':'
     | ';'
     | '`'
-    | '~';
+    | '~'
+    | ' ';
   shift?: boolean;
   ctrl?: boolean;
   meta?: boolean;
@@ -110,21 +124,50 @@ export type NotiosConfigKeymappingRoot =
 
 export type NotiosConfigActionKeymapping = ReadonlyArray<NotiosConfigKeymappingRoot>;
 
-export type NotiosConfigActionKeymappings<T extends string> = {
-  [notiosAction in T]?: NotiosConfigActionKeymapping;
+declare const notiosConfigV1KeymappingSymbol: unique symbol;
+
+declare const notiosConfigV1KeymappingCommonSymbol: unique symbol;
+declare const notiosConfigV1KeymappingInspectProcSymbol: unique symbol;
+declare const notiosConfigV1KeymappingTreeProcsSymbol: unique symbol;
+declare const notiosConfigV1KeymappingSelectScriptSymbol: unique symbol;
+declare const notiosConfigV1KeymappingHelpSymbol: unique symbol;
+
+type NotiosConfigV1Keymapping = {
+  [notiosConfigV1KeymappingSymbol]: unknown;
+  common: Record<NotiosCommonAction | typeof notiosConfigV1KeymappingCommonSymbol, NotiosConfigActionKeymapping>;
+  'inspect-proc': Record<
+    NotiosInspectProcAction | typeof notiosConfigV1KeymappingInspectProcSymbol,
+    NotiosConfigActionKeymapping
+  >;
+  'tree-procs': Record<
+    NotiosTreeProcsAction | typeof notiosConfigV1KeymappingTreeProcsSymbol,
+    NotiosConfigActionKeymapping
+  >;
+  'select-script': Record<
+    NotiosSelectScriptAction | typeof notiosConfigV1KeymappingSelectScriptSymbol,
+    NotiosConfigActionKeymapping
+  >;
+  help: Record<NotiosHelpAction | typeof notiosConfigV1KeymappingHelpSymbol, NotiosConfigActionKeymapping>;
 };
 
-export type NotiosConfig = {
-  keymappings: {
-    'inspect-proc': NotiosConfigActionKeymappings<NotiosInspectProcAction>;
-    'tree-procs': NotiosConfigActionKeymappings<NotiosTreeProcsAction>;
-    'select-script': NotiosConfigActionKeymappings<NotiosSelectScriptAction>;
-    help: NotiosConfigActionKeymappings<NotiosHelpAction>;
-  };
+declare const notiosConfigV1Symbol: unique symbol;
+export type NotiosConfigV1 = {
+  [notiosConfigV1Symbol]: unknown;
+  keymappings: NotiosConfigV1Keymapping;
   paragraphSize: number;
   wordSize: number;
   showTimestampByDefault: boolean;
   showLabelByDefault: boolean;
   showScriptCommandInSelectScript: boolean;
   showScriptCommandInTreeProcs: boolean;
+  enableUnreadMarker: boolean;
+  enableTimeElapseGradationBar: boolean;
+  historyAlwaysKeepHeadSize: number;
+  historyCacheSize: number;
+};
+
+declare const notiosConfigSymbol: unique symbol;
+export type NotiosConfig = {
+  [notiosConfigSymbol]: unknown;
+  v1: NotiosConfigV1;
 };

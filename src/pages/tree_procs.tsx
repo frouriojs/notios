@@ -132,10 +132,16 @@ const TreeProcs: FC<TreeProcsProps> = ({}) => {
           procManager.restartNode(selectedNode);
         }
       },
+      'restart-recrusive': () => {
+        procManager.restartAllNode(selectedNode);
+      },
       kill: () => {
         if (canKill) {
           procManager.killNode(selectedNode);
         }
+      },
+      'kill-recrusive': () => {
+        procManager.killAllNode(selectedNode);
       },
       inspect: () => {
         const token = selectedNode.token;

@@ -66,12 +66,12 @@ export type LogContentReadonly = Readonly<LogContent>;
 
 export interface LogAccumulated {
   readonly lineCount: number;
-  // TODO(perf): better to use deque
   readonly lines: LogLinesReadonly;
 }
 export interface LogAccumulatedInternal {
   lineCount: number;
   lines: LogLines;
+  $unreadLines: Set<LogLine>;
   $lastLineToTitle: Record<string, LogLine>;
 }
 
@@ -88,6 +88,7 @@ export interface ProcNode {
   readonly token: string;
   readonly status: ProcStatus;
   readonly logAccumulated: LogAccumulated;
+  readonly logOmitted: boolean;
   readonly addUpdateListener: AddUpdateListener;
   readonly removeUpdateListener: RemoveUpdateListener;
   readonly ignored: boolean;
@@ -104,6 +105,7 @@ export interface ProcNodeInternal {
   status: ProcStatus;
   exitCode?: number | null;
   logAccumulated: LogAccumulatedInternal;
+  logOmitted: boolean;
   npmPath?: string;
   addUpdateListener: AddUpdateListener;
   removeUpdateListener: RemoveUpdateListener;
@@ -126,12 +128,15 @@ export type CreateNodeParams = Omit<
   | 'removeUpdateListener'
   | 'logAccumulated'
   | 'logOwn'
+  | 'logOmitted'
   | 'ignored'
 > & { parentToken?: string | undefined };
 
 export type CreateNode = (createNodeParams: CreateNodeParams) => ProcNode | null;
 export type RestartNode = (node?: ProcNode | null | undefined) => void;
+export type RestartAllNode = (node?: ProcNode | null | undefined) => void;
 export type KillNode = (node?: ProcNode | null | undefined) => void;
+export type KillAllNode = (node?: ProcNode | null | undefined) => void;
 export type UpdateListener = () => void;
 export type AddUpdateListener = (updateListener: UpdateListener) => void;
 export type RemoveUpdateListener = (updateListener: UpdateListener) => void;
@@ -140,7 +145,9 @@ export type MarkNodeAsRead = (node?: ProcNode | null | undefined) => void;
 export interface ProcManager {
   readonly createNode: CreateNode;
   readonly restartNode: RestartNode;
+  readonly restartAllNode: RestartAllNode;
   readonly killNode: KillNode;
+  readonly killAllNode: KillAllNode;
   readonly rootNode: ProcNode;
   readonly addUpdateListener: AddUpdateListener;
   readonly removeUpdateListener: RemoveUpdateListener;
@@ -152,6 +159,7 @@ const $createEmptyLogAccumulated = (): LogAccumulatedInternal => {
   return {
     lineCount: 0,
     lines: [],
+    $unreadLines: new Set(),
     $lastLineToTitle: {},
   };
 };
@@ -162,14 +170,25 @@ export const createEmptyLogAccumulated = (): LogAccumulated => {
 
 export interface CreateProcManagerParams {
   forceNoColor: boolean;
+  enableUnreadMarker: boolean;
+  historyAlwaysKeepHeadSize: number;
+  historyCacheSize: number;
 }
-export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): ProcManager => {
+export const createProcManager = ({
+  forceNoColor,
+  enableUnreadMarker,
+  historyAlwaysKeepHeadSize,
+  historyCacheSize,
+}: CreateProcManagerParams): ProcManager => {
   const isColorSupported =
     !('NO_COLOR' in process.env || forceNoColor) &&
     ('FORCE_COLOR' in process.env ||
       process.platform === 'win32' ||
       (tty.isatty(1) && process.env.TERM !== 'dumb') ||
       'CI' in process.env);
+
+  const RESET = isColorSupported ? '\x1b[0m' : '';
+  const YELLOW = isColorSupported ? '\x1b[33m' : '';
 
   const $updateListenerSet = new Set<UpdateListener>();
   // Call when tree structure changed.
@@ -215,9 +234,6 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
       removeUpdateListener,
       token,
       $notifyUpdate: (): void => {
-        [...$updateListenerSet].forEach((listener) => {
-          listener();
-        });
         const children = node.children.filter((child) => !child.ignored);
         if (children.length > 0) {
           node.status = (() => {
@@ -259,24 +275,77 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
               const lastLine = node.logAccumulated.$lastLineToTitle[title] as LogLine | undefined;
               let from = 0;
               if (lastLine) {
-                from = realLen - 1;
-                while (from >= 1 && childLines[from].main.id !== lastLine.main.id) from -= 1;
-                // The last line may be wiped out from history.
-                if (childLines[from].main.id === lastLine.main.id) from += 1;
+                from = realLen;
+                while (
+                  from >= 1 &&
+                  childLines[from - 1].main.id !== -1 &&
+                  childLines[from - 1].main.id !== lastLine.main.id
+                )
+                  from -= 1;
               }
               node.logAccumulated.$lastLineToTitle[title] = childLines[realLen - 1];
               beingAdded.push(...childLines.slice(from, realLen).map((e) => ({ title, main: e.main })));
             }
           }
           const lines = node.logAccumulated.lines;
-          lines.push(...beingAdded.sort((a, b) => a.main.timestamp!.getTime() - b.main.timestamp!.getTime()));
+          const beingAddedSorted = beingAdded.sort((a, b) => a.main.timestamp!.getTime() - b.main.timestamp!.getTime());
+          lines.push(...beingAddedSorted);
+          if (enableUnreadMarker) {
+            const unreadLines = node.logAccumulated.$unreadLines;
+            beingAddedSorted.forEach((e) => {
+              unreadLines.add(e);
+            });
+          }
         }
 
-        // Wiping out the history.
-        // TODO: buggy
-        // node.logAccumulated.lines = node.logAccumulated.lines.slice(-3000);
-
+        // This should be done before wiping out the history.
         node.parent?.$notifyUpdate();
+
+        // Wiping out the history.
+        {
+          const lines = node.logAccumulated.lines;
+          const headSize = Math.max(0, historyAlwaysKeepHeadSize);
+          const tailSize = Math.max(1, historyCacheSize + 1);
+          if (lines.length > headSize + tailSize) {
+            node.logOmitted = true;
+            const head = node.logAccumulated.lines.slice(0, headSize);
+            let tail = node.logAccumulated.lines.slice(headSize);
+            if (enableUnreadMarker) {
+              const unreadLines = node.logAccumulated.$unreadLines;
+              tail.slice(0, -tailSize).forEach((line) => {
+                unreadLines.delete(line);
+              });
+            }
+            tail = tail.slice(-tailSize);
+            node.logAccumulated.lines = [
+              ...head,
+              {
+                title: '[NOTIOS]',
+                main: {
+                  id: -1,
+                  read: true,
+                  timestamp: new Date(0),
+                  content: [
+                    {
+                      type: 'style',
+                      bytes: Uint8Array.from(Buffer.from(`${RESET}${YELLOW}`)),
+                    } as const,
+                    ...[...Buffer.from(`[NOTIOS] HISTORY DROPPED`)].map((b) => ({ type: 'print', byte: b } as const)),
+                    {
+                      type: 'style',
+                      bytes: Uint8Array.from(Buffer.from(`${RESET}`)),
+                    } as const,
+                  ],
+                },
+              },
+              ...tail,
+            ];
+          }
+        }
+
+        [...$updateListenerSet].forEach((listener) => {
+          listener();
+        });
       },
     };
     $tokenToNodeMap.set(token, node);
@@ -289,18 +358,22 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
     node.logOwn.currentParser = newParser;
     for (const action of actions) {
       const lines = node.logAccumulated.lines;
+      const unreadLines = node.logAccumulated.$unreadLines;
       if (lines.length === 0) {
         const title = '';
         const logLine: LogLine = {
           main: {
             timestamp: undefined,
             read: false,
-            id: lines.length,
+            id: node.logAccumulated.lineCount,
             content: [],
           },
           title,
         };
         lines.push(logLine);
+        if (enableUnreadMarker) {
+          unreadLines.add(logLine);
+        }
         node.logAccumulated.$lastLineToTitle[title] = logLine;
       }
       const lastLine = lines[lines.length - 1];
@@ -334,7 +407,7 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
                 main: {
                   timestamp: undefined,
                   read: false,
-                  id: lines.length,
+                  id: node.logAccumulated.lineCount,
                   content: [
                     {
                       type: 'style',
@@ -345,6 +418,9 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
                 title,
               };
               lines.push(logLine);
+              if (enableUnreadMarker) {
+                unreadLines.add(logLine);
+              }
               node.logAccumulated.$lastLineToTitle[title] = logLine;
               break;
             }
@@ -377,6 +453,7 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
     type: 'none',
     logOwn: $createEmptyLogOwn(),
     logAccumulated: $createEmptyLogAccumulated(),
+    logOmitted: false,
     children: [],
     ignored: false,
   });
@@ -400,6 +477,7 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
       type: 'none',
       logOwn: $createEmptyLogOwn(),
       logAccumulated: $createEmptyLogAccumulated(),
+      logOmitted: false,
       children: [],
       ignored: false,
     });
@@ -409,6 +487,7 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
       type: 'none',
       logOwn: $createEmptyLogOwn(),
       logAccumulated: $createEmptyLogAccumulated(),
+      logOmitted: false,
       children: [],
       ignored: false,
     });
@@ -443,15 +522,17 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
 
     node.$notifyUpdate();
 
-    p.stdout.on('data', (buf: Buffer) => {
+    const stdoutDataListener = (buf: Buffer) => {
       $appendLogToNode(buf, nodeStdout);
       nodeStdout.$notifyUpdate();
-    });
-    p.stderr.on('data', (buf: Buffer) => {
+    };
+    const stderrDataListener = (buf: Buffer) => {
       $appendLogToNode(buf, nodeStderr);
       nodeStderr.$notifyUpdate();
-    });
-    p.on('exit', (exitCode) => {
+    };
+    p.stdout.on('data', stdoutDataListener);
+    p.stderr.on('data', stderrDataListener);
+    p.once('exit', (exitCode) => {
       if (nodeStdout.status === 'running') {
         nodeStdout.status = 'finished';
       }
@@ -462,6 +543,9 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
       nodeStderr.exitCode = exitCode;
       nodeStdout.$notifyUpdate();
       nodeStderr.$notifyUpdate();
+
+      p.stdout.off('data', stdoutDataListener);
+      p.stderr.off('data', stderrDataListener);
     });
   };
 
@@ -474,6 +558,7 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
       ...params,
       logOwn: $createEmptyLogOwn(),
       logAccumulated: $createEmptyLogAccumulated(),
+      logOmitted: false,
       children: [],
       ignored: false,
     });
@@ -493,9 +578,6 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
     $updateListenerSet.delete(listener);
   };
 
-  const RESET = isColorSupported ? '\x1b[0m' : '';
-  const YELLOW = isColorSupported ? '\x1b[33m' : '';
-
   const restartNode: RestartNode = (node) => {
     if (!node) return;
     const inode: ProcNodeInternal = node as any;
@@ -505,6 +587,14 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
     inode.children[1].ignored = true;
     $startRunning(inode);
     $appendLogToNode(Buffer.from(`${RESET}${YELLOW}[NOTIOS] MANUALLY RESTARTED${RESET}\n`), inode.children[0]);
+  };
+
+  const restartAllNode: RestartAllNode = (node) => {
+    if (!node) return;
+    restartNode(node);
+    node.children.forEach((c) => {
+      restartAllNode(c);
+    });
   };
 
   const killNode: KillNode = (node) => {
@@ -522,16 +612,25 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
     inode.$notifyUpdate();
   };
 
+  const killAllNode: KillAllNode = (node) => {
+    if (!node) return;
+    killNode(node);
+    node.children.forEach((c) => {
+      killAllNode(c);
+    });
+  };
+
   const markNodeAsRead: MarkNodeAsRead = (node) => {
+    if (!enableUnreadMarker) return;
     if (!node) return;
     const inode: ProcNodeInternal = node as any;
     const internal = (inode: ProcNodeInternal) => {
-      for (let i = inode.logAccumulated.lines.length - 1; i >= 0; i -= 1) {
-        const line = inode.logAccumulated.lines[i];
+      [...inode.logAccumulated.$unreadLines].forEach((line) => {
         line.main.read = true;
-      }
+      });
+      inode.logAccumulated.$unreadLines.clear();
       inode.children.forEach((c) => {
-        markNodeAsRead(c);
+        internal(c);
       });
     };
     internal(inode);
@@ -541,7 +640,9 @@ export const createProcManager = ({ forceNoColor }: CreateProcManagerParams): Pr
   return {
     createNode,
     restartNode,
+    restartAllNode,
     killNode,
+    killAllNode,
     rootNode,
     addUpdateListener,
     removeUpdateListener,

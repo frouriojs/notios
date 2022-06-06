@@ -10,6 +10,8 @@ export interface LogScrollableCounterProps {
   showTitle?: boolean;
   bottom?: number;
   left?: number;
+  enableUnreadMarker: boolean;
+  enableTimeElapseGradationBar: boolean;
 }
 const LogScrollableCounter: FC<LogScrollableCounterProps> = ({ bottom = 0, lines, ...rest }) => {
   return (
