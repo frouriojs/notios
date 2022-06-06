@@ -106,6 +106,22 @@ export const matchKeymapping = (
         ctrl: input.startsWith('[1;5') || input.startsWith('[1;6'),
         shift: input.startsWith('[1;2') || input.startsWith('[1;6'),
       };
+      // eslint-disable-next-line no-control-regex
+      if (/^\[B(?:\x1b\[B)+$/.test(input)) {
+        // upWheel
+        return keymappingToString({
+          type: 'special',
+          special: 'upWheel',
+        });
+      }
+      // eslint-disable-next-line no-control-regex
+      if (/^\[A(?:\x1b\[A)+$/.test(input)) {
+        // downWheel
+        return keymappingToString({
+          type: 'special',
+          special: 'downWheel',
+        });
+      }
       if (input === '[1~') {
         // home
         return keymappingToString({
@@ -122,9 +138,48 @@ export const matchKeymapping = (
           special: 'end',
         });
       }
+      if (input === '[5;2~') {
+        // S-pageUp
+        return keymappingToString({
+          ...sub2,
+          type: 'special',
+          special: 'pageUp',
+          shift: true,
+        });
+      }
+      if (input === '[6;2~') {
+        // S-pageDown
+        return keymappingToString({
+          ...sub2,
+          type: 'special',
+          special: 'pageDown',
+          shift: true,
+        });
+      }
+      if (input === '[5;6~') {
+        // C-S-pageUp
+        return keymappingToString({
+          ...sub2,
+          type: 'special',
+          special: 'pageUp',
+          ctrl: true,
+          shift: true,
+        });
+      }
+      if (input === '[6;6~') {
+        // C-S-pageDown
+        return keymappingToString({
+          ...sub2,
+          type: 'special',
+          special: 'pageDown',
+          ctrl: true,
+          shift: true,
+        });
+      }
+
       if (sub2.ctrl || sub2.shift) {
         if (input.endsWith('H')) {
-          // home
+          // C-home
           return keymappingToString({
             ...sub2,
             type: 'special',
@@ -132,7 +187,7 @@ export const matchKeymapping = (
           });
         }
         if (input.endsWith('F')) {
-          // end
+          // C-end
           return keymappingToString({
             ...sub2,
             type: 'special',
@@ -176,6 +231,22 @@ export const matchKeymapping = (
 
     for (const specialKeyName of specialKeyNames) {
       if (key[specialKeyName]) {
+        // shift only
+        if (specialKeyName === 'tab') {
+          return keymappingToString({
+            type: 'special',
+            special: specialKeyName,
+            shift: sub.shift,
+          });
+        }
+        // no modifier
+        if (specialKeyName === 'delete' || specialKeyName === 'backspace' || specialKeyName === 'return') {
+          return keymappingToString({
+            type: 'special',
+            special: specialKeyName,
+          });
+        }
+        // ctrl+shift modifier
         return keymappingToString({
           ...sub,
           type: 'special',

@@ -19,19 +19,31 @@ import {
   NotiosSelectScriptAction,
   NotiosTreeProcsAction,
 } from '../action_definitions';
-import { specialKeyNames } from '../special_key_names';
 
-// TODO: dirty monkey patch for ink
-type ExtraSpecialKeyName = 'home' | 'end';
-
-export type SpecialKeyName = typeof specialKeyNames[number] | ExtraSpecialKeyName;
-
-export type NotiosConfigKeymappingSpecial = {
+type NotiosConfigKeymappingSpecialNoMod = {
   type: 'special';
-  special: SpecialKeyName;
+  special: 'upWheel' | 'downWheel' | 'return' | 'backspace' | 'delete';
+  shift?: false;
+  ctrl?: false;
+};
+type NotiosConfigKeymappingSpecialShiftOnly = {
+  type: 'special';
+  special: 'tab';
+  shift?: boolean;
+  ctrl?: false;
+};
+type NotiosConfigKeymappingSpecialCtrlShift = {
+  type: 'special';
+  special: 'pageUp' | 'pageDown' | 'downArrow' | 'upArrow' | 'rightArrow' | 'leftArrow' | 'home' | 'end';
   shift?: boolean;
   ctrl?: boolean;
 };
+export type NotiosConfigKeymappingSpecial =
+  | NotiosConfigKeymappingSpecialNoMod
+  | NotiosConfigKeymappingSpecialShiftOnly
+  | NotiosConfigKeymappingSpecialCtrlShift;
+export type SpecialKeyName = NotiosConfigKeymappingSpecial['special'];
+
 export type NotiosConfigKeymappingChar = {
   type: 'char';
   char:
