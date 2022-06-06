@@ -4,16 +4,6 @@ import { ActionablePage, pageActions } from '../../libs/notios-config/src/action
 import { NotiosConfigV1 } from '../../libs/notios-config/src/interfaces/notios-config';
 import { constructKeymapping, matchKeymapping } from '../utils/keymapping';
 
-export const dump = (obj: unknown) => {
-  const fs = require('fs');
-  const util = require('util');
-  const path = require('path');
-  const { homedir } = require('os');
-  const debugLogFile = path.resolve(homedir(), 'notios-debug.log');
-
-  fs.appendFileSync(debugLogFile, `${new Date().toLocaleTimeString()}: ${util.inspect(obj)}\n`);
-};
-
 type ActionImpl = () => void;
 
 export type UseActionParams<T extends ActionablePage> = {
@@ -37,7 +27,6 @@ const useAction = <T extends ActionablePage>({ page, actionMaps, notiosConfig, d
   const [cur, setCur] = useState(trie);
 
   useInput((input, key) => {
-    dump({ input, key });
     if (disabled) return;
     const [next, matched] = matchKeymapping(cur, input, key);
 

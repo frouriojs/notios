@@ -27,19 +27,6 @@ const prevCommon = [
   {
     type: 'special',
     special: 'tab',
-    shift: true,
-  },
-  {
-    type: 'special',
-    special: 'tab',
-    ctrl: true,
-    shift: true,
-  },
-  {
-    type: 'char',
-    char: 'i',
-    ctrl: true,
-    shift: true,
   },
   // vim/less
   {
@@ -63,11 +50,6 @@ const nextCommon = [
   {
     type: 'special',
     special: 'tab',
-  },
-  {
-    type: 'special',
-    special: 'tab',
-    ctrl: true,
   },
   {
     type: 'char',
