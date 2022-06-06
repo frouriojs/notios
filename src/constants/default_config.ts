@@ -424,7 +424,7 @@ const defaultConfigOriginal = {
             char: 't',
           },
         ],
-        'toggle-lable': [
+        'toggle-label': [
           {
             type: 'char',
             char: 'v',

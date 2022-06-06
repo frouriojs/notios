@@ -96,7 +96,7 @@ const inspectProcActions = {
   'toggle-timestamp': defineAction({
     description: 'Toggle timestamp view.',
   }),
-  'toggle-lable': defineAction({
+  'toggle-label': defineAction({
     description: 'Toggle label view. Note that <out>/<err> messages does not have label.',
   }),
 } as const;

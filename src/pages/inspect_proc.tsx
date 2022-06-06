@@ -111,7 +111,7 @@ const InspectProc: FC<InspectProcProps> = ({}) => {
       'toggle-timestamp': () => {
         setShowTimestamp((v) => !v);
       },
-      'toggle-lable': () => {
+      'toggle-label': () => {
         setShowTitle((v) => !v);
       },
     },
