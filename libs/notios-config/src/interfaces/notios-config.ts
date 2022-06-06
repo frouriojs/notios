@@ -13,6 +13,7 @@
 //   MUST be remained because of avobe rule.
 
 import {
+  NotiosCommonAction,
   NotiosHelpAction,
   NotiosInspectProcAction,
   NotiosSelectScriptAction,
@@ -171,3 +172,4 @@ export type NotiosConfig = {
   [notiosConfigSymbol]: unknown;
   v1: NotiosConfigV1;
 };
+export {};
