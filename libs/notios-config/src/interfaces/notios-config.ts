@@ -22,7 +22,7 @@ import {
 import { specialKeyNames } from '../special_key_names';
 
 // TODO: dirty monkey patch for ink
-type ExtraSpecialKeyName = 'home' | 'end';
+type ExtraSpecialKeyName = 'home' | 'end' | 'upWheel' | 'downWheel';
 
 export type SpecialKeyName = typeof specialKeyNames[number] | ExtraSpecialKeyName;
 

@@ -211,6 +211,10 @@ const scrollDownParagraphCommon = [
     special: 'downArrow',
     ctrl: true,
   },
+  {
+    type: 'special',
+    special: 'upWheel',
+  },
   // vim/less
   // emacs
 ] as const;
@@ -221,6 +225,10 @@ const scrollUpParagraphCommon = [
     type: 'special',
     special: 'upArrow',
     ctrl: true,
+  },
+  {
+    type: 'special',
+    special: 'downWheel',
   },
   // vim/less
   // emacs
@@ -344,8 +352,20 @@ const defaultConfigOriginal = {
       },
       'select-script': {
         back: backCommon,
-        'cursor-prev': prevCommon,
-        'cursor-next': nextCommon,
+        'cursor-prev': [
+          ...prevCommon,
+          {
+            type: 'special',
+            special: 'downWheel',
+          },
+        ],
+        'cursor-next': [
+          ...nextCommon,
+          {
+            type: 'special',
+            special: 'upWheel',
+          },
+        ],
         'start-and-back': [...enterCommon, ...rightCommon],
         start: [],
       },

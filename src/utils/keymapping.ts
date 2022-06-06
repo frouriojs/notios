@@ -106,6 +106,22 @@ export const matchKeymapping = (
         ctrl: input.startsWith('[1;5') || input.startsWith('[1;6'),
         shift: input.startsWith('[1;2') || input.startsWith('[1;6'),
       };
+      // eslint-disable-next-line no-control-regex
+      if (/^\[B(?:\x1b\[B)+$/.test(input)) {
+        // upWheel
+        return keymappingToString({
+          type: 'special',
+          special: 'upWheel',
+        });
+      }
+      // eslint-disable-next-line no-control-regex
+      if (/^\[A(?:\x1b\[A)+$/.test(input)) {
+        // downWheel
+        return keymappingToString({
+          type: 'special',
+          special: 'downWheel',
+        });
+      }
       if (input === '[1~') {
         // home
         return keymappingToString({
