@@ -20,19 +20,28 @@ import {
   NotiosTreeProcsAction,
 } from '../action_definitions';
 
-export type NotiosConfigKeymappingSpecialNoMod = {
+type NotiosConfigKeymappingSpecialNoMod = {
   type: 'special';
-  special: 'upWheel' | 'downWheel' | 'return' | 'backspace' | 'delete' | 'tab';
+  special: 'upWheel' | 'downWheel' | 'return' | 'backspace' | 'delete';
   shift?: false;
   ctrl?: false;
 };
-export type NotiosConfigKeymappingSpecialCtrlShift = {
+type NotiosConfigKeymappingSpecialShiftOnly = {
+  type: 'special';
+  special: 'tab';
+  shift?: boolean;
+  ctrl?: false;
+};
+type NotiosConfigKeymappingSpecialCtrlShift = {
   type: 'special';
   special: 'pageUp' | 'pageDown' | 'downArrow' | 'upArrow' | 'rightArrow' | 'leftArrow' | 'home' | 'end';
   shift?: boolean;
   ctrl?: boolean;
 };
-export type NotiosConfigKeymappingSpecial = NotiosConfigKeymappingSpecialNoMod | NotiosConfigKeymappingSpecialCtrlShift;
+export type NotiosConfigKeymappingSpecial =
+  | NotiosConfigKeymappingSpecialNoMod
+  | NotiosConfigKeymappingSpecialShiftOnly
+  | NotiosConfigKeymappingSpecialCtrlShift;
 export type SpecialKeyName = NotiosConfigKeymappingSpecial['special'];
 
 export type NotiosConfigKeymappingChar = {

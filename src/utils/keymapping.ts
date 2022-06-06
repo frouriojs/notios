@@ -231,17 +231,22 @@ export const matchKeymapping = (
 
     for (const specialKeyName of specialKeyNames) {
       if (key[specialKeyName]) {
-        if (
-          specialKeyName === 'tab' ||
-          specialKeyName === 'delete' ||
-          specialKeyName === 'backspace' ||
-          specialKeyName === 'return'
-        ) {
+        // shift only
+        if (specialKeyName === 'tab') {
+          return keymappingToString({
+            type: 'special',
+            special: specialKeyName,
+            shift: sub.shift,
+          });
+        }
+        // no modifier
+        if (specialKeyName === 'delete' || specialKeyName === 'backspace' || specialKeyName === 'return') {
           return keymappingToString({
             type: 'special',
             special: specialKeyName,
           });
         }
+        // ctrl+shift modifier
         return keymappingToString({
           ...sub,
           type: 'special',
