@@ -27,6 +27,7 @@ const prevCommon = [
   {
     type: 'special',
     special: 'tab',
+    shift: true,
   },
   // vim/less
   {
