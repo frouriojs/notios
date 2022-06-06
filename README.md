@@ -161,5 +161,5 @@ Utility `defineNotiosConfig` enables you use completion and not necessary. Direc
 Notios never fallbacks to any value of configuration to default values. You should use `defaultConfig` to explicitly specify what and how you want to fallback.
 Spreading in any nesting level like `...defaultConfig.v1,` is necessary to make your configuration working properly for various notios versions.
 
-Until the detailed documatation is ready, please refer to the [default configuration](./libs/notios-config/src/default_config.ts).
+Until the detailed documatation is ready, please refer to the [default configuration](https://github.com/frouriojs/notios/blob/main/src/constants/default_config.ts).
 
