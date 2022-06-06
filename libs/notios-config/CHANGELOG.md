@@ -1,5 +1,19 @@
 # @notios/config
 
+## 0.2.0
+
+### Minor Changes
+
+- [#93](https://github.com/frouriojs/notios/pull/93) [`b74d4ec`](https://github.com/frouriojs/notios/commit/b74d4ec34fef22da5bc0cd0025a3bb577b35c449) Thanks [@LumaKernel](https://github.com/LumaKernel)! - minor bump
+
+### Patch Changes
+
+- [#92](https://github.com/frouriojs/notios/pull/92) [`7f1a871`](https://github.com/frouriojs/notios/commit/7f1a8711ad5a0383923feb20f31b1756e3e81d08) Thanks [@LumaKernel](https://github.com/LumaKernel)! - feat: improve better support for modifier to special keys
+
+* [#90](https://github.com/frouriojs/notios/pull/90) [`c739a67`](https://github.com/frouriojs/notios/commit/c739a67560498b94109547b5c37376ec0c5e092a) Thanks [@LumaKernel](https://github.com/LumaKernel)! - fix: typo
+
+- [#92](https://github.com/frouriojs/notios/pull/92) [`469f2c5`](https://github.com/frouriojs/notios/commit/469f2c594d91bcc2ca8ab48c301d7ad1940d226f) Thanks [@LumaKernel](https://github.com/LumaKernel)! - feat: support mouse wheel (at least in my environments)
+
 ## 0.1.1
 
 ### Patch Changes
