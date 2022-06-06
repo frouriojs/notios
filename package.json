@@ -37,6 +37,7 @@
     "lint:fix": "eslint --ext .ts,.js,.tsx . --fix && prettier --check \"./**/*.{js,ts,tsx}\" --write"
   },
   "dependencies": {
+    "@notios/config": "workspace:*",
     "commander": "^9.0.0",
     "cross-spawn": "7.0.3",
     "ink": "^3.2.0",
