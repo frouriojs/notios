@@ -82,7 +82,7 @@ For linux users, `~/.config/notios/notios.config.cjs` is the default location of
 mkdir -p ~/.config/notios
 cd ~/.config/notios
 npm init -y
-npm i @notios/config
+npm i @notios/config@latest
 ```
 
 Then edit `~/.config/notios/notios.config.cjs` like following.
