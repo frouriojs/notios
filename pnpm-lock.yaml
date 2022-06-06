@@ -30,8 +30,8 @@ importers:
       eslint-plugin-import: ^2.25.4
       eslint-plugin-react: ^7.29.4
       eslint-plugin-react-hooks: ^4.3.0
-      ink: ^3.2.0
-      ink-divider: ^3.0.0
+      ink: 3.2.0
+      ink-divider: 3.0.0
       ink-testing-library: ^2.1.0
       node-ipc: 10.1.0
       npm-run-all: 4.1.5
@@ -1204,7 +1204,7 @@ packages:
     dev: true
 
   /convert-to-spaces/1.0.2:
-    resolution: {integrity: sha1-fj5Iu+bZl7FBfdyihoIEtNPYVxU=}
+    resolution: {integrity: sha512-cj09EBuObp9gZNQCzc7hByQyrs6jVGE+o9kSJmeUoj+GiPiJvi5LYqEH/Hmme4+MTLHM+Ejtq+FChpjjEnsPdQ==}
     engines: {node: '>= 4'}
     dev: false
 
