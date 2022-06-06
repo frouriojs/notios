@@ -1,5 +1,11 @@
 # @notios/config
 
+## 0.1.1
+
+### Patch Changes
+
+- [#88](https://github.com/frouriojs/notios/pull/88) [`07e8e40`](https://github.com/frouriojs/notios/commit/07e8e40c05c9c912851b42bad1305aa89e79beca) Thanks [@LumaKernel](https://github.com/LumaKernel)! - fix(config): .d.ts to .ts to build correctly
+
 ## 0.1.0
 
 ### Minor Changes

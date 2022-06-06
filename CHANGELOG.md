@@ -1,5 +1,11 @@
 # notios
 
+## 0.3.1
+
+### Patch Changes
+
+- [#88](https://github.com/frouriojs/notios/pull/88) [`71d4c6b`](https://github.com/frouriojs/notios/commit/71d4c6baa443b21b35c4e3f7b5632d0911686bc0) Thanks [@LumaKernel](https://github.com/LumaKernel)! - docs: fix link
+
 ## 0.3.0
 
 ### Minor Changes
