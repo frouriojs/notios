@@ -91,7 +91,7 @@ Then edit `~/.config/notios/notios.config.cjs` like following.
 // @ts-check
 const { defineNotiosConfig } = require('@notios/config');
 
-module.exports = defineNotiosConfig((defaultConfig) => {
+module.exports = defineNotiosConfig((defaultConfig) => ({
   ...defaultConfig,
   v1: {
     ...defaultConfig.v1,
@@ -153,7 +153,7 @@ module.exports = defineNotiosConfig((defaultConfig) => {
       },
     },
   },
-});
+}));
 ```
 
 Utility `defineNotiosConfig` enables you use completion and not necessary. Directive `// @ts-check` enables you write configuration type-safely.
