@@ -16,10 +16,10 @@ importers:
         version: 7.0.3
       ink:
         specifier: 3.2.0
-        version: 3.2.0(@types/react@17.0.40)(react@17.0.2)
+        version: 3.2.0(@types/react@18.2.12)(react@18.2.0)
       ink-divider:
         specifier: 3.0.0
-        version: 3.0.0(ink@3.2.0)(react@17.0.2)
+        version: 3.0.0(ink@3.2.0)(react@18.2.0)
       node-ipc:
         specifier: 10.1.0
         version: 10.1.0
@@ -30,8 +30,8 @@ importers:
         specifier: ^0.5.0
         version: 0.5.0
       react:
-        specifier: ^17.0.2
-        version: 17.0.2
+        specifier: ^18.2.0
+        version: 18.2.0
       source-map-support:
         specifier: ^0.5.21
         version: 0.5.21
@@ -61,8 +61,8 @@ importers:
         specifier: ^9.2.0
         version: 9.2.0
       '@types/react':
-        specifier: ^17.0.40
-        version: 17.0.40
+        specifier: ^18.2.12
+        version: 18.2.12
       '@types/source-map-support':
         specifier: ^0.5.4
         version: 0.5.4
@@ -116,7 +116,7 @@ importers:
         version: 4.3.0(eslint@8.11.0)
       ink-testing-library:
         specifier: ^2.1.0
-        version: 2.1.0(@types/react@17.0.40)
+        version: 2.1.0(@types/react@18.2.12)
       prettier:
         specifier: ^2.6.0
         version: 2.6.0
@@ -752,8 +752,8 @@ packages:
   /@types/prop-types@15.7.4:
     resolution: {integrity: sha512-rZ5drC/jWjrArrS8BR6SIr4cWpW09RNTYt9AMZo3Jwwif+iacXAqgVjm0B0Bv/S1jhDXKHqRVNCbACkJ89RAnQ==}
 
-  /@types/react@17.0.40:
-    resolution: {integrity: sha512-UrXhD/JyLH+W70nNSufXqMZNuUD2cXHu6UjCllC6pmOQgBX4SGXOH8fjRka0O0Ee0HrFxapDD8Bwn81Kmiz6jQ==}
+  /@types/react@18.2.12:
+    resolution: {integrity: sha512-ndmBMLCgn38v3SntMeoJaIrO6tGHYKMEBohCUmw8HoLLQdRMOIGXfeYaBTLe2lsFaSB3MOK1VXscYFnmLtTSmw==}
     dependencies:
       '@types/prop-types': 15.7.4
       '@types/scheduler': 0.16.2
@@ -2512,20 +2512,20 @@ packages:
   /inherits@2.0.4:
     resolution: {integrity: sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==}
 
-  /ink-divider@3.0.0(ink@3.2.0)(react@17.0.2):
+  /ink-divider@3.0.0(ink@3.2.0)(react@18.2.0):
     resolution: {integrity: sha512-Mqb9WArtEZCtXw622aHhJqPK157QNc+8ssl9/RvAZlS6nZRCKyW4mYOYCudQh6dSuFGt9eG5yaqT1mJaGmwu+w==}
     engines: {node: '>=6'}
     peerDependencies:
       ink: '>=3.0.0'
       react: '>=16.8.0'
     dependencies:
-      ink: 3.2.0(@types/react@17.0.40)(react@17.0.2)
+      ink: 3.2.0(@types/react@18.2.12)(react@18.2.0)
       prop-types: 15.8.1
-      react: 17.0.2
+      react: 18.2.0
       string-width: 4.2.3
     dev: false
 
-  /ink-testing-library@2.1.0(@types/react@17.0.40):
+  /ink-testing-library@2.1.0(@types/react@18.2.12):
     resolution: {integrity: sha512-7TNlOjJlJXB33vG7yVa+MMO7hCjaC1bCn+zdpSjknWoLbOWMaFdKc7LJvqVkZ0rZv2+akhjXPrcR/dbxissjUw==}
     engines: {node: '>=10'}
     peerDependencies:
@@ -2534,10 +2534,10 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@types/react': 17.0.40
+      '@types/react': 18.2.12
     dev: true
 
-  /ink@3.2.0(@types/react@17.0.40)(react@17.0.2):
+  /ink@3.2.0(@types/react@18.2.12)(react@18.2.0):
     resolution: {integrity: sha512-firNp1q3xxTzoItj/eOOSZQnYSlyrWks5llCTVX37nJ59K3eXbQ8PtzCguqo8YI19EELo5QxaKnJd4VxzhU8tg==}
     engines: {node: '>=10'}
     peerDependencies:
@@ -2547,7 +2547,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@types/react': 17.0.40
+      '@types/react': 18.2.12
       ansi-escapes: 4.3.2
       auto-bind: 4.0.0
       chalk: 4.1.2
@@ -2559,18 +2559,18 @@ packages:
       is-ci: 2.0.0
       lodash: 4.17.21
       patch-console: 1.0.0
-      react: 17.0.2
-      react-devtools-core: 4.23.0
-      react-reconciler: 0.26.2(react@17.0.2)
+      react: 18.2.0
+      react-devtools-core: 4.27.8
+      react-reconciler: 0.26.2(react@18.2.0)
       scheduler: 0.20.2
       signal-exit: 3.0.7
       slice-ansi: 3.0.0
-      stack-utils: 2.0.5
+      stack-utils: 2.0.6
       string-width: 4.2.3
       type-fest: 0.12.0
       widest-line: 3.1.0
       wrap-ansi: 6.2.0
-      ws: 7.5.7
+      ws: 7.5.9
       yoga-layout-prebuilt: 1.10.0
     transitivePeerDependencies:
       - bufferutil
@@ -3416,11 +3416,11 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /react-devtools-core@4.23.0:
-    resolution: {integrity: sha512-KkzneT1LczFtebbTJlvRphIRvzuHLhI9ghfrseVv9ktBs+l2cXy8Svw5U16lzQnwU9okVEcURmGPgH79WWrlaw==}
+  /react-devtools-core@4.27.8:
+    resolution: {integrity: sha512-KwoH8/wN/+m5wTItLnsgVraGNmFrcTWR3k1VimP1HjtMMw4CNF+F5vg4S/0tzTEKIdpCi2R7mPNTC+/dswZMgw==}
     dependencies:
       shell-quote: 1.7.3
-      ws: 7.5.7
+      ws: 7.5.9
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -3429,7 +3429,7 @@ packages:
   /react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
 
-  /react-reconciler@0.26.2(react@17.0.2):
+  /react-reconciler@0.26.2(react@18.2.0):
     resolution: {integrity: sha512-nK6kgY28HwrMNwDnMui3dvm3rCFjZrcGiuwLc5COUipBK5hWHLOxMJhSnSomirqWwjPBJKV1QcbkI0VJr7Gl1Q==}
     engines: {node: '>=0.10.0'}
     peerDependencies:
@@ -3437,16 +3437,15 @@ packages:
     dependencies:
       loose-envify: 1.4.0
       object-assign: 4.1.1
-      react: 17.0.2
+      react: 18.2.0
       scheduler: 0.20.2
     dev: false
 
-  /react@17.0.2:
-    resolution: {integrity: sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA==}
+  /react@18.2.0:
+    resolution: {integrity: sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==}
     engines: {node: '>=0.10.0'}
     dependencies:
       loose-envify: 1.4.0
-      object-assign: 4.1.1
     dev: false
 
   /read-pkg-up@7.0.1:
@@ -3745,8 +3744,8 @@ packages:
     resolution: {integrity: sha1-BOaSb2YolTVPPdAVIDYzuFcpfiw=}
     dev: true
 
-  /stack-utils@2.0.5:
-    resolution: {integrity: sha512-xrQcmYhOsn/1kX+Vraq+7j4oE2j/6BFscZ0etmYg81xuM8Gq0022Pxb8+IqgOFUIaxHs0KaSb7T1+OegiNrNFA==}
+  /stack-utils@2.0.6:
+    resolution: {integrity: sha512-XlkWvfIm6RmsWtNJx+uqtKLS8eqFbxUg0ZzLXqY0caEy9l7hruX8IpiDnjsLavoBgqCCR71TqWO8MaXYheJ3RQ==}
     engines: {node: '>=10'}
     dependencies:
       escape-string-regexp: 2.0.0
@@ -4239,8 +4238,8 @@ packages:
   /wrappy@1.0.2:
     resolution: {integrity: sha1-tSQ9jz7BqjXxNkYFvA0QNuMKtp8=}
 
-  /ws@7.5.7:
-    resolution: {integrity: sha512-KMvVuFzpKBuiIXW3E4u3mySRO2/mCHSyZDJQM5NQ9Q9KHWHWh0NHgfbRMLLrceUK5qAL4ytALJbpRMjixFZh8A==}
+  /ws@7.5.9:
+    resolution: {integrity: sha512-F+P9Jil7UiSKSkppIiD94dN07AwvFixvLIj1Og1Rl9GGMuNipJnV9JzjD6XuqmAeiswGvUmNLjr5cFuXwNS77Q==}
     engines: {node: '>=8.3.0'}
     peerDependencies:
       bufferutil: ^4.0.1
