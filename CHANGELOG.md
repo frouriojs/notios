@@ -1,5 +1,11 @@
 # notios
 
+## 0.4.1
+
+### Patch Changes
+
+- [#99](https://github.com/frouriojs/notios/pull/99) [`30cf7fd`](https://github.com/frouriojs/notios/commit/30cf7fd1b3c0fb9c4c5248a167840192022898e4) Thanks [@solufa](https://github.com/solufa)! - fix: update react@18.2
+
 ## 0.4.0
 
 ### Minor Changes
