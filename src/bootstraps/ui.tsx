@@ -12,7 +12,6 @@ export interface SetupUiParams {
   notiosConfig: NotiosConfig;
 }
 export const setupUi = ({ uiOptions, procManager, notiosConfig }: SetupUiParams) => {
-  // eslint-disable-next-line prefer-const
   let rendered: Instance | undefined = undefined;
   const onExit = () => {
     if (!rendered) return;

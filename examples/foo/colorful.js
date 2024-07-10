@@ -1,4 +1,4 @@
-const delay = (ms) => new Promise((r) => setTimeout(r, ms));
+// const delay = (ms) => new Promise((r) => setTimeout(r, ms));
 const main = async () => {
   console.log('starting colorful1!');
   console.log('starting colorful2!');

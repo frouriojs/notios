@@ -16,12 +16,9 @@ export const catchWithHint = (f: () => void) => {
   } catch (e: unknown) {
     if (e instanceof Error && hintSymbol in e) {
       const hint = (e as any)[hintSymbol];
-      // eslint-disable-next-line no-console
       console.error(e);
-      // eslint-disable-next-line no-console
       console.error('[NOTIOS ERROR HINT] %s', hint);
     } else {
-      // eslint-disable-next-line no-console
       console.error(e);
     }
     process.exit(1);

@@ -7,7 +7,7 @@ export interface HijackNpmRunAllParams {
   initial?: any;
   options?: any;
 }
-/* eslint-disable import/no-dynamic-require */
+
 const hijackNpmRunAll = ({ name, initial, options }: HijackNpmRunAllParams) => {
   if (process.env[envVarNames.rootToken] && process.env[envVarNames.parentToken]) {
     const args = process.argv.slice(2);
@@ -29,6 +29,5 @@ const hijackNpmRunAll = ({ name, initial, options }: HijackNpmRunAllParams) => {
     }
   }
 };
-/* eslint-enable import/no-dynamic-require */
 
 export default hijackNpmRunAll;
