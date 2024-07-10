@@ -2,15 +2,15 @@ import { Box, Text } from 'ink';
 import path from 'path';
 import type { FC } from 'react';
 import React, { useState } from 'react';
-import { pageActions } from '../../libs/notios-config/src/action_definitions';
-import FullDivider from '../components/full_divider';
-import HelpPortal from '../components/help_portal';
-import VerticalScrollable from '../components/vertical_scrollable';
-import { useNotiosConfigContext } from '../contexts/notios_config_context';
-import { usePageContext } from '../contexts/page_context';
-import { useProcManagerContext } from '../contexts/proc_manager_context';
-import { useUiOptionsContext } from '../contexts/ui_options_context';
-import useAction from '../hooks/use_action';
+import { pageActions } from '../../libs/notios-config/src/action_definitions.js';
+import FullDivider from '../components/full_divider.js';
+import HelpPortal from '../components/help_portal.js';
+import VerticalScrollable from '../components/vertical_scrollable.js';
+import { useNotiosConfigContext } from '../contexts/notios_config_context.js';
+import { usePageContext } from '../contexts/page_context.js';
+import { useProcManagerContext } from '../contexts/proc_manager_context.js';
+import { useUiOptionsContext } from '../contexts/ui_options_context.js';
+import useAction from '../hooks/use_action.js';
 
 export interface SelectScriptProps {}
 const SelectScript: FC<SelectScriptProps> = ({}) => {

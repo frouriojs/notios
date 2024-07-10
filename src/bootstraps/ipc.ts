@@ -1,7 +1,7 @@
 import nodeIpc from 'node-ipc';
-import { IPC_CONFIG_NAME } from '../constants/ipc';
-import type { IpcRequest } from '../interfaces/ipc_request';
-import type { ProcManager } from '../utils/proc_manager';
+import { IPC_CONFIG_NAME } from '../constants/ipc.js';
+import type { IpcRequest } from '../interfaces/ipc_request.js';
+import type { ProcManager } from '../utils/proc_manager.js';
 
 export interface setupIpcParams {
   procManager: ProcManager;

@@ -1,15 +1,15 @@
 import { Box, Text } from 'ink';
 import React, { FC, useEffect, useState } from 'react';
-import { Action, ActionablePage, pageActions } from '../../libs/notios-config/src/action_definitions';
+import { Action, ActionablePage, pageActions } from '../../libs/notios-config/src/action_definitions.js';
 import {
   NotiosConfigActionKeymapping,
   NotiosConfigKeymappingRoot,
-} from '../../libs/notios-config/src/interfaces/notios-config';
-import { useNotiosConfigContext } from '../contexts/notios_config_context';
-import { useTermShapeContext } from '../contexts/term_shape_context';
-import useAction from '../hooks/use_action';
-import FullDivider from './full_divider';
-import VerticalScrollable from './vertical_scrollable';
+} from '../../libs/notios-config/src/interfaces/notios-config.js';
+import { useNotiosConfigContext } from '../contexts/notios_config_context.js';
+import { useTermShapeContext } from '../contexts/term_shape_context.js';
+import useAction from '../hooks/use_action.js';
+import FullDivider from './full_divider.js';
+import VerticalScrollable from './vertical_scrollable.js';
 
 export const keymappingToText = (keymapping: NotiosConfigKeymappingRoot): React.ReactElement => {
   const baseColor = 'blue';

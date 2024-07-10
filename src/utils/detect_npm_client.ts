@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import type { NpmClient } from '../interfaces/ui_options';
+import type { NpmClient } from '../interfaces/ui_options.js';
 
 export const executable = (name: string) => {
   try {

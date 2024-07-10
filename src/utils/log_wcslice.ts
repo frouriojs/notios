@@ -1,5 +1,5 @@
 import wcwidth from 'wcwidth';
-import { LogContentReadonly } from '../utils/proc_manager';
+import { LogContentReadonly } from '../utils/proc_manager.js';
 
 export interface LogWcsliceResult {
   stylePrintableBytesLength: number;

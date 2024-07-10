@@ -1,8 +1,8 @@
 import type { FC } from 'react';
 import React from 'react';
-import { LogLinesReadonly } from '../utils/proc_manager';
-import BoxWithSize from './box_with_size';
-import LogScrollable from './log_scrollable';
+import { LogLinesReadonly } from '../utils/proc_manager.js';
+import BoxWithSize from './box_with_size.js';
+import LogScrollable from './log_scrollable.js';
 
 export interface LogScrollableCounterProps {
   lines: LogLinesReadonly;

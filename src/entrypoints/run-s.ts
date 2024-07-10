@@ -1,4 +1,4 @@
-import hijackNpmRunAll from '../bootstraps/hijack_npm_run_all';
+import hijackNpmRunAll from '../bootstraps/hijack_npm_run_all.js';
 
 hijackNpmRunAll({
   name: 'run-s',

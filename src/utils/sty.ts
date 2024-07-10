@@ -14,7 +14,7 @@ import type {
   AnsiActionScript,
   AnsiActionStrike,
   AnsiActionUnderline,
-} from 'ansi-parser/interfaces/ansi-action';
+} from 'ansi-parser/interfaces/ansi-action.js';
 import { encodeAnsiAction } from 'ansi-parser/src';
 
 export type StyContext = Partial<

@@ -1,7 +1,7 @@
 import { Box, Text } from 'ink';
 import type { FC } from 'react';
 import React from 'react';
-import BoxWithSize from './box_with_size';
+import BoxWithSize from './box_with_size.js';
 
 export interface VerticalScrollableProps {
   lines: readonly React.ReactElement[];

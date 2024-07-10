@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { NotiosConfigV1 } from '../../libs/notios-config/src/interfaces/notios-config';
+import { NotiosConfigV1 } from '../../libs/notios-config/src/interfaces/notios-config.js';
 
 export type NotiosConfigContextValue = {
   notiosConfig: NotiosConfigV1;

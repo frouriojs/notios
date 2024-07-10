@@ -1,11 +1,11 @@
-import { AnsiParser } from 'ansi-parser/interfaces/ansi-parser';
+import { AnsiParser } from 'ansi-parser/interfaces/ansi-parser.js';
 import { decodeAnsiBytes, defaultAnsiParser } from 'ansi-parser/src';
 import type childProcess from 'child_process';
 import cp from 'cross-spawn';
 import tty from 'tty';
-import { envVarNames } from '../constants/ipc';
-import crossKill from './cross_kill';
-import { applyActionToSty, defaultStyContext, restoreSty, StyContext } from './sty';
+import { envVarNames } from '../constants/ipc.js';
+import crossKill from './cross_kill.js';
+import { applyActionToSty, defaultStyContext, restoreSty, StyContext } from './sty.js';
 
 export type ProcStatus = 'waiting' | 'running' | 'killed' | 'finished';
 

@@ -1,6 +1,6 @@
 import parseCliArgs from 'npm-run-all/bin/common/parse-cli-args';
-import { envVarNames } from '../constants/ipc';
-import { request } from './ipc_request';
+import { envVarNames } from '../constants/ipc.js';
+import { request } from './ipc_request.js';
 
 export interface HijackNpmRunAllParams {
   name: string;

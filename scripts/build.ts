@@ -1,7 +1,7 @@
 import arg from 'arg';
 import type { Plugin, WatchMode } from 'esbuild';
 import { build } from 'esbuild';
-import nodeExternalsPlugin from 'esbuild-node-externals';
+import { nodeExternalsPlugin } from 'esbuild-node-externals';
 import * as fs from 'fs';
 import * as path from 'path';
 
