@@ -59,7 +59,7 @@ const main = async ({ fromDir, toDir, watch, target, clean }: Params) => {
 
   await build({
     platform: 'node',
-    format: 'cjs',
+    format: 'esm',
     target,
     minify: true,
     keepNames: true,

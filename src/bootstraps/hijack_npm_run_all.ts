@@ -1,4 +1,4 @@
-import parseCliArgs from 'npm-run-all/bin/common/parse-cli-args';
+import parseCliArgs from 'npm-run-all/bin/common/parse-cli-args.js';
 import { envVarNames } from '../constants/ipc.js';
 import { request } from './ipc_request.js';
 
@@ -8,7 +8,7 @@ export interface HijackNpmRunAllParams {
   options?: any;
 }
 
-const hijackNpmRunAll = ({ name, initial, options }: HijackNpmRunAllParams) => {
+const hijackNpmRunAll = async ({ name, initial, options }: HijackNpmRunAllParams) => {
   if (process.env[envVarNames.rootToken] && process.env[envVarNames.parentToken]) {
     const args = process.argv.slice(2);
     const argv = parseCliArgs(args, initial, options);
@@ -22,10 +22,11 @@ const hijackNpmRunAll = ({ name, initial, options }: HijackNpmRunAllParams) => {
         return false;
       }
     })();
+
     if (npmRunAllFound) {
-      require(`@notios/npm-run-all/bin/${name}`);
+      await import(`@notios/npm-run-all/bin/${name}/index.js`);
     } else {
-      require(`npm-run-all/bin/${name}`);
+      await import(`npm-run-all/bin/${name}/index.js`);
     }
   }
 };

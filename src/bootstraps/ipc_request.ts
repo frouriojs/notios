@@ -1,6 +1,6 @@
 import fs from 'fs';
 import nodeIpc from 'node-ipc';
-import matchTasks from 'npm-run-all/lib/match-tasks';
+import matchTasks from 'npm-run-all/lib/match-tasks.js';
 import path from 'path';
 import { envVarNames, IPC_CONFIG_NAME } from '../constants/ipc.js';
 import type { IpcRequest, RunGroup } from '../interfaces/ipc_request.js';

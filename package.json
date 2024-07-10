@@ -32,7 +32,7 @@
     "dev:libs": "pnpm run \"--filter=./libs/*\" build-dev",
     "dev:notios": "pnpm run build:notios --watch",
     "test": "run-p test:*",
-    "test:libs": "pnpm run --filter=./libs test",
+    "test:libs": "pnpm run \"--filter=./libs/*\" test",
     "lint": "eslint && prettier --check \"./**/*.{js,ts,tsx}\"",
     "lint:fix": "eslint --fix && prettier --check \"./**/*.{js,ts,tsx}\" --write"
   },
