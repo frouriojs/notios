@@ -450,7 +450,7 @@ const defaultConfigOriginal = {
 
 // typecheck
 () =>
-  defineNotiosConfig.default((d) => ({
+  defineNotiosConfig((d) => ({
     ...d,
     ...defaultConfigOriginal,
     v1: {

@@ -1,9 +1,13 @@
+import assert from 'assert';
+
 export const hintSymbol = Symbol('error hint');
 
 export const tryWithHint = <T>(f: () => T, hint: string): T => {
   try {
     return f();
   } catch (e: unknown) {
+    assert(e instanceof Error);
+
     throw Object.assign(e, {
       [hintSymbol]: hint,
     });

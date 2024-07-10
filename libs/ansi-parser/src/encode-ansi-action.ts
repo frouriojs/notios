@@ -1,5 +1,5 @@
-import { AnsiAction } from '../interfaces/ansi-action';
-import colorIndexOf from './color-index-of';
+import { AnsiAction } from '../interfaces/ansi-action.js';
+import colorIndexOf from './color-index-of.js';
 
 const encodeInteger = (s: string): Uint8Array => {
   return Uint8Array.from([...s].map((c) => c.charCodeAt(0)));

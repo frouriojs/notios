@@ -1,6 +1,7 @@
 {
   "name": "@notios/config",
   "version": "0.2.0",
+  "type": "module",
   "description": "Notios configuration tools",
   "keywords": [
     "notios",

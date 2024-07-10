@@ -1,4 +1,4 @@
-import { ColorName } from '../interfaces/ansi-action';
+import { ColorName } from '../interfaces/ansi-action.js';
 
 const colorIndexOf = (colorName: ColorName) => {
   switch (colorName) {

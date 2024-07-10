@@ -31,7 +31,7 @@ import type {
   AnsiActionControll1d,
   AnsiActionControll1e,
   AnsiActionControll1f,
-} from '../interfaces/ansi-controll-action';
+} from '../interfaces/ansi-controll-action.js';
 
 /**
  * Action for controll character NUL(0x00).

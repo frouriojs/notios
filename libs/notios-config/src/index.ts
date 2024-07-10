@@ -1,1 +1,1 @@
-export { default as defineNotiosConfig } from './define_notios_config';
+export { default as defineNotiosConfig } from './define_notios_config.js';

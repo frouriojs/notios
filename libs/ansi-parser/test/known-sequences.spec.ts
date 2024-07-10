@@ -1,7 +1,7 @@
 import { expect, test } from 'vitest';
-import { AnsiAction } from '../interfaces/ansi-action';
-import decodeAnsiBytes from '../src/decode-ansi-bytes';
-import defaultAnsiParser from '../src/default-ansi-parser';
+import { AnsiAction } from '../interfaces/ansi-action.js';
+import decodeAnsiBytes from '../src/decode-ansi-bytes.js';
+import defaultAnsiParser from '../src/default-ansi-parser.js';
 
 type Case = {
   s: string;

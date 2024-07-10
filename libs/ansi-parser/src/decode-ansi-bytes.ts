@@ -1,6 +1,6 @@
-import type { AnsiAction } from '../interfaces/ansi-action';
-import type { AnsiParser } from '../interfaces/ansi-parser';
-import decodeAnsiByte from './decode-ansi-byte';
+import type { AnsiAction } from '../interfaces/ansi-action.js';
+import type { AnsiParser } from '../interfaces/ansi-parser.js';
+import decodeAnsiByte from './decode-ansi-byte.js';
 
 const decodeAnsiBytes = (
   parser: AnsiParser,

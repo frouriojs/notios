@@ -18,7 +18,7 @@ import {
   NotiosInspectProcAction,
   NotiosSelectScriptAction,
   NotiosTreeProcsAction,
-} from '../action_definitions';
+} from '../action_definitions.js';
 
 type NotiosConfigKeymappingSpecialNoMod = {
   type: 'special';
