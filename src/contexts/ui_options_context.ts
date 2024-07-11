@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import type { UiOptions } from '../interfaces/ui_options.js';
+import type { UiOptions } from '../interfaces/ui_options';
 
 export type UiOptionsContextValue = UiOptions;
 

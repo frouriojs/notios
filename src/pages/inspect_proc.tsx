@@ -1,16 +1,16 @@
 import { Box, Text } from 'ink';
 import React, { FC, useEffect, useMemo, useState } from 'react';
-import { pageActions } from '../../libs/notios-config/src/action_definitions.js';
-import FullDivider from '../components/full_divider.js';
-import HelpPortal from '../components/help_portal.js';
-import LogScrollableCounter from '../components/log_scrollable_counter.js';
-import { useInspectContext } from '../contexts/inspect_context.js';
-import { useNotiosConfigContext } from '../contexts/notios_config_context.js';
-import { usePageContext } from '../contexts/page_context.js';
-import { useProcManagerContext } from '../contexts/proc_manager_context.js';
-import { useTermShapeContext } from '../contexts/term_shape_context.js';
-import useAction from '../hooks/use_action.js';
-import { createEmptyLogAccumulated } from '../utils/proc_manager.js';
+import { pageActions } from '../../libs/notios-config/src/action_definitions';
+import FullDivider from '../components/full_divider';
+import HelpPortal from '../components/help_portal';
+import LogScrollableCounter from '../components/log_scrollable_counter';
+import { useInspectContext } from '../contexts/inspect_context';
+import { useNotiosConfigContext } from '../contexts/notios_config_context';
+import { usePageContext } from '../contexts/page_context';
+import { useProcManagerContext } from '../contexts/proc_manager_context';
+import { useTermShapeContext } from '../contexts/term_shape_context';
+import useAction from '../hooks/use_action';
+import { createEmptyLogAccumulated } from '../utils/proc_manager';
 
 export interface InspectProcProps {}
 const InspectProc: FC<InspectProcProps> = ({}) => {

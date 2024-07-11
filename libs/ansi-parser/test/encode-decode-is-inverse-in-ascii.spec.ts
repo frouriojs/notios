@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
-import decodeAnsiBytes from '../src/decode-ansi-bytes.js';
-import defaultAnsiParser from '../src/default-ansi-parser.js';
-import encodeAnsiBytes from '../src/encode-ansi-action.js';
+import decodeAnsiBytes from '../src/decode-ansi-bytes';
+import defaultAnsiParser from '../src/default-ansi-parser';
+import encodeAnsiBytes from '../src/encode-ansi-action';
 
 type SimpleCase = {
   s: string;

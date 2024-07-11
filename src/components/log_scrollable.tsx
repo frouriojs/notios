@@ -3,10 +3,10 @@ import type { FC } from 'react';
 import React, { useCallback } from 'react';
 import stringLength from 'string-length';
 import wcwidth from 'wcwidth';
-import useCurrentMs from '../hooks/use_current_ms.js';
-import logWcslice from '../utils/log_wcslice.js';
-import { LogLinesReadonly } from '../utils/proc_manager.js';
-import BoxWithSize from './box_with_size.js';
+import useCurrentMs from '../hooks/use_current_ms';
+import logWcslice from '../utils/log_wcslice';
+import { LogLinesReadonly } from '../utils/proc_manager';
+import BoxWithSize from './box_with_size';
 
 const formatDate = (d: Date) => {
   return `${d.getFullYear()}/${`0${d.getMonth() + 1}`.slice(-2)}/${`0${d.getDate()}`.slice(

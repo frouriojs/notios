@@ -1,4 +1,4 @@
-import type { ScriptDefinition } from './script_definition.js';
+import type { ScriptDefinition } from './script_definition';
 
 export type NpmClient = 'npm' | 'yarn' | 'pnpm';
 

@@ -1,4 +1,4 @@
-import { AnsiColor8bit } from '../interfaces/ansi-action.js';
+import { AnsiColor8bit } from '../interfaces/ansi-action';
 
 const decodeAnsiColor8bit = (n: number): AnsiColor8bit => {
   if (n < 16) {

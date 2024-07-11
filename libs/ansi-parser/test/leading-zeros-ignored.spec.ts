@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
-import decodeAnsiBytes from '../src/decode-ansi-bytes.js';
-import defaultAnsiParser from '../src/default-ansi-parser.js';
+import decodeAnsiBytes from '../src/decode-ansi-bytes';
+import defaultAnsiParser from '../src/default-ansi-parser';
 
 type SameCheckCase = {
   s: string;

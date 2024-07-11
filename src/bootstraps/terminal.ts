@@ -1,5 +1,5 @@
-import { envVarNames } from '../constants/ipc.js';
-import { waitKillDone } from '../utils/cross_kill.js';
+import { envVarNames } from '../constants/ipc';
+import { waitKillDone } from '../utils/cross_kill';
 
 export const setupTerminal = () => {
   if (process.platform !== 'win32' && process.env[envVarNames.doNotAlternate] !== '1') {

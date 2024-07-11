@@ -1,7 +1,7 @@
 import Divider from 'ink-divider';
 import type { FC } from 'react';
 import React from 'react';
-import BoxWithSize from './box_with_size.js';
+import BoxWithSize from './box_with_size';
 
 export interface FullDividerProps {
   title?: string;

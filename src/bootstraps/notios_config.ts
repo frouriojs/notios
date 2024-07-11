@@ -1,11 +1,11 @@
 import fs from 'fs';
-import { actionablePages } from '../../libs/notios-config/src/action_definitions.js';
-import { ConfigFn } from '../../libs/notios-config/src/define_notios_config.js';
-import { NotiosConfig } from '../../libs/notios-config/src/interfaces/notios-config.js';
-import defaultConfig from '../constants/default_config.js';
-import { UiOptions } from '../interfaces/ui_options.js';
-import { tryWithHint } from '../utils/error.js';
-import { constructKeymapping } from '../utils/keymapping.js';
+import { actionablePages } from '../../libs/notios-config/src/action_definitions';
+import { ConfigFn } from '../../libs/notios-config/src/define_notios_config';
+import { NotiosConfig } from '../../libs/notios-config/src/interfaces/notios-config';
+import defaultConfig from '../constants/default_config';
+import { UiOptions } from '../interfaces/ui_options';
+import { tryWithHint } from '../utils/error';
+import { constructKeymapping } from '../utils/keymapping';
 
 export interface setupNotiosConfigParams {
   uiOptions: UiOptions;

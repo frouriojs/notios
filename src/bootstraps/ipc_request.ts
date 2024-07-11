@@ -1,11 +1,11 @@
 import fs from 'fs';
 import nodeIpc from 'node-ipc';
-import matchTasks from 'npm-run-all/lib/match-tasks.js';
+import matchTasks from 'npm-run-all/lib/match-tasks';
 import path from 'path';
-import { envVarNames, IPC_CONFIG_NAME } from '../constants/ipc.js';
-import type { IpcRequest, RunGroup } from '../interfaces/ipc_request.js';
-import detectNpmClient from '../utils/detect_npm_client.js';
-import { tryWithHint } from '../utils/error.js';
+import { envVarNames, IPC_CONFIG_NAME } from '../constants/ipc';
+import type { IpcRequest, RunGroup } from '../interfaces/ipc_request';
+import detectNpmClient from '../utils/detect_npm_client';
+import { tryWithHint } from '../utils/error';
 
 export const request = (cliName: string, args: string[], argv: any): void => {
   const manifestFullPath = path.resolve(process.cwd(), 'package.json');

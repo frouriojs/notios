@@ -1,11 +1,11 @@
 import sourceMapSupport from 'source-map-support';
-import { setupArgs } from '../bootstraps/args.js';
-import initiateProcManager from '../bootstraps/initiate_proc_manager.js';
-import { setupIpc } from '../bootstraps/ipc.js';
-import { setupNotiosConfig } from '../bootstraps/notios_config.js';
-import { exitNotios, setupTerminal } from '../bootstraps/terminal.js';
-import { setupUi } from '../bootstraps/ui.js';
-import { catchWithHint } from '../utils/error.js';
+import { setupArgs } from '../bootstraps/args';
+import initiateProcManager from '../bootstraps/initiate_proc_manager';
+import { setupIpc } from '../bootstraps/ipc';
+import { setupNotiosConfig } from '../bootstraps/notios_config';
+import { exitNotios, setupTerminal } from '../bootstraps/terminal';
+import { setupUi } from '../bootstraps/ui';
+import { catchWithHint } from '../utils/error';
 
 sourceMapSupport.install();
 

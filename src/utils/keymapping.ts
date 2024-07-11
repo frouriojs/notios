@@ -5,8 +5,8 @@ import {
   NotiosConfigActionKeymapping,
   NotiosConfigKeymapping,
   NotiosConfigKeymappingRoot,
-} from '../../libs/notios-config/src/interfaces/notios-config.js';
-import { specialKeyNames } from '../../libs/notios-config/src/special_key_names.js';
+} from '../../libs/notios-config/src/interfaces/notios-config';
+import { specialKeyNames } from '../../libs/notios-config/src/special_key_names';
 
 type KeymappingNode = {
   children: Map<string, KeymappingNode>;

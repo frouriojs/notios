@@ -1,6 +1,6 @@
 import { Box, measureElement } from 'ink';
 import React, { useEffect, useRef, useState } from 'react';
-import { useTermShapeContext } from '../contexts/term_shape_context.js';
+import { useTermShapeContext } from '../contexts/term_shape_context';
 
 export type BoxWithSizeProps = Omit<Parameters<typeof Box>[0], 'ref' | 'children'> & {
   children: (size: { height: number; width: number }) => React.ReactNode;

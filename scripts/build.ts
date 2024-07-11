@@ -66,6 +66,7 @@ const main = async ({ fromDir, toDir, watch, target, clean }: Params) => {
     sourcemap: 'inline',
     bundle: true,
     outdir: toDirAbs,
+    outExtension: { '.js': '.mjs' },
     entryPoints,
     watch: watchOptions,
     plugins: [

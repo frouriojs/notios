@@ -1,5 +1,5 @@
-import defineNotiosConfig from '../../libs/notios-config/src/define_notios_config.js';
-import { NotiosConfig } from '../../libs/notios-config/src/interfaces/notios-config.js';
+import defineNotiosConfig from '../../libs/notios-config/src/define_notios_config';
+import { NotiosConfig } from '../../libs/notios-config/src/interfaces/notios-config';
 
 // NOTE: Cannot distinguish Tab from C-Tab. Same for S-Tab.
 // NOTE: Cannot distinguish <Special Keys> from M-<Special Keys>.

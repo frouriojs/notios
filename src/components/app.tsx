@@ -1,20 +1,20 @@
 import type { FC } from 'react';
 import React, { useEffect, useMemo } from 'react';
-import { NotiosConfigV1 } from '../../libs/notios-config/src/interfaces/notios-config.js';
-import { inspectContext, useInspectContextDefaultValue } from '../contexts/inspect_context.js';
-import { notiosConfigContext, NotiosConfigContextValue } from '../contexts/notios_config_context.js';
-import { pageContext, usePageContextDefaultValue } from '../contexts/page_context.js';
-import { procManagerContext } from '../contexts/proc_manager_context.js';
-import { termShapeContext, useTermShapeContextDefaultValue } from '../contexts/term_shape_context.js';
-import { treeProcContext, useTreeProcContextDefaultValue } from '../contexts/tree_proc_context.js';
-import { uiOptionsContext } from '../contexts/ui_options_context.js';
-import useAction from '../hooks/use_action.js';
-import type { UiOptions } from '../interfaces/ui_options.js';
-import InspectProc from '../pages/inspect_proc.js';
-import SelectScript from '../pages/select_script.js';
-import TreeProcs from '../pages/tree_procs.js';
-import type { ProcManager } from '../utils/proc_manager.js';
-import GlobalWrapper from './global_wrapper.js';
+import { NotiosConfigV1 } from '../../libs/notios-config/src/interfaces/notios-config';
+import { inspectContext, useInspectContextDefaultValue } from '../contexts/inspect_context';
+import { notiosConfigContext, NotiosConfigContextValue } from '../contexts/notios_config_context';
+import { pageContext, usePageContextDefaultValue } from '../contexts/page_context';
+import { procManagerContext } from '../contexts/proc_manager_context';
+import { termShapeContext, useTermShapeContextDefaultValue } from '../contexts/term_shape_context';
+import { treeProcContext, useTreeProcContextDefaultValue } from '../contexts/tree_proc_context';
+import { uiOptionsContext } from '../contexts/ui_options_context';
+import useAction from '../hooks/use_action';
+import type { UiOptions } from '../interfaces/ui_options';
+import InspectProc from '../pages/inspect_proc';
+import SelectScript from '../pages/select_script';
+import TreeProcs from '../pages/tree_procs';
+import type { ProcManager } from '../utils/proc_manager';
+import GlobalWrapper from './global_wrapper';
 
 export interface AppProps {
   uiOptions: UiOptions;

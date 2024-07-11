@@ -1,4 +1,4 @@
-import { AnsiParser } from '../interfaces/ansi-parser.js';
+import { AnsiParser } from '../interfaces/ansi-parser';
 
 export const defaultAnsiParser = (): AnsiParser => {
   return {

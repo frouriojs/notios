@@ -1,4 +1,4 @@
-import { NotiosConfig } from './interfaces/notios-config.js';
+import { NotiosConfig } from './interfaces/notios-config';
 
 export type ConfigFn = (defaultConfig: NotiosConfig) => NotiosConfig;
 

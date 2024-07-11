@@ -1,8 +1,8 @@
-import type { AnsiAction } from '../interfaces/ansi-action.js';
-import type { AnsiParser } from '../interfaces/ansi-parser.js';
-import { ansiActionControllList } from './controll-actions.js';
-import decodeAnsiColor8bit from './decode-ansi-color-8bit.js';
-import { defaultAnsiParser } from './default-ansi-parser.js';
+import type { AnsiAction } from '../interfaces/ansi-action';
+import type { AnsiParser } from '../interfaces/ansi-parser';
+import { ansiActionControllList } from './controll-actions';
+import decodeAnsiColor8bit from './decode-ansi-color-8bit';
+import { defaultAnsiParser } from './default-ansi-parser';
 
 const lessThan256 = (n: string) => {
   if (n.length < 3) return true;

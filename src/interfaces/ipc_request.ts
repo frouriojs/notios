@@ -1,4 +1,4 @@
-import type { NpmClient } from './ui_options.js';
+import type { NpmClient } from './ui_options';
 
 export interface RunTask {
   name: string;

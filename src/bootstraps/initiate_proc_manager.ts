@@ -1,8 +1,8 @@
-import { NotiosConfig } from '../../libs/notios-config/src/interfaces/notios-config.js';
-import type { UiOptions } from '../interfaces/ui_options.js';
-import detectNpmClient from '../utils/detect_npm_client.js';
-import type { ProcManager } from '../utils/proc_manager.js';
-import { createProcManager } from '../utils/proc_manager.js';
+import { NotiosConfig } from '../../libs/notios-config/src/interfaces/notios-config';
+import type { UiOptions } from '../interfaces/ui_options';
+import detectNpmClient from '../utils/detect_npm_client';
+import type { ProcManager } from '../utils/proc_manager';
+import { createProcManager } from '../utils/proc_manager';
 
 export interface InitiateProcManagerParams {
   uiOptions: UiOptions;

@@ -2,12 +2,12 @@ import { program } from 'commander';
 import fs from 'fs';
 import path from 'path';
 import xdg from 'xdg-portable';
-import type { UiOptions } from '../interfaces/ui_options.js';
-import detectNpmClient from '../utils/detect_npm_client.js';
-import { tryWithHint } from '../utils/error.js';
+import type { UiOptions } from '../interfaces/ui_options';
+import detectNpmClient from '../utils/detect_npm_client';
+import { tryWithHint } from '../utils/error';
 
 export const setupArgs = (): UiOptions => {
-  const defaultNotiosConfigFilePath = path.resolve(xdg.default.config(), 'notios', 'notios.config.cjs');
+  const defaultNotiosConfigFilePath = path.resolve(xdg.config(), 'notios', 'notios.config.cjs');
 
   program.option('--manifest <string>', 'package.json path', 'package.json');
   program.option('--no-color', 'force to suppress coloring');

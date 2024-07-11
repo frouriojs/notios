@@ -7,11 +7,6 @@
     "outDir": "build",
     "declaration": true
   },
-  "exclude": [
-    "node_modules"
-  ],
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx"
-  ]
+  "exclude": ["node_modules"],
+  "include": ["src/**/*.mts", "src/**/*.ts"]
 }

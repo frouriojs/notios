@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import type { ProcManager } from '../utils/proc_manager.js';
+import type { ProcManager } from '../utils/proc_manager';
 
 export type ProcManagerContextValue = ProcManager;
 

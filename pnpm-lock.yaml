@@ -42,8 +42,8 @@ importers:
         specifier: ^1.0.1
         version: 1.0.1
       xdg-portable:
-        specifier: 9.4.0
-        version: 9.4.0
+        specifier: 10.6.0
+        version: 10.6.0
     devDependencies:
       '@changesets/changelog-github':
         specifier: ^0.4.3
@@ -2283,8 +2283,8 @@ packages:
     resolution: {integrity: sha512-6IpQ7mKUxRcZNLIObR0hz7lxsapSSIYNZJwXPGeF0mTVqGKFIXj1DQcMoT22S3ROcLyY/rz0PWaWZ9ayWmad9g==}
     engines: {node: '>= 0.8.0'}
 
-  os-paths@6.9.0:
-    resolution: {integrity: sha512-b6fbX4phQ0zydXASUr4GNAIWGtG1LzUoHdQxUpgkpYz/WszdpVGlRKkMIaLhZnRymDz4lPQfX9cx0qvDfYPmPg==}
+  os-paths@7.4.0:
+    resolution: {integrity: sha512-Ux1J4NUqC6tZayBqLN1kUlDAEvLiQlli/53sSddU4IN+h+3xxnv2HmRSMpVSvr1hvJzotfMs3ERvETGK+f4OwA==}
     engines: {node: '>= 4.0'}
 
   os-tmpdir@1.0.2:
@@ -3092,8 +3092,8 @@ packages:
       utf-8-validate:
         optional: true
 
-  xdg-portable@9.4.0:
-    resolution: {integrity: sha512-L6M5PMpxOJeT5FGnI5TjrN2jPT/rdwu+/aEjO9gbY7wLe4qq+v9oPYJpqqlaL6qNc6zE/Usmq0dvkA793nfBqw==}
+  xdg-portable@10.6.0:
+    resolution: {integrity: sha512-xrcqhWDvtZ7WLmt8G4f3hHy37iK7D2idtosRgkeiSPZEPmBShp0VfmRBLWAPC6zLF48APJ21yfea+RfQMF4/Aw==}
     engines: {node: '>= 4.0'}
 
   xtend@4.0.2:
@@ -5486,7 +5486,9 @@ snapshots:
       type-check: 0.4.0
       word-wrap: 1.2.5
 
-  os-paths@6.9.0: {}
+  os-paths@7.4.0:
+    optionalDependencies:
+      fsevents: 2.3.3
 
   os-tmpdir@1.0.2: {}
 
@@ -5747,7 +5749,7 @@ snapshots:
 
   rollup@2.70.1:
     optionalDependencies:
-      fsevents: 2.3.2
+      fsevents: 2.3.3
 
   run-parallel@1.2.0:
     dependencies:
@@ -6307,9 +6309,11 @@ snapshots:
 
   ws@8.18.0: {}
 
-  xdg-portable@9.4.0:
+  xdg-portable@10.6.0:
     dependencies:
-      os-paths: 6.9.0
+      os-paths: 7.4.0
+    optionalDependencies:
+      fsevents: 2.3.3
 
   xtend@4.0.2: {}
 
