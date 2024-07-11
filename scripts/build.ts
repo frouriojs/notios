@@ -32,7 +32,7 @@ const main = async ({ fromDir, toDir, watch, target, clean }: Params) => {
   const entryPoints = fs
     .readdirSync(fromDirAbs)
     .map((f) => path.resolve(fromDirAbs, f))
-    .filter((e) => e.endsWith('.ts'));
+    .filter((e) => e.endsWith('.mts'));
   const watchOptions: boolean | WatchMode = watch && {
     onRebuild(error, result) {
       if (error || !result) {
