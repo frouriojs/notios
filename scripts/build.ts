@@ -69,7 +69,6 @@ const main = async ({ fromDir, toDir, watch, target, clean }: Params) => {
     outExtension: { '.js': '.mjs' },
     entryPoints,
     watch: watchOptions,
-    banner: { js: 'import { createRequire } from "module";const require = createRequire(import.meta.url);' },
     plugins: [
       ...(clean ? [cleanPlugin] : []),
       omitImportNodeNSPlugin,
