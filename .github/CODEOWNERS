@@ -1,7 +1,0 @@
-/.changeset/** @LumaKernel
-/package.json @LumaKernel
-/tsconfig.json @LumaKernel
-/src/** @LumaKernel
-/package-lock.json @LumaKernel
-/yarn.lock @LumaKernel
-/pnpm-lock.yaml @LumaKernel

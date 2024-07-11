@@ -1,19 +1,12 @@
 {
   "compilerOptions": {
     "esModuleInterop": true,
-    "module": "CommonJS",
-    "moduleResolution": "Node",
+    "module": "ES2020",
+    "moduleResolution": "Bundler",
     "skipLibCheck": true,
     "strict": true,
     "target": "ES2020",
     "jsx": "react",
     "incremental": true
-  },
-  "exclude": [
-    "node_modules"
-  ],
-  "include": [
-    "**/*.ts",
-    "**/*.tsx"
-  ]
+  }
 }

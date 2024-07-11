@@ -1,7 +1,7 @@
 import arg from 'arg';
 import type { Plugin, WatchMode } from 'esbuild';
 import { build } from 'esbuild';
-import nodeExternalsPlugin from 'esbuild-node-externals';
+import { nodeExternalsPlugin } from 'esbuild-node-externals';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -32,7 +32,7 @@ const main = async ({ fromDir, toDir, watch, target, clean }: Params) => {
   const entryPoints = fs
     .readdirSync(fromDirAbs)
     .map((f) => path.resolve(fromDirAbs, f))
-    .filter((e) => e.endsWith('.ts'));
+    .filter((e) => e.endsWith('.mts'));
   const watchOptions: boolean | WatchMode = watch && {
     onRebuild(error, result) {
       if (error || !result) {
@@ -59,13 +59,14 @@ const main = async ({ fromDir, toDir, watch, target, clean }: Params) => {
 
   await build({
     platform: 'node',
-    format: 'cjs',
+    format: 'esm',
     target,
     minify: true,
     keepNames: true,
     sourcemap: 'inline',
     bundle: true,
     outdir: toDirAbs,
+    outExtension: { '.js': '.mjs' },
     entryPoints,
     watch: watchOptions,
     plugins: [

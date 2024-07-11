@@ -1,4 +1,4 @@
-import { AnsiActionControll } from './ansi-controll-action';
+import { AnsiActionControll } from './ansi-controll-action.d.ts';
 
 export type AnsiAction =
   | AnsiActionNoop
