@@ -20,7 +20,7 @@ jobs:
             ${{ runner.os }}-
       - uses: pnpm/action-setup@v2
         with:
-          version: 8
+          version: 9
           run_install: |
             - recursive: true
               args: [--frozen-lockfile, --prefer-offline]
@@ -41,7 +41,7 @@ jobs:
             ${{ runner.os }}-
       - uses: pnpm/action-setup@v2
         with:
-          version: 8
+          version: 9
           run_install: |
             - recursive: true
               args: [--frozen-lockfile, --prefer-offline]
