@@ -246,7 +246,10 @@ export const createProcManager = ({
             if (allWaiting) return 'waiting';
             return 'running';
           })();
-          node.exitCode = children.reduce((accum, n) => accum || n.exitCode, null as null | number | undefined);
+          node.exitCode = children.reduce(
+            (accum, n) => accum || n.exitCode,
+            null as null | number | undefined,
+          );
         }
         $checkSerial(node);
 
@@ -269,8 +272,8 @@ export const createProcManager = ({
               childLines.length === 0
                 ? 0
                 : childLines[childLines.length - 1].main.timestamp
-                ? childLines.length
-                : childLines.length - 1;
+                  ? childLines.length
+                  : childLines.length - 1;
             if (realLen > 0) {
               const lastLine = node.logAccumulated.$lastLineToTitle[title] as LogLine | undefined;
               let from = 0;
@@ -284,11 +287,15 @@ export const createProcManager = ({
                   from -= 1;
               }
               node.logAccumulated.$lastLineToTitle[title] = childLines[realLen - 1];
-              beingAdded.push(...childLines.slice(from, realLen).map((e) => ({ title, main: e.main })));
+              beingAdded.push(
+                ...childLines.slice(from, realLen).map((e) => ({ title, main: e.main })),
+              );
             }
           }
           const lines = node.logAccumulated.lines;
-          const beingAddedSorted = beingAdded.sort((a, b) => a.main.timestamp!.getTime() - b.main.timestamp!.getTime());
+          const beingAddedSorted = beingAdded.sort(
+            (a, b) => a.main.timestamp!.getTime() - b.main.timestamp!.getTime(),
+          );
           lines.push(...beingAddedSorted);
           if (enableUnreadMarker) {
             const unreadLines = node.logAccumulated.$unreadLines;
@@ -330,7 +337,9 @@ export const createProcManager = ({
                       type: 'style',
                       bytes: Uint8Array.from(Buffer.from(`${RESET}${YELLOW}`)),
                     } as const,
-                    ...[...Buffer.from(`[NOTIOS] HISTORY DROPPED`)].map((b) => ({ type: 'print', byte: b } as const)),
+                    ...[...Buffer.from(`[NOTIOS] HISTORY DROPPED`)].map(
+                      (b) => ({ type: 'print', byte: b }) as const,
+                    ),
                     {
                       type: 'style',
                       bytes: Uint8Array.from(Buffer.from(`${RESET}`)),
@@ -353,7 +362,8 @@ export const createProcManager = ({
   };
 
   const $appendLogToNode = (newLog: Buffer, node: ProcNodeInternal) => {
-    if (!node.logOwn) throw new Error('[INTERNAL UNREACHABLE ERROR]: appending to log-accumulate-only node');
+    if (!node.logOwn)
+      throw new Error('[INTERNAL UNREACHABLE ERROR]: appending to log-accumulate-only node');
     const [newParser, actions] = decodeAnsiBytes(node.logOwn.currentParser, new Uint8Array(newLog));
     node.logOwn.currentParser = newParser;
     for (const action of actions) {
@@ -586,7 +596,10 @@ export const createProcManager = ({
     inode.children[0].ignored = true;
     inode.children[1].ignored = true;
     $startRunning(inode);
-    $appendLogToNode(Buffer.from(`${RESET}${YELLOW}[NOTIOS] MANUALLY RESTARTED${RESET}\n`), inode.children[0]);
+    $appendLogToNode(
+      Buffer.from(`${RESET}${YELLOW}[NOTIOS] MANUALLY RESTARTED${RESET}\n`),
+      inode.children[0],
+    );
   };
 
   const restartAllNode: RestartAllNode = (node) => {
@@ -608,7 +621,10 @@ export const createProcManager = ({
     inode.status = 'killed';
     inode.children[0].status = 'killed';
     inode.children[1].status = 'killed';
-    $appendLogToNode(Buffer.from(`\n${RESET}${YELLOW}[NOTIOS] MANUALLY KILLED${RESET}\n`), inode.children[0]);
+    $appendLogToNode(
+      Buffer.from(`\n${RESET}${YELLOW}[NOTIOS] MANUALLY KILLED${RESET}\n`),
+      inode.children[0],
+    );
     inode.$notifyUpdate();
   };
 

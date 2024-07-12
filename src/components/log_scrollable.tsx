@@ -15,7 +15,9 @@ const formatDate = (d: Date) => {
 };
 
 const rateToRgbHex = (t: number) => {
-  return '#' + ('0' + Math.min(Math.max(Math.round(t * 255), 0), 255).toString(16)).slice(-2).repeat(3);
+  return (
+    '#' + ('0' + Math.min(Math.max(Math.round(t * 255), 0), 255).toString(16)).slice(-2).repeat(3)
+  );
 };
 
 const colorOfStr = (s: string) => {
@@ -76,19 +78,28 @@ const LogScrollable: FC<LogScrollableProps> = ({
       for (let i = Math.max(top, 0); i < top + height && i < lines.length; i += 1) {
         const line = lines[i];
         if (!line.main.timestamp) continue;
-        const ts = showTimestamp ? `(${line.main.timestamp ? formatDate(line.main.timestamp) : '???'})` : '';
+        const ts = showTimestamp
+          ? `(${line.main.timestamp ? formatDate(line.main.timestamp) : '???'})`
+          : '';
         const title = showTitle ? (line.title ? `[${line.title}]` : '') : '';
         const wcstart = left;
         const noticeBarLenght = enableUnreadMarker || enableTimeElapseGradationBar ? 3 : 0;
         const padRightLength = 6;
         const wcend = left + width - padRightLength - noticeBarLenght - ts.length - wcwidth(title);
-        const { sliced: text, stylePrintableBytesLength } = logWcslice(line.main.content, wcstart, wcend);
+        const { sliced: text, stylePrintableBytesLength } = logWcslice(
+          line.main.content,
+          wcstart,
+          wcend,
+        );
         const textPrinted = logWcslice(
           line.main.content.filter((c) => c.type === 'print'),
           wcstart,
           wcend,
         ).sliced;
-        const fixWidth = wcwidth(text) - (textPrinted.length - stringLength(textPrinted)) - stylePrintableBytesLength;
+        const fixWidth =
+          wcwidth(text) -
+          (textPrinted.length - stringLength(textPrinted)) -
+          stylePrintableBytesLength;
         shownLines.push({
           ts,
           timestamp: line.main.timestamp,
@@ -117,14 +128,18 @@ const LogScrollable: FC<LogScrollableProps> = ({
     fixWidth,
   }) => {
     const ms = useCurrentMs();
-    const rate = timestamp == null ? 1 : Math.min(0.04 + 0.93 ** ((ms - timestamp.getTime()) / 1000), 1);
+    const rate =
+      timestamp == null ? 1 : Math.min(0.04 + 0.93 ** ((ms - timestamp.getTime()) / 1000), 1);
     return (
       <Box height={1}>
         {(() => {
           if (enableTimeElapseGradationBar) {
             return (
               <Box>
-                <Text color={rate < 0.5 ? '#ffffff' : '#000000'} backgroundColor={rateToRgbHex(rate)}>
+                <Text
+                  color={rate < 0.5 ? '#ffffff' : '#000000'}
+                  backgroundColor={rateToRgbHex(rate)}
+                >
                   {!read && enableUnreadMarker ? ' @ ' : '   '}
                 </Text>
               </Box>
@@ -165,7 +180,9 @@ const LogScrollable: FC<LogScrollableProps> = ({
   return (
     <BoxWithSize height="100%" width="100%" flexDirection="column">
       {({ width, height }) =>
-        trimmedLines({ width, height }).map((d) => <Main key={d.abs} width={width} height={height} {...d} />)
+        trimmedLines({ width, height }).map((d) => (
+          <Main key={d.abs} width={width} height={height} {...d} />
+        ))
       }
     </BoxWithSize>
   );

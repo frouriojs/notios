@@ -16,7 +16,9 @@ export interface LogScrollableCounterProps {
 const LogScrollableCounter: FC<LogScrollableCounterProps> = ({ bottom = 0, lines, ...rest }) => {
   return (
     <BoxWithSize height="100%" width="100%">
-      {({ height }) => <LogScrollable {...rest} lines={lines} top={Math.max(lines.length - height - bottom, 0)} />}
+      {({ height }) => (
+        <LogScrollable {...rest} lines={lines} top={Math.max(lines.length - height - bottom, 0)} />
+      )}
     </BoxWithSize>
   );
 };

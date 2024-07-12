@@ -1,8 +1,8 @@
+import { Box, Text } from 'ink';
 import type { FC } from 'react';
 import React from 'react';
-import BoxWithSize from './box_with_size';
-import { Box, Text } from 'ink';
 import stringWidth from 'string-width';
+import BoxWithSize from './box_with_size';
 
 const paddingChar = ' ';
 

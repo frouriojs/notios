@@ -34,21 +34,26 @@ export const setupArgs = (): UiOptions => {
   );
   const scripts = tryWithHint(
     () =>
-      Object.entries((manifestJson as { scripts: Record<string, string> }).scripts).map(([name, command]) => {
-        if (typeof command !== 'string') throw new TypeError('command is not string');
-        return { name, command };
-      }),
+      Object.entries((manifestJson as { scripts: Record<string, string> }).scripts).map(
+        ([name, command]) => {
+          if (typeof command !== 'string') throw new TypeError('command is not string');
+          return { name, command };
+        },
+      ),
     `Manifest json ${JSON.stringify(
       manifestFullPath,
     )} does not have scripts section correctly.\nPlease check the npm documentation for more information: https://docs.npmjs.com/misc/scripts/`,
   );
 
   initialScriptNames.forEach((scriptName) => {
-    tryWithHint(() => {
-      if (!(scriptName in (manifestJson as any).scripts)) {
-        throw new Error('no such script');
-      }
-    }, `Manifest json ${JSON.stringify(manifestFullPath)} does not have such script: ${JSON.stringify(scriptName)}`);
+    tryWithHint(
+      () => {
+        if (!(scriptName in (manifestJson as any).scripts)) {
+          throw new Error('no such script');
+        }
+      },
+      `Manifest json ${JSON.stringify(manifestFullPath)} does not have such script: ${JSON.stringify(scriptName)}`,
+    );
   });
 
   return {

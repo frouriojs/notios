@@ -34,7 +34,15 @@ type NotiosConfigKeymappingSpecialShiftOnly = {
 };
 type NotiosConfigKeymappingSpecialCtrlShift = {
   type: 'special';
-  special: 'pageUp' | 'pageDown' | 'downArrow' | 'upArrow' | 'rightArrow' | 'leftArrow' | 'home' | 'end';
+  special:
+    | 'pageUp'
+    | 'pageDown'
+    | 'downArrow'
+    | 'upArrow'
+    | 'rightArrow'
+    | 'leftArrow'
+    | 'home'
+    | 'end';
   shift?: boolean;
   ctrl?: boolean;
 };
@@ -147,7 +155,10 @@ declare const notiosConfigV1KeymappingHelpSymbol: unique symbol;
 
 type NotiosConfigV1Keymapping = {
   [notiosConfigV1KeymappingSymbol]: unknown;
-  common: Record<NotiosCommonAction | typeof notiosConfigV1KeymappingCommonSymbol, NotiosConfigActionKeymapping>;
+  common: Record<
+    NotiosCommonAction | typeof notiosConfigV1KeymappingCommonSymbol,
+    NotiosConfigActionKeymapping
+  >;
   'inspect-proc': Record<
     NotiosInspectProcAction | typeof notiosConfigV1KeymappingInspectProcSymbol,
     NotiosConfigActionKeymapping
@@ -160,7 +171,10 @@ type NotiosConfigV1Keymapping = {
     NotiosSelectScriptAction | typeof notiosConfigV1KeymappingSelectScriptSymbol,
     NotiosConfigActionKeymapping
   >;
-  help: Record<NotiosHelpAction | typeof notiosConfigV1KeymappingHelpSymbol, NotiosConfigActionKeymapping>;
+  help: Record<
+    NotiosHelpAction | typeof notiosConfigV1KeymappingHelpSymbol,
+    NotiosConfigActionKeymapping
+  >;
 };
 
 declare const notiosConfigV1Symbol: unique symbol;

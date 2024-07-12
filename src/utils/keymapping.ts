@@ -17,10 +17,15 @@ const keymappingToString = (keymapping: NotiosConfigKeymapping) => {
   switch (keymapping.type) {
     case 'char':
       return (
-        keymapping.char + (keymapping.ctrl ? 'c' : '-') + (keymapping.meta ? 'm' : '-') + (keymapping.shift ? 's' : '-')
+        keymapping.char +
+        (keymapping.ctrl ? 'c' : '-') +
+        (keymapping.meta ? 'm' : '-') +
+        (keymapping.shift ? 's' : '-')
       );
     case 'special':
-      return keymapping.special + ';' + (keymapping.ctrl ? 'c' : '-') + (keymapping.shift ? 's' : '-');
+      return (
+        keymapping.special + ';' + (keymapping.ctrl ? 'c' : '-') + (keymapping.shift ? 's' : '-')
+      );
   }
 };
 
@@ -43,7 +48,9 @@ const toSeq = (keymappingRoot: NotiosConfigKeymappingRoot) => {
   return seq;
 };
 
-export const constructKeymapping = (actionKeymappings: Record<string, NotiosConfigActionKeymapping>) => {
+export const constructKeymapping = (
+  actionKeymappings: Record<string, NotiosConfigActionKeymapping>,
+) => {
   const trie: KeymappingNode = { children: new Map() };
 
   const sortedSeqEntries = (() => {
@@ -62,7 +69,9 @@ export const constructKeymapping = (actionKeymappings: Record<string, NotiosConf
   })();
   for (const [action, seq] of sortedSeqEntries) {
     if (seq.length === 0) {
-      throw new Error(`Keymap for action "${action}" is zero-length sequential, which is not allowed.`);
+      throw new Error(
+        `Keymap for action "${action}" is zero-length sequential, which is not allowed.`,
+      );
     }
     let cur = trie;
     for (const one of seq) {
@@ -240,7 +249,11 @@ export const matchKeymapping = (
           });
         }
         // no modifier
-        if (specialKeyName === 'delete' || specialKeyName === 'backspace' || specialKeyName === 'return') {
+        if (
+          specialKeyName === 'delete' ||
+          specialKeyName === 'backspace' ||
+          specialKeyName === 'return'
+        ) {
           return keymappingToString({
             type: 'special',
             special: specialKeyName,

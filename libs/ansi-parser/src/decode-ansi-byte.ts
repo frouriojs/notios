@@ -25,7 +25,10 @@ const decodeIntegerBytes = (bytes: readonly number[]): string => {
   return bytes.map((b) => `${b - 0x30}`).join('');
 };
 
-const decodeAnsiByte = (parser: AnsiParser, byte: number): readonly [newParser: AnsiParser, action: AnsiAction] => {
+const decodeAnsiByte = (
+  parser: AnsiParser,
+  byte: number,
+): readonly [newParser: AnsiParser, action: AnsiAction] => {
   const bytes = Array.from(parser.waitingBytes);
   bytes.push(byte);
   const rbytes = Array.from(parser.waitingBytes);

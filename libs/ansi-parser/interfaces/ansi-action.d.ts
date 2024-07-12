@@ -337,7 +337,15 @@ export type AnsiColorDefault = {
   readonly colorType: 'default';
 };
 
-export type ColorName = 'black' | 'red' | 'green' | 'yellow' | 'blue' | 'magenta' | 'cyan' | 'white';
+export type ColorName =
+  | 'black'
+  | 'red'
+  | 'green'
+  | 'yellow'
+  | 'blue'
+  | 'magenta'
+  | 'cyan'
+  | 'white';
 
 export type AnsiColor4bit = AnsiColor4bitStandard | AnsiColor4bitHighIntensity;
 export type AnsiColor4bitStandard =
@@ -440,7 +448,11 @@ export type AnsiColor4bitHighIntensityWhite = {
   readonly colorName: 'white';
 };
 
-export type AnsiColor8bit = AnsiColor8bitStandard | AnsiColor8bitHighIntensity | AnsiColor8Rgb | AnsiColor8Grayscale;
+export type AnsiColor8bit =
+  | AnsiColor8bitStandard
+  | AnsiColor8bitHighIntensity
+  | AnsiColor8Rgb
+  | AnsiColor8Grayscale;
 export type AnsiColor8bitStandard =
   | AnsiColor8bitStandardBlack
   | AnsiColor8bitStandardRed

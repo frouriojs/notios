@@ -8,11 +8,16 @@ type ActionImpl = () => void;
 
 export type UseActionParams<T extends ActionablePage> = {
   page: T;
-  actionMaps: Record<keyof typeof pageActions[T] | 'help', ActionImpl>;
+  actionMaps: Record<keyof (typeof pageActions)[T] | 'help', ActionImpl>;
   notiosConfig: NotiosConfigV1;
   disabled?: boolean;
 };
-const useAction = <T extends ActionablePage>({ page, actionMaps, notiosConfig, disabled }: UseActionParams<T>) => {
+const useAction = <T extends ActionablePage>({
+  page,
+  actionMaps,
+  notiosConfig,
+  disabled,
+}: UseActionParams<T>) => {
   const trie = useMemo(() => {
     return constructKeymapping({
       ...notiosConfig.keymappings[page],

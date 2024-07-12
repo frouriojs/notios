@@ -45,7 +45,9 @@ const TreeProcs: FC<TreeProcsProps> = ({}) => {
           command,
           node: n,
         },
-        ...n.children.flatMap((c) => dfs(c, ind)).map((p) => ({ ...p, indent: `${ind}${p.indent}` })),
+        ...n.children
+          .flatMap((c) => dfs(c, ind))
+          .map((p) => ({ ...p, indent: `${ind}${p.indent}` })),
       ];
     }
     return [

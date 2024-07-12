@@ -20,7 +20,12 @@ export const setupUi = ({ uiOptions, procManager, notiosConfig }: SetupUiParams)
     exitNotios();
   };
   rendered = render(
-    <App uiOptions={uiOptions} procManager={procManager} notiosConfig={notiosConfig.v1} onExit={onExit} />,
+    <App
+      uiOptions={uiOptions}
+      procManager={procManager}
+      notiosConfig={notiosConfig.v1}
+      onExit={onExit}
+    />,
     {
       // Handle exit manually.
       exitOnCtrlC: false,

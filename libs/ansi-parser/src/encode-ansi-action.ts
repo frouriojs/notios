@@ -32,7 +32,13 @@ const encodeAnsiAction = (action: AnsiAction): Uint8Array => {
       if (action.column === null) {
         return Uint8Array.from([...CSI, ...encodeInteger(action.row), 0x48]);
       } else {
-        return Uint8Array.from([...CSI, ...encodeInteger(action.row), 0x3b, ...encodeInteger(action.column), 0x48]);
+        return Uint8Array.from([
+          ...CSI,
+          ...encodeInteger(action.row),
+          0x3b,
+          ...encodeInteger(action.column),
+          0x48,
+        ]);
       }
     case 'ed':
       return Uint8Array.from([...CSI, ...encodeInteger(action.eraseInDisplayType), 0x4a]);
@@ -132,10 +138,20 @@ const encodeAnsiAction = (action: AnsiAction): Uint8Array => {
         case '4bit':
           switch (action.fgColor.color4bitType) {
             case 'standard':
-              return Uint8Array.from([...CSI, 0x33, 0x30 + colorIndexOf(action.fgColor.colorName), 0x6d]);
+              return Uint8Array.from([
+                ...CSI,
+                0x33,
+                0x30 + colorIndexOf(action.fgColor.colorName),
+                0x6d,
+              ]);
             case 'high_intensity':
             default:
-              return Uint8Array.from([...CSI, 0x39, 0x30 + colorIndexOf(action.fgColor.colorName), 0x6d]);
+              return Uint8Array.from([
+                ...CSI,
+                0x39,
+                0x30 + colorIndexOf(action.fgColor.colorName),
+                0x6d,
+              ]);
           }
         case '8bit':
           switch (action.fgColor.color8bitType) {
@@ -164,7 +180,16 @@ const encodeAnsiAction = (action: AnsiAction): Uint8Array => {
               ]);
             case 'rgb': {
               const n = 16 + action.fgColor.r * 36 + action.fgColor.g * 6 + action.fgColor.b;
-              return Uint8Array.from([...CSI, 0x33, 0x38, 0x3b, 0x35, 0x3b, ...encodeInteger(n.toString()), 0x6d]);
+              return Uint8Array.from([
+                ...CSI,
+                0x33,
+                0x38,
+                0x3b,
+                0x35,
+                0x3b,
+                ...encodeInteger(n.toString()),
+                0x6d,
+              ]);
             }
             case 'grayscale':
             default:
@@ -202,10 +227,21 @@ const encodeAnsiAction = (action: AnsiAction): Uint8Array => {
         case '4bit':
           switch (action.bgColor.color4bitType) {
             case 'standard':
-              return Uint8Array.from([...CSI, 0x34, 0x30 + colorIndexOf(action.bgColor.colorName), 0x6d]);
+              return Uint8Array.from([
+                ...CSI,
+                0x34,
+                0x30 + colorIndexOf(action.bgColor.colorName),
+                0x6d,
+              ]);
             case 'high_intensity':
             default:
-              return Uint8Array.from([...CSI, 0x31, 0x30, 0x30 + colorIndexOf(action.bgColor.colorName), 0x6d]);
+              return Uint8Array.from([
+                ...CSI,
+                0x31,
+                0x30,
+                0x30 + colorIndexOf(action.bgColor.colorName),
+                0x6d,
+              ]);
           }
         case '8bit':
           switch (action.bgColor.color8bitType) {
@@ -234,7 +270,16 @@ const encodeAnsiAction = (action: AnsiAction): Uint8Array => {
               ]);
             case 'rgb': {
               const n = 16 + action.bgColor.r * 36 + action.bgColor.g * 6 + action.bgColor.b;
-              return Uint8Array.from([...CSI, 0x34, 0x38, 0x3b, 0x35, 0x3b, ...encodeInteger(n.toString()), 0x6d]);
+              return Uint8Array.from([
+                ...CSI,
+                0x34,
+                0x38,
+                0x3b,
+                0x35,
+                0x3b,
+                ...encodeInteger(n.toString()),
+                0x6d,
+              ]);
             }
             case 'grayscale':
             default:

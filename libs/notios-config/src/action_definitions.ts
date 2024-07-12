@@ -160,7 +160,13 @@ export const pageActions = {
   help: helpActions,
 } as const;
 
-export const actionablePages = ['common', 'inspect-proc', 'tree-procs', 'select-script', 'help'] as const;
+export const actionablePages = [
+  'common',
+  'inspect-proc',
+  'tree-procs',
+  'select-script',
+  'help',
+] as const;
 
 // This is not the same as Page.
 export type ActionablePage = keyof typeof pageActions;

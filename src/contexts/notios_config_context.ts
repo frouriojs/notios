@@ -10,4 +10,5 @@ const createNotiosConfigContext = (): React.Context<NotiosConfigContextValue> =>
 };
 
 export const notiosConfigContext = createNotiosConfigContext();
-export const useNotiosConfigContext = (): NotiosConfigContextValue => useContext(notiosConfigContext);
+export const useNotiosConfigContext = (): NotiosConfigContextValue =>
+  useContext(notiosConfigContext);

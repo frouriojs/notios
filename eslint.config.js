@@ -1,24 +1,14 @@
 import js from '@eslint/js';
-import reactPlugin from 'eslint-plugin-react';
+import gitignore from 'eslint-config-flat-gitignore';
 import prettierConfig from 'eslint-config-prettier';
 import importPlugin from 'eslint-plugin-import';
-import tseslint from 'typescript-eslint';
+import reactPlugin from 'eslint-plugin-react';
 import globals from 'globals';
+import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   { files: ['**/*.(ts,js,tsx)'] },
-  {
-    ignores: [
-      '.DS_Store',
-      '.vscode',
-      '.idea',
-      'node_modules',
-      '*.local',
-      '**/build/**',
-      '**/coverage/**',
-      '.pnpm-debug.log*',
-    ],
-  },
+  gitignore(),
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {

@@ -10,7 +10,9 @@ import { constructKeymapping } from '../utils/keymapping';
 export interface setupNotiosConfigParams {
   uiOptions: UiOptions;
 }
-export const setupNotiosConfig = ({ uiOptions: { configFileFullPath } }: setupNotiosConfigParams): NotiosConfig => {
+export const setupNotiosConfig = ({
+  uiOptions: { configFileFullPath },
+}: setupNotiosConfigParams): NotiosConfig => {
   const configFileContent = (() => {
     try {
       return fs.readFileSync(configFileFullPath);
@@ -30,9 +32,16 @@ export const setupNotiosConfig = ({ uiOptions: { configFileFullPath } }: setupNo
   actionablePages
     .filter((page) => page !== 'common')
     .map((page) => {
-      tryWithHint(() => {
-        constructKeymapping({ ...config.v1.keymappings.common, ...config.v1.keymappings[page] });
-      }, [`Detected the confliction of keymapping or invalid configuration for page "${page}"(including "common" keymapping).`, `See error message for more details.`, `Review your notios configuration.`].join(' '));
+      tryWithHint(
+        () => {
+          constructKeymapping({ ...config.v1.keymappings.common, ...config.v1.keymappings[page] });
+        },
+        [
+          `Detected the confliction of keymapping or invalid configuration for page "${page}"(including "common" keymapping).`,
+          `See error message for more details.`,
+          `Review your notios configuration.`,
+        ].join(' '),
+      );
     });
 
   if (config.v1.keymappings.common.exit.length < 1) {

@@ -1,6 +1,10 @@
 import { Box, Text } from 'ink';
 import React, { FC, useEffect, useState } from 'react';
-import { Action, ActionablePage, pageActions } from '../../libs/notios-config/src/action_definitions';
+import {
+  Action,
+  ActionablePage,
+  pageActions,
+} from '../../libs/notios-config/src/action_definitions';
 import {
   NotiosConfigActionKeymapping,
   NotiosConfigKeymappingRoot,
@@ -172,7 +176,9 @@ const HelpPortal: FC<HelpPortalProps> = ({ page, title, actions, denyHelpOpen, o
         </Text>
       </Box>,
       ...(() => {
-        const actionKeymapping = (notiosConfig.keymappings as any)[page][actionName] as NotiosConfigActionKeymapping;
+        const actionKeymapping = (notiosConfig.keymappings as any)[page][
+          actionName
+        ] as NotiosConfigActionKeymapping;
         if (actionKeymapping.length === 0) {
           return [
             <Box key={`${actionName}:no-keymappings`} height={1}>

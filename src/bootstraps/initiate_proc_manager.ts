@@ -8,7 +8,10 @@ export interface InitiateProcManagerParams {
   uiOptions: UiOptions;
   notiosConfig: NotiosConfig;
 }
-const initiateProcManager = ({ uiOptions, notiosConfig }: InitiateProcManagerParams): ProcManager => {
+const initiateProcManager = ({
+  uiOptions,
+  notiosConfig,
+}: InitiateProcManagerParams): ProcManager => {
   const procManager = createProcManager({
     forceNoColor: uiOptions.forceNoColor,
     enableUnreadMarker: notiosConfig.v1.enableUnreadMarker,

@@ -13,7 +13,9 @@ const hijackNpmRunAll = async ({ name, initial, options }: HijackNpmRunAllParams
     const argv = await import('npm-run-all/bin/common/parse-cli-args.js').then((parseCliArgs) =>
       parseCliArgs.default(args, initial, options),
     );
-    await import('npm-run-all/lib/match-tasks.js').then((matchTasks) => request(matchTasks.default, name, args, argv));
+    await import('npm-run-all/lib/match-tasks.js').then((matchTasks) =>
+      request(matchTasks.default, name, args, argv),
+    );
   } else {
     const npmRunAllFound = (() => {
       try {
