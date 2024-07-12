@@ -17,9 +17,6 @@ importers:
       ink:
         specifier: ^5.0.1
         version: 5.0.1(@types/react@18.3.3)(react-devtools-core@4.27.8)(react@18.3.1)
-      ink-divider:
-        specifier: 3.0.0
-        version: 3.0.0(ink@5.0.1(@types/react@18.3.3)(react-devtools-core@4.27.8)(react@18.3.1))(react@18.3.1)
       node-ipc:
         specifier: 10.1.0
         version: 10.1.0
@@ -38,6 +35,9 @@ importers:
       string-length:
         specifier: ^5.0.1
         version: 5.0.1
+      string-width:
+        specifier: ^7.2.0
+        version: 7.2.0
       wcwidth:
         specifier: ^1.0.1
         version: 1.0.1
@@ -1799,13 +1799,6 @@ packages:
 
   inherits@2.0.4:
     resolution: {integrity: sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==}
-
-  ink-divider@3.0.0:
-    resolution: {integrity: sha512-Mqb9WArtEZCtXw622aHhJqPK157QNc+8ssl9/RvAZlS6nZRCKyW4mYOYCudQh6dSuFGt9eG5yaqT1mJaGmwu+w==}
-    engines: {node: '>=6'}
-    peerDependencies:
-      ink: '>=3.0.0'
-      react: '>=16.8.0'
 
   ink-testing-library@2.1.0:
     resolution: {integrity: sha512-7TNlOjJlJXB33vG7yVa+MMO7hCjaC1bCn+zdpSjknWoLbOWMaFdKc7LJvqVkZ0rZv2+akhjXPrcR/dbxissjUw==}
@@ -4987,13 +4980,6 @@ snapshots:
       wrappy: 1.0.2
 
   inherits@2.0.4: {}
-
-  ink-divider@3.0.0(ink@5.0.1(@types/react@18.3.3)(react-devtools-core@4.27.8)(react@18.3.1))(react@18.3.1):
-    dependencies:
-      ink: 5.0.1(@types/react@18.3.3)(react-devtools-core@4.27.8)(react@18.3.1)
-      prop-types: 15.8.1
-      react: 18.3.1
-      string-width: 4.2.3
 
   ink-testing-library@2.1.0(@types/react@18.3.3):
     optionalDependencies:
