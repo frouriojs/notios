@@ -1,11 +1,28 @@
 import { AnsiParser } from 'ansi-parser/interfaces/ansi-parser';
 import { decodeAnsiBytes, defaultAnsiParser } from 'ansi-parser/src';
-import type childProcess from 'child_process';
 import cp from 'cross-spawn';
-import tty from 'tty';
+import ttyGlobal from 'tty';
 import { envVarNames } from '../constants/ipc';
-import crossKill from './cross_kill';
+import crossKillGlobal from './cross_kill';
 import { applyActionToSty, defaultStyContext, restoreSty, StyContext } from './sty';
+
+interface CrossSpawnParams {
+  command: string;
+  args: string[];
+  cwd?: string;
+  env?: NodeJS.ProcessEnv | undefined;
+}
+type CrossProcessReadable = {
+  readonly on: (name: 'data', handler: (buf: Buffer) => void) => void;
+  readonly off: (name: 'data', handler: (buf: Buffer) => void) => void;
+};
+type CrossProcess = {
+  readonly pid?: number | undefined;
+  readonly once: (name: 'exit', handler: (exitCode: number | null) => void) => void;
+  readonly stdout: CrossProcessReadable;
+  readonly stderr: CrossProcessReadable;
+};
+export type CrossSpawn = (params: CrossSpawnParams) => CrossProcess;
 
 export type ProcStatus = 'waiting' | 'running' | 'killed' | 'finished';
 
@@ -19,7 +36,8 @@ export interface ProcOwnInternal {
   command: string;
   cwd: string;
   npmPath: string;
-  $raw?: childProcess.ChildProcessWithoutNullStreams;
+  // $raw?: childProcess.ChildProcessWithoutNullStreams;
+  $raw?: CrossProcess;
 }
 
 export interface LogOwn {
@@ -168,24 +186,35 @@ export const createEmptyLogAccumulated = (): LogAccumulated => {
   return $createEmptyLogAccumulated();
 };
 
+const crossSpawnGlobal: CrossSpawn = ({ env, cwd, args, command }) => {
+  return cp.spawn(command, args, {
+    stdio: ['pipe', 'pipe', 'pipe'],
+    env,
+    cwd,
+  });
+};
+
 export interface CreateProcManagerParams {
-  forceNoColor: boolean;
+  isColorSupported: boolean;
   enableUnreadMarker: boolean;
   historyAlwaysKeepHeadSize: number;
   historyCacheSize: number;
+
+  // for test
+  tty?: typeof ttyGlobal;
+  crossSpawn?: CrossSpawn;
+  crossKill?: typeof crossKillGlobal;
 }
 export const createProcManager = ({
-  forceNoColor,
+  isColorSupported,
   enableUnreadMarker,
   historyAlwaysKeepHeadSize,
   historyCacheSize,
+  crossKill: crossKill0,
+  crossSpawn: crossSpawn0,
 }: CreateProcManagerParams): ProcManager => {
-  const isColorSupported =
-    !('NO_COLOR' in process.env || forceNoColor) &&
-    ('FORCE_COLOR' in process.env ||
-      process.platform === 'win32' ||
-      (tty.isatty(1) && process.env.TERM !== 'dumb') ||
-      'CI' in process.env);
+  const crossSpawn: CrossSpawn = crossSpawn0 ?? crossSpawnGlobal;
+  const crossKill = crossKill0 ?? crossKillGlobal;
 
   const RESET = isColorSupported ? '\x1b[0m' : '';
   const YELLOW = isColorSupported ? '\x1b[33m' : '';
@@ -496,8 +525,10 @@ export const createProcManager = ({
     nodeStderr.parent = node;
     $notifyUpdate();
 
-    const p = cp.spawn(node.procOwn.npmPath, ['run', node.name], {
-      stdio: ['pipe', 'pipe', 'pipe'],
+    const p = crossSpawn({
+      command: node.procOwn.npmPath,
+      args: ['run', node.name],
+      // stdio: ['pipe', 'pipe', 'pipe'],
       cwd: node.procOwn.cwd,
       env: {
         ...process.env,

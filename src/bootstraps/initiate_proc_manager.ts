@@ -1,3 +1,4 @@
+import tty from 'tty';
 import { NotiosConfig } from '../../libs/notios-config/src/interfaces/notios-config';
 import type { UiOptions } from '../interfaces/ui_options';
 import detectNpmClient from '../utils/detect_npm_client';
@@ -9,8 +10,14 @@ export interface InitiateProcManagerParams {
   notiosConfig: NotiosConfig;
 }
 const initiateProcManager = ({ uiOptions, notiosConfig }: InitiateProcManagerParams): ProcManager => {
+  const isColorSupported =
+    !('NO_COLOR' in process.env || uiOptions.forceNoColor) &&
+    ('FORCE_COLOR' in process.env ||
+      process.platform === 'win32' ||
+      (tty.isatty(1) && process.env.TERM !== 'dumb') ||
+      'CI' in process.env);
   const procManager = createProcManager({
-    forceNoColor: uiOptions.forceNoColor,
+    isColorSupported,
     enableUnreadMarker: notiosConfig.v1.enableUnreadMarker,
     historyAlwaysKeepHeadSize: notiosConfig.v1.historyAlwaysKeepHeadSize,
     historyCacheSize: notiosConfig.v1.historyCacheSize,
